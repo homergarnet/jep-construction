@@ -40,7 +40,7 @@ export const PUNCTUATIONS = [
 
 export const API_ENDPOINTS = {
   CREATE_SKU_MASTER_LIST: "SkuMasterList",
-  GET_ALL_SKUS: "SkuMasterList/GetAllSkus",
+  GET_HOME_TBL_LIST: "Home/get-table-list",
   GET_SKU_DETAILS: "SkuMasterList/GetSkuDetails",
   GET_WORKSHEET_PO_DETAILS: "WorkSheet/GetWorkSheetPODetails",
   UPDATE_SKU: "SkuMasterList/UpdateSku",
