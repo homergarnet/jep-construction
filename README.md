@@ -2,6 +2,10 @@
 Add .eslintrc to make the color or the file to yellow only if it is warning and remove the other eslint
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Important docs to read:
+
+https://ui.shadcn.com/docs/components/sidebar
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 tech stack used:
 Frontend:
 React19 Typscript vite
