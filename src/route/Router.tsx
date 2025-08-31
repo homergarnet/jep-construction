@@ -7,6 +7,7 @@ import {
 import ProtectedRoute from "./ProtectedRoute";
 import React from "react";
 import Layout from "@/layout/Layout";
+import HomePage from "@/pages/HomePage";
 
 const Page404 = React.lazy(() => import("../pages/Page404"));
 
@@ -17,7 +18,8 @@ const Router = createBrowserRouter(
         path=""
         element={
           <Suspense fallback={<div>Loading...</div>}>
-            <Layout />
+            {/* <Layout /> */}
+            <HomePage />
           </Suspense>
         }
       />

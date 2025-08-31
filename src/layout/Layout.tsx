@@ -11,10 +11,10 @@ const Layout = ({ children }: { children?: React.ReactNode }) => {
             <main className="flex-1">
                 <Header />
 
-                <div>
-                    {children}
+                <>
+                    {/* {children} */}
                     <Outlet />
-                </div>
+                </>
             </main>
         </SidebarProvider>
     );
