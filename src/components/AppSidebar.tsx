@@ -3,12 +3,19 @@ import {
     BookOpen,
     Bot,
     Command,
+    Folder,
+    FolderDot,
     Frame,
     GalleryVerticalEnd,
+    IdCardLanyard,
     Map,
+    MessageCircle,
     PieChart,
     Settings2,
+    SquaresExclude,
     SquareTerminal,
+    Stars,
+    UserPen,
 } from "lucide-react"
 import {
     Sidebar,
@@ -19,8 +26,7 @@ import {
 } from "@/components/ui/sidebar"
 import TeamSwitcher from "./TeamSwitcher"
 import NavMain from "./NavMain"
-import NavProjects from "./NavProjects"
-import NavUser from "./NavUser"
+import logo from "@/assets/logo.jpg";
 // This is sample data.
 const data = {
     user: {
@@ -47,106 +53,135 @@ const data = {
     ],
     navMain: [
         {
-            title: "Playground",
+            title: "Employee",
             url: "#",
-            icon: SquareTerminal,
+            icon: IdCardLanyard,
             isActive: true,
             items: [
                 {
-                    title: "History",
+                    title: "Employee List",
                     url: "#",
                 },
                 {
-                    title: "Starred",
+                    title: "Attendance",
                     url: "#",
                 },
                 {
-                    title: "Settings",
+                    title: "Payslip",
                     url: "#",
                 },
             ],
         },
         {
-            title: "Models",
+            title: "Project Management",
             url: "#",
-            icon: Bot,
-            items: [
-                {
-                    title: "Genesis",
-                    url: "#",
-                },
-                {
-                    title: "Explorer",
-                    url: "#",
-                },
-                {
-                    title: "Quantum",
-                    url: "#",
-                },
-            ],
+            icon: FolderDot,
+            // items: [
+            //     {
+            //         title: "Genesis",
+            //         url: "#",
+            //     },
+            //     {
+            //         title: "Explorer",
+            //         url: "#",
+            //     },
+            //     {
+            //         title: "Quantum",
+            //         url: "#",
+            //     },
+            // ],
         },
         {
-            title: "Documentation",
+            title: "Reviews",
             url: "#",
-            icon: BookOpen,
-            items: [
-                {
-                    title: "Introduction",
-                    url: "#",
-                },
-                {
-                    title: "Get Started",
-                    url: "#",
-                },
-                {
-                    title: "Tutorials",
-                    url: "#",
-                },
-                {
-                    title: "Changelog",
-                    url: "#",
-                },
-            ],
+            icon: Stars,
+            // items: [
+            //     {
+            //         title: "Introduction",
+            //         url: "#",
+            //     },
+            //     {
+            //         title: "Get Started",
+            //         url: "#",
+            //     },
+            //     {
+            //         title: "Tutorials",
+            //         url: "#",
+            //     },
+            //     {
+            //         title: "Changelog",
+            //         url: "#",
+            //     },
+            // ],
         },
         {
-            title: "Settings",
+            title: "Messages",
             url: "#",
-            icon: Settings2,
-            items: [
-                {
-                    title: "General",
-                    url: "#",
-                },
-                {
-                    title: "Team",
-                    url: "#",
-                },
-                {
-                    title: "Billing",
-                    url: "#",
-                },
-                {
-                    title: "Limits",
-                    url: "#",
-                },
-            ],
-        },
-    ],
-    projects: [
-        {
-            name: "Design Engineering",
-            url: "#",
-            icon: Frame,
+            icon: MessageCircle,
+            // items: [
+            //     {
+            //         title: "Introduction",
+            //         url: "#",
+            //     },
+            //     {
+            //         title: "Get Started",
+            //         url: "#",
+            //     },
+            //     {
+            //         title: "Tutorials",
+            //         url: "#",
+            //     },
+            //     {
+            //         title: "Changelog",
+            //         url: "#",
+            //     },
+            // ],
         },
         {
-            name: "Sales & Marketing",
+            title: "Inventory",
             url: "#",
-            icon: PieChart,
+            icon: SquaresExclude,
+            // items: [
+            //     {
+            //         title: "General",
+            //         url: "#",
+            //     },
+            //     {
+            //         title: "Team",
+            //         url: "#",
+            //     },
+            //     {
+            //         title: "Billing",
+            //         url: "#",
+            //     },
+            //     {
+            //         title: "Limits",
+            //         url: "#",
+            //     },
+            // ],
         },
         {
-            name: "Travel",
+            title: "Profile",
             url: "#",
-            icon: Map,
+            icon: UserPen,
+            // items: [
+            //     {
+            //         title: "General",
+            //         url: "#",
+            //     },
+            //     {
+            //         title: "Team",
+            //         url: "#",
+            //     },
+            //     {
+            //         title: "Billing",
+            //         url: "#",
+            //     },
+            //     {
+            //         title: "Limits",
+            //         url: "#",
+            //     },
+            // ],
         },
     ],
 }
@@ -155,15 +190,24 @@ const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
     return (
         <Sidebar collapsible="icon" {...props}>
             <SidebarHeader>
-                <TeamSwitcher teams={data.teams} />
+                {/* Logo at the very top */}
+                <div className="flex">
+                    <img
+                        src={logo}
+                        alt="App Logo"
+                        className="h-10 w-auto"
+                    />
+                </div>
+                {/* <TeamSwitcher teams={data.teams} />
+                <Folder /> */}
             </SidebarHeader>
             <SidebarContent>
                 <NavMain items={data.navMain} />
-                <NavProjects projects={data.projects} />
+                {/* <NavProjects projects={data.projects} /> */}
             </SidebarContent>
-            <SidebarFooter>
+            {/* <SidebarFooter>
                 <NavUser user={data.user} />
-            </SidebarFooter>
+            </SidebarFooter> */}
             <SidebarRail />
         </Sidebar>
     )
