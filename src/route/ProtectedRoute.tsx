@@ -1,3 +1,4 @@
+import Layout from "@/layout/Layout";
 import useLoginContext from "@/store/login/useLoginContext";
 import { isAuthenticated } from "@/utils/tokenhelpers";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
@@ -15,7 +16,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ roles }) => {
     if (!isAuthenticated()) {
         return <Navigate to="/" state={{ prevUrl: location.pathname }} />;
     } else if (isAuthenticated()) {
-        return <></>;
+        return <Layout />;
     }
 
     if (!roles.includes(roleId) && zIsAuthenticated && isAuthenticated()) {
