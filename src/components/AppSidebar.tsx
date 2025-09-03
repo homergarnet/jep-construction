@@ -7,6 +7,7 @@ import {
     FolderDot,
     Frame,
     GalleryVerticalEnd,
+    GitPullRequest,
     IdCardLanyard,
     Map,
     MessageCircle,
@@ -95,6 +96,29 @@ const data = {
             title: "Reviews",
             url: "#",
             icon: Stars,
+            // items: [
+            //     {
+            //         title: "Introduction",
+            //         url: "#",
+            //     },
+            //     {
+            //         title: "Get Started",
+            //         url: "#",
+            //     },
+            //     {
+            //         title: "Tutorials",
+            //         url: "#",
+            //     },
+            //     {
+            //         title: "Changelog",
+            //         url: "#",
+            //     },
+            // ],
+        },
+        {
+            title: "Client Request",
+            url: "#",
+            icon: GitPullRequest,
             // items: [
             //     {
             //         title: "Introduction",

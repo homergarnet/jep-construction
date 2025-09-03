@@ -19,6 +19,8 @@ import Reviews from "@/pages/Reviews";
 import Messages from "@/pages/Messages";
 import Inventory from "@/pages/Inventory";
 import EmployeePayslipPage from "@/pages/admin/Employee/EmployeePayslipPage";
+import ClientRequest from "@/pages/admin/ClientRequest";
+import Profile from "@/pages/Profile";
 
 const Page404 = React.lazy(() => import("../pages/Page404"));
 
@@ -32,7 +34,12 @@ const Router = createBrowserRouter(
             {/* <Layout /> */}
             {/* <EmployeeListPage /> */}
             {/* <EmployeeAttendancePage /> */}
-            <EmployeePayslipPage />
+            {/* <EmployeePayslipPage /> */}
+            {/* <ClientRequest /> */}
+            {/* <ProjectManagement /> */}
+            {/* <Reviews /> */}
+            {/* <Inventory /> */}
+            <Profile />
             {/* <HomePage /> */}
             {/* <Login /> */}
           </Suspense>

@@ -11,10 +11,10 @@ type Employee = {
   id: number
   name: string
   position: string,
-  totalHours: number
-  overtimeHours: number
-  ratePerHour: number
-  overtimeRate: number
+  totalHours: number,
+  overtimeHours: number,
+  ratePerHour: number,
+  overtimeRate: number,
   totalPay: number,
 
 }
