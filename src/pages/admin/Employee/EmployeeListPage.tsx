@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input'
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Users } from 'lucide-react'
 import React, { useState } from 'react'
 
 type Employee = {
@@ -82,6 +83,16 @@ const EmployeeListPage = () => {
 
     return (
         <div className="p-6">
+            <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2">
+                    <Users className="h-6 w-6 text-primary" />
+                    Employee List Page
+                </h2>
+                {/* <Button>Export Report</Button> */}
+            </div>
+            <p className="text-muted-foreground mt-1">
+                Track and manage employee records.
+            </p>
             {/* Header with Status Filter, Search + Add Employee */}
             <div className="flex justify-end items-center mb-4 space-x-2">
                 {/* Status Filter */}

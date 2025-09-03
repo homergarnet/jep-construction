@@ -13,11 +13,12 @@ import EmployeeLogin from "@/pages/employee/Login";
 
 import EmployeeListPage from "@/pages/admin/Employee/EmployeeListPage";
 import EmployeeAttendancePage from "@/pages/admin/Employee/EmployeeAttendancePage";
-import PayslipPage from "@/pages/admin/Employee/PayslipPage";
+import PayslipPage from "@/pages/admin/Employee/EmployeePayslipPage";
 import ProjectManagement from "@/pages/admin/ProjectManagement";
 import Reviews from "@/pages/Reviews";
 import Messages from "@/pages/Messages";
 import Inventory from "@/pages/Inventory";
+import EmployeePayslipPage from "@/pages/admin/Employee/EmployeePayslipPage";
 
 const Page404 = React.lazy(() => import("../pages/Page404"));
 
@@ -29,7 +30,9 @@ const Router = createBrowserRouter(
         element={
           <Suspense fallback={<div>Loading...</div>}>
             {/* <Layout /> */}
-            <EmployeeListPage />
+            {/* <EmployeeListPage /> */}
+            {/* <EmployeeAttendancePage /> */}
+            <EmployeePayslipPage />
             {/* <HomePage /> */}
             {/* <Login /> */}
           </Suspense>
