@@ -16,7 +16,7 @@ import EmployeeAttendancePage from "@/pages/admin/Employee/EmployeeAttendancePag
 import PayslipPage from "@/pages/admin/Employee/EmployeePayslipPage";
 import ProjectManagement from "@/pages/admin/ProjectManagement";
 import Reviews from "@/pages/Reviews";
-import Messages from "@/pages/Messages";
+import Messages from "@/pages/Messenger/Messages";
 import Inventory from "@/pages/Inventory";
 import EmployeePayslipPage from "@/pages/admin/Employee/EmployeePayslipPage";
 import ClientRequest from "@/pages/admin/ClientRequest";
@@ -39,7 +39,8 @@ const Router = createBrowserRouter(
             {/* <ProjectManagement /> */}
             {/* <Reviews /> */}
             {/* <Inventory /> */}
-            <Profile />
+            {/* <Profile /> */}
+            <Messages />
             {/* <HomePage /> */}
             {/* <Login /> */}
           </Suspense>
