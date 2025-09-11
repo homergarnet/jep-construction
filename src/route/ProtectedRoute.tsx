@@ -1,6 +1,7 @@
 import Layout from "@/layout/Layout";
 import useLoginContext from "@/store/login/useLoginContext";
 import type { MyTokenPayload } from "@/types/token";
+import { getRoleId } from "@/utils/getJwtRoleId";
 import { isAuthenticated } from "@/utils/tokenhelpers";
 import { jwtDecode } from "jwt-decode";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
@@ -12,19 +13,9 @@ interface ProtectedRouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ roles }) => {
 
     const location = useLocation();
-    const token = localStorage.getItem("authToken");
     // default roleId to "0" if no token
-    let roleId = "0";
+    const roleId = getRoleId();
 
-    if (token) {
-        try {
-            const decodedToken = jwtDecode<MyTokenPayload>(token);
-            roleId = decodedToken?.RoleId ?? "0";
-        } catch (err) {
-            console.error("Invalid token:", err);
-            roleId = "0";
-        }
-    }
     if (!isAuthenticated()) {
         return <Navigate to="/" state={{ prevUrl: location.pathname }} />;
     }

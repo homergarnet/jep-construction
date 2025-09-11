@@ -22,6 +22,8 @@ import Inventory from "@/pages/Inventory";
 import EmployeePayslipPage from "@/pages/admin/Employee/EmployeePayslipPage";
 import ClientRequest from "@/pages/admin/ClientRequest";
 import Profile from "@/pages/Profile";
+import MyProjects from "@/pages/client/MyProjects";
+import Feedback from "@/pages/client/Feedback";
 
 const Page404 = React.lazy(() => import("../pages/Page404"));
 
@@ -161,10 +163,50 @@ const Router = createBrowserRouter(
       {/* Protected routes for role 3 */}
       <Route element={<ProtectedRoute roles={[3]} />}>
         <Route
-          path="client/home"
+          path="client/my-projects"
           element={
             <Suspense fallback={<div>Loading...</div>}>
-              <Page404 />
+              <MyProjects />
+            </Suspense>
+          }
+        />
+        <Route
+          path="client/inventory"
+          element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <Inventory />
+            </Suspense>
+          }
+        />
+        <Route
+          path="client/messages"
+          element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <Messages />
+            </Suspense>
+          }
+        />
+        <Route
+          path="client/feedback"
+          element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <Feedback />
+            </Suspense>
+          }
+        />
+        <Route
+          path="client/feedback"
+          element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <Profile />
+            </Suspense>
+          }
+        />
+        <Route
+          path="client/profile"
+          element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <Profile />
             </Suspense>
           }
         />

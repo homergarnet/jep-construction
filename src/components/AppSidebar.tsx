@@ -29,8 +29,11 @@ import TeamSwitcher from "./TeamSwitcher"
 import NavMain from "./NavMain"
 import logo from "@/assets/logo.jpg";
 import { adminSidebar } from "@/constants/adminSideBar";
+import { getRoleId } from "@/utils/getJwtRoleId";
+import { clientSidebar } from "@/constants/clientSidebar";
 // This is sample data.
-const data = adminSidebar;
+const roleId = getRoleId();
+const data = roleId === "1" ? adminSidebar : roleId === "2" ? adminSidebar : clientSidebar;
 
 const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
     return (
