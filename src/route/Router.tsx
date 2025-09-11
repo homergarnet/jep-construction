@@ -24,6 +24,8 @@ import ClientRequest from "@/pages/admin/ClientRequest";
 import Profile from "@/pages/Profile";
 import MyProjects from "@/pages/client/MyProjects";
 import Feedback from "@/pages/client/Feedback";
+import InOut from "@/pages/employee/InOut";
+import InOutList from "@/pages/employee/InOutList";
 
 const Page404 = React.lazy(() => import("../pages/Page404"));
 
@@ -152,10 +154,26 @@ const Router = createBrowserRouter(
       {/* Protected routes for role 2 */}
       <Route element={<ProtectedRoute roles={[2]} />}>
         <Route
-          path="employee/home"
+          path="employee/in-out"
           element={
             <Suspense fallback={<div>Loading...</div>}>
-              <Page404 />
+              <InOut />
+            </Suspense>
+          }
+        />
+        <Route
+          path="employee/in-out-list"
+          element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <InOutList />
+            </Suspense>
+          }
+        />
+        <Route
+          path="employee/profile"
+          element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <Profile />
             </Suspense>
           }
         />
