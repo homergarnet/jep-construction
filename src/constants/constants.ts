@@ -100,3 +100,5 @@ export const UPDATE_SKU = "Update SKU";
 export const DELETE_SKU = "Delete SKU";
 export const UPDATED_SKU_MESSAGE = "SKU updated successfully";
 export const DELETED_SKU_MESSAGE = "SKU deleted successfully";
+
+export const BRANCH_DEPLOYED = "test branch";

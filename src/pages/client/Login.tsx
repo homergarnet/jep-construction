@@ -18,10 +18,6 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useLogin } from "@/hooks/useAuth";
-import type { LoginPayload } from "@/types/auth";
-import useSharedStore from "@/store/sharedStore";
-import { useNavigate } from "react-router-dom";
 
 // ✅ Schema for validation
 const loginSchema = z.object({
@@ -33,7 +29,6 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 const Login = () => {
 
-    const zSetLoading = useSharedStore((state) => state.zSetLoading);
 
     const form = useForm<LoginFormValues>({
         resolver: zodResolver(loginSchema),
@@ -43,38 +38,16 @@ const Login = () => {
         },
     });
 
-    const login = useLogin();
-    const navigate = useNavigate();
     const onSubmit = (values: LoginFormValues) => {
-
-        const payload: LoginPayload = {
-            Email: values.email,
-            Password: values.password,
-            UserType: "admin", // or whatever your API expects
-        };
-
-        login.mutate(payload, {
-
-            onSuccess: () => {
-                // alert("Login successful!");
-                navigate("/admin/employee-list");
-                zSetLoading(false)
-            },
-            onError: (error) => {
-                // alert((error as Error).message);
-            },
-        });
-
-    };
-
-    login.isPending ? zSetLoading(true) : zSetLoading(false);
+        console.log("Login data:", values);
+    }
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-gray-100 dark:bg-gray-900 px-4">
             <Card className="w-full max-w-md shadow-lg rounded-2xl">
                 <CardHeader>
                     <CardTitle className="text-center text-2xl font-bold">
-                        Admin Login
+                        Client Login
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -118,25 +91,21 @@ const Login = () => {
                                 )}
                             />
 
-                            <Button
-                                type="submit"
-                                className="w-full"
-                                disabled={login.isPending}
-                            >
-                                {login.isPending ? "Logging in..." : "Login"}
+                            <Button type="submit" className="w-full">
+                                Login
                             </Button>
-
-                            {login.error && (
-                                <p className="text-sm text-red-500 text-center">
-                                    {(login.error as Error).message}
-                                </p>
-                            )}
                         </form>
                     </Form>
                 </CardContent>
+                {/* <CardFooter className="text-sm text-center text-gray-500 dark:text-gray-400">
+                    Don’t have an account?{" "}
+                    <a href="/register" className="text-blue-500 hover:underline ml-1">
+                        Register
+                    </a>
+                </CardFooter> */}
             </Card>
         </div>
     );
-};
+}
 
-export default Login;
+export default Login

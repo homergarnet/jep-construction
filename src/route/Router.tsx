@@ -10,6 +10,7 @@ import Layout from "@/layout/Layout";
 import HomePage from "@/pages/HomePage";
 import Login from "@/pages/admin/Login";
 import EmployeeLogin from "@/pages/employee/Login";
+import ClientLogin from "@/pages/client/Login";
 
 import EmployeeListPage from "@/pages/admin/Employee/EmployeeListPage";
 import EmployeeAttendancePage from "@/pages/admin/Employee/EmployeeAttendancePage";
@@ -40,8 +41,8 @@ const Router = createBrowserRouter(
             {/* <Reviews /> */}
             {/* <Inventory /> */}
             {/* <Profile /> */}
-            <Messages />
-            {/* <HomePage /> */}
+            {/* <Messages /> */}
+            <HomePage />
             {/* <Login /> */}
           </Suspense>
         }
@@ -50,13 +51,26 @@ const Router = createBrowserRouter(
         path="admin/login"
         element={
           <Suspense fallback={<div>Loading...</div>}>
-            {/* <Layout /> */}
-            {/* <HomePage /> */}
             <Login />
           </Suspense>
         }
       />
-
+      <Route
+        path="employee/login"
+        element={
+          <Suspense fallback={<div>Loading...</div>}>
+            <EmployeeLogin />
+          </Suspense>
+        }
+      />
+      <Route
+        path="client/login"
+        element={
+          <Suspense fallback={<div>Loading...</div>}>
+            <ClientLogin />
+          </Suspense>
+        }
+      />
       {/* Protected routes for role 1 */}
       <Route element={<ProtectedRoute roles={[1]} />}>
         <Route
@@ -100,6 +114,14 @@ const Router = createBrowserRouter(
           }
         />
         <Route
+          path="admin/client-request"
+          element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <ClientRequest />
+            </Suspense>
+          }
+        />
+        <Route
           path="admin/messages"
           element={
             <Suspense fallback={<div>Loading...</div>}>
@@ -108,10 +130,18 @@ const Router = createBrowserRouter(
           }
         />
         <Route
-          path="admin/profile"
+          path="admin/inventory"
           element={
             <Suspense fallback={<div>Loading...</div>}>
               <Inventory />
+            </Suspense>
+          }
+        />
+        <Route
+          path="admin/profile"
+          element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <Profile />
             </Suspense>
           }
         />
@@ -120,14 +150,24 @@ const Router = createBrowserRouter(
       {/* Protected routes for role 2 */}
       <Route element={<ProtectedRoute roles={[2]} />}>
         <Route
-          path="employee/login"
+          path="employee/home"
           element={
             <Suspense fallback={<div>Loading...</div>}>
-              <EmployeeLogin />
+              <Page404 />
             </Suspense>
           }
         />
-
+      </Route>
+      {/* Protected routes for role 3 */}
+      <Route element={<ProtectedRoute roles={[3]} />}>
+        <Route
+          path="client/home"
+          element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <Page404 />
+            </Suspense>
+          }
+        />
       </Route>
       {/* Catch-all route for 404 */}
       <Route

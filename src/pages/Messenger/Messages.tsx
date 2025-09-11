@@ -304,7 +304,7 @@ const messagesSeed: Record<string, Message[]> = {
             authorId: "u3",
             authorName: "Ken",
             authorAvatar: "https://i.pravatar.cc/100?img=32",
-            imageUrl: "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=1000&q=80",
+            imageUrl: "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=1000&q=802zz",
             text: "Draft banner – thoughts?",
             createdAt: new Date(Date.now() - 1000 * 60 * 39).toISOString(),
             status: "delivered",
@@ -366,11 +366,11 @@ const MessageBubble = ({ msg, isMine }: { msg: Message; isMine: boolean }) => {
                     isMine ? "bg-primary text-primary-foreground" : "bg-muted/50"
                 )}
             >
-                {msg.imageUrl && (
+                {/* {msg.imageUrl && (
                     <a href={msg.imageUrl} target="_blank" rel="noreferrer" className="block overflow-hidden rounded-xl">
                         <img src={msg.imageUrl} alt="attachment" className="max-h-64 w-full object-cover" />
                     </a>
-                )}
+                )} */}
                 {msg.fileName && (
                     <div className="flex items-center gap-2 text-sm">
                         <FileText className="h-4 w-4" />

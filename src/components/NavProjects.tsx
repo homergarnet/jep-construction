@@ -21,6 +21,7 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from "@/components/ui/sidebar"
+import { Link } from "react-router-dom"
 
 const NavProjects = ({
     projects,
@@ -38,10 +39,10 @@ const NavProjects = ({
         projects.map((item) => (
             <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link to={item.url}>
                         <item.icon />
                         <span>{item.title}</span>
-                    </a>
+                    </Link>
                 </SidebarMenuButton>
                 {/* <DropdownMenu>
                             <DropdownMenuTrigger asChild>
