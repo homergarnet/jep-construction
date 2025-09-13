@@ -19,7 +19,6 @@ import ProjectManagement from "@/pages/admin/ProjectManagement";
 import Reviews from "@/pages/Reviews";
 import Messages from "@/pages/Messenger/Messages";
 import Inventory from "@/pages/Inventory";
-import EmployeePayslipPage from "@/pages/admin/Employee/EmployeePayslipPage";
 import ClientRequest from "@/pages/admin/ClientRequest";
 import Profile from "@/pages/Profile";
 import MyProjects from "@/pages/client/MyProjects";

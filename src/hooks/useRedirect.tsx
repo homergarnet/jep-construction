@@ -6,7 +6,7 @@ import { jwtDecode } from "jwt-decode";
 import useLoginContext from "@/store/login/useLoginContext";
 import { isAuthenticated } from "@/utils/tokenhelpers";
 import { getJwtRoleId } from "@/utils/getJwtRoleId";
-import { ADMIN_ROLE_ID, CLIENT_ROLE_ID } from "@/constants/constants";
+import { ADMIN_ROLE_ID, CLIENT_ROLE_ID, EMPLOYEE_ROLE_ID } from "@/constants/constants";
 
 const useRedirect = () => {
 
@@ -28,7 +28,7 @@ const useRedirect = () => {
           //redirect to order-analyst/home if authenticated else, to the login page
           const redirectUrl =
             location?.state?.prevUrl || isAuthenticated()
-              ? roleId === ADMIN_ROLE_ID ? "/admin/employee-list" : roleId === CLIENT_ROLE_ID ? "/employee/in-out" : "/client/my-projects"
+              ? roleId === ADMIN_ROLE_ID ? "/admin/employee-list" : roleId === EMPLOYEE_ROLE_ID ? "/employee/in-out" : "/client/my-projects"
               : !isAuthenticated() ? "/" : "/unauthorized";
           navigate(redirectUrl);
         }
