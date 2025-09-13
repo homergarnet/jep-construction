@@ -6,26 +6,27 @@ import {
 } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import React from "react";
-import Layout from "@/layout/Layout";
-import HomePage from "@/pages/HomePage";
-import Login from "@/pages/admin/Login";
-import EmployeeLogin from "@/pages/employee/Login";
-import ClientLogin from "@/pages/client/Login";
 
-import EmployeeListPage from "@/pages/admin/Employee/EmployeeListPage";
-import EmployeeAttendancePage from "@/pages/admin/Employee/EmployeeAttendancePage";
-import PayslipPage from "@/pages/admin/Employee/EmployeePayslipPage";
-import ProjectManagement from "@/pages/admin/ProjectManagement";
-import Reviews from "@/pages/Reviews";
-import Messages from "@/pages/Messenger/Messages";
-import Inventory from "@/pages/Inventory";
-import ClientRequest from "@/pages/admin/ClientRequest";
-import Profile from "@/pages/Profile";
-import MyProjects from "@/pages/client/MyProjects";
-import Feedback from "@/pages/client/Feedback";
-import InOut from "@/pages/employee/InOut";
+
 import InOutList from "@/pages/employee/InOutList";
 
+const HomePage = React.lazy(() => import("../pages/HomePage"));
+const Login = React.lazy(() => import("../pages/admin/Login"));
+const EmployeeLogin = React.lazy(() => import("../pages/employee/Login"));
+const EmployeeListPage = React.lazy(() => import("../pages/admin/Employee/EmployeeListPage"));
+const EmployeeAttendancePage = React.lazy(() => import("../pages/admin/Employee/EmployeeAttendancePage"));
+const ClientLogin = React.lazy(() => import("../pages/client/Login"));
+const PayslipPage = React.lazy(() => import("../pages/admin/Employee/EmployeePayslipPage"));
+const ProjectManagement = React.lazy(() => import("../pages/admin/ProjectManagement"));
+const Reviews = React.lazy(() => import("../pages/Reviews"));
+const Messages = React.lazy(() => import("../pages/Messenger/Messages"));
+const Inventory = React.lazy(() => import("../pages/Inventory"));
+const ClientRequest = React.lazy(() => import("../pages/admin/ClientRequest"));
+const Profile = React.lazy(() => import("../pages/Profile"));
+const MyProjects = React.lazy(() => import("../pages/client/MyProjects"));
+const Feedback = React.lazy(() => import("../pages/client/Feedback"));
+const In = React.lazy(() => import("../pages/employee/In"));
+const EmployeeOut = React.lazy(() => import("../pages/employee/Out"));
 const Page404 = React.lazy(() => import("../pages/Page404"));
 
 const Router = createBrowserRouter(
@@ -153,10 +154,18 @@ const Router = createBrowserRouter(
       {/* Protected routes for role 2 */}
       <Route element={<ProtectedRoute roles={[2]} />}>
         <Route
-          path="employee/in-out"
+          path="employee/in"
           element={
             <Suspense fallback={<div>Loading...</div>}>
-              <InOut />
+              <In />
+            </Suspense>
+          }
+        />
+        <Route
+          path="employee/out"
+          element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <EmployeeOut />
             </Suspense>
           }
         />

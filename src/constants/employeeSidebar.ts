@@ -9,6 +9,7 @@ import {
   MessageCircle,
   SquaresExclude,
   UserPen,
+  Flag,
 } from "lucide-react";
 
 export const employeeSidebar = {
@@ -38,17 +39,18 @@ export const employeeSidebar = {
     {
       title: "Attendance",
       url: "#",
-      icon: IdCardLanyard,
+      icon: Flag,
       isActive: true,
       items: [
-        { title: "In/Out", url: "/employee/in-out" },
+        { title: "In", url: "/employee/in" },
+        { title: "Out", url: "/employee/out" },
         { title: "List", url: "/employee/in-out-list" },
       ],
     },
     {
       title: "Profile",
       url: "/employee/profile",
-      icon: FolderDot,
+      icon: UserPen,
     },
   ],
 };

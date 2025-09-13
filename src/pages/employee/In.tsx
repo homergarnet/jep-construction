@@ -1,11 +1,11 @@
 import React from 'react'
 
-const InOut = () => {
+const In = () => {
   return (
     <div>
-      In Out
+      In
     </div>
   )
 }
 
-export default InOut
+export default In
