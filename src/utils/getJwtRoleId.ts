@@ -1,7 +1,7 @@
 import type { MyTokenPayload } from "@/types/token";
 import { jwtDecode } from "jwt-decode";
 
-export function getRoleId(): string {
+export function getJwtRoleId(): string {
   const token = localStorage.getItem("authToken");
   if (!token) return "0";
 

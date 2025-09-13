@@ -100,5 +100,8 @@ export const UPDATE_SKU = "Update SKU";
 export const DELETE_SKU = "Delete SKU";
 export const UPDATED_SKU_MESSAGE = "SKU updated successfully";
 export const DELETED_SKU_MESSAGE = "SKU deleted successfully";
+export const ADMIN_ROLE_ID = "1";
+export const EMPLOYEE_ROLE_ID = "2";
+export const CLIENT_ROLE_ID = "3";
 
 export const BRANCH_DEPLOYED = "test branch";

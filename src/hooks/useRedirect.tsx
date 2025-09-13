@@ -4,17 +4,19 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import { jwtDecode } from "jwt-decode";
 import useLoginContext from "@/store/login/useLoginContext";
+import { isAuthenticated } from "@/utils/tokenhelpers";
+import { getJwtRoleId } from "@/utils/getJwtRoleId";
+import { ADMIN_ROLE_ID, CLIENT_ROLE_ID } from "@/constants/constants";
 
 const useRedirect = () => {
 
-  const zJwtToken = useLoginContext((state) => state.zJwtToken);
-  const zIsAuthenticated = useLoginContext((state) => state.zIsAuthenticated);
+  const token = localStorage.getItem("authToken");
   const navigate = useNavigate();
   const location = useLocation();
   useEffect(() => {
-    if (zJwtToken) {
+    if (token) {
       try {
-        const decodedToken = jwtDecode(zJwtToken);
+        const decodedToken = jwtDecode(token);
 
         const isTokenExpired =
           decodedToken &&
@@ -22,18 +24,19 @@ const useRedirect = () => {
           decodedToken.exp * 1000 < Date.now();
 
         if (!isTokenExpired) {
+          const roleId = getJwtRoleId();
           //redirect to order-analyst/home if authenticated else, to the login page
           const redirectUrl =
-            location?.state?.prevUrl || zIsAuthenticated
-              ? "/order-analyst/home"
-              : "/";
+            location?.state?.prevUrl || isAuthenticated()
+              ? roleId === ADMIN_ROLE_ID ? "/admin/employee-list" : roleId === CLIENT_ROLE_ID ? "/employee/in-out" : "/client/my-projects"
+              : !isAuthenticated() ? "/" : "/unauthorized";
           navigate(redirectUrl);
         }
       } catch (err: unknown) {
         console.error("Invalid token:", err);
       }
     }
-  }, [zJwtToken, navigate, location]);
+  }, [navigate, location]);
 };
 
 export default useRedirect;

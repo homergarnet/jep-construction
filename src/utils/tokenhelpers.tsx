@@ -27,22 +27,21 @@ export const isTokenExpired = (token: string): boolean => {
 
 export const isAuthenticated = (): boolean => {
     const token = localStorage.getItem("authToken");
-    const { zSetUserEmailAdd, zSetRoleId } = useSharedStore.getState();
 
     if (token) {
         // console.log("isTokenExpired(token): ", isTokenExpired(token));
         if (isTokenExpired(token)) {
             // Handle token expiration
-            localStorage.removeItem("roleId");
-            localStorage.removeItem("userEmailAdd");
+            // localStorage.removeItem("roleId");
+            // localStorage.removeItem("userEmailAdd");
             localStorage.removeItem("authToken");
             console.warn("Token has expired. User logged out.");
             // Optionally navigate to login page here
             // Example: window.location.href = '/login';
             return false;
         }
-        zSetUserEmailAdd(localStorage.getItem("userEmailAdd") as string);
-        zSetRoleId(localStorage.getItem("roleId") as string);
+        // zSetUserEmailAdd(localStorage.getItem("userEmailAdd") as string);
+        // zSetRoleId(localStorage.getItem("roleId") as string);
         return true; // Token is valid and not expired
     }
 

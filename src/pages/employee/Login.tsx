@@ -22,6 +22,7 @@ import { useLogin } from "@/hooks/useAuth";
 import type { LoginPayload } from "@/types/auth";
 import useSharedStore from "@/store/sharedStore";
 import { useNavigate } from "react-router-dom";
+import useRedirect from "@/hooks/useRedirect";
 
 // ✅ Schema for validation
 const loginSchema = z.object({
@@ -32,7 +33,7 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 const Login = () => {
-
+    useRedirect();
     const zSetLoading = useSharedStore((state) => state.zSetLoading);
 
     const form = useForm<LoginFormValues>({
