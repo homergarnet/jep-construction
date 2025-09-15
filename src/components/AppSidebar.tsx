@@ -34,10 +34,12 @@ import { clientSidebar } from "@/constants/clientSidebar";
 import { employeeSidebar } from "@/constants/employeeSidebar";
 import { ADMIN_ROLE_ID, CLIENT_ROLE_ID, EMPLOYEE_ROLE_ID } from "@/constants/constants";
 // This is sample data.
-const roleId = getJwtRoleId();
-const data = roleId === ADMIN_ROLE_ID ? adminSidebar : roleId === EMPLOYEE_ROLE_ID ? employeeSidebar : clientSidebar;
+
 
 const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
+    const roleId = getJwtRoleId();
+    console.log("roleId:", roleId);
+    const data = roleId === ADMIN_ROLE_ID ? adminSidebar : roleId === EMPLOYEE_ROLE_ID ? employeeSidebar : clientSidebar;
     return (
         <Sidebar collapsible="icon" {...props}>
             <SidebarHeader>
