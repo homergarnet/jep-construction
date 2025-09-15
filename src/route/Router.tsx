@@ -25,8 +25,7 @@ const ClientRequest = React.lazy(() => import("../pages/admin/ClientRequest"));
 const Profile = React.lazy(() => import("../pages/Profile"));
 const MyProjects = React.lazy(() => import("../pages/client/MyProjects"));
 const Feedback = React.lazy(() => import("../pages/client/Feedback"));
-const In = React.lazy(() => import("../pages/employee/In"));
-const EmployeeOut = React.lazy(() => import("../pages/employee/Out"));
+const InOut = React.lazy(() => import("../pages/employee/InOut"));
 const Page404 = React.lazy(() => import("../pages/Page404"));
 
 const Router = createBrowserRouter(
@@ -154,18 +153,10 @@ const Router = createBrowserRouter(
       {/* Protected routes for role 2 */}
       <Route element={<ProtectedRoute roles={[2]} />}>
         <Route
-          path="employee/in"
+          path="employee/in-out"
           element={
             <Suspense fallback={<div>Loading...</div>}>
-              <In />
-            </Suspense>
-          }
-        />
-        <Route
-          path="employee/out"
-          element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <EmployeeOut />
+              <InOut />
             </Suspense>
           }
         />

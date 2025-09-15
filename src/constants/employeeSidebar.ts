@@ -42,8 +42,7 @@ export const employeeSidebar = {
       icon: Flag,
       isActive: true,
       items: [
-        { title: "In", url: "/employee/in" },
-        { title: "Out", url: "/employee/out" },
+        { title: "In / Out", url: "/employee/in-out" },
         { title: "List", url: "/employee/in-out-list" },
       ],
     },

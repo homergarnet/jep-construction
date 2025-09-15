@@ -28,7 +28,7 @@ const useRedirect = () => {
           //redirect to order-analyst/home if authenticated else, to the login page
           const redirectUrl =
             location?.state?.prevUrl || isAuthenticated()
-              ? roleId === ADMIN_ROLE_ID ? "/admin/employee-list" : roleId === EMPLOYEE_ROLE_ID ? "/employee/in" : "/client/my-projects"
+              ? roleId === ADMIN_ROLE_ID ? "/admin/employee-list" : roleId === EMPLOYEE_ROLE_ID ? "/employee/in-out" : "/client/my-projects"
               : !isAuthenticated() ? "/" : "/unauthorized";
           navigate(redirectUrl);
         }

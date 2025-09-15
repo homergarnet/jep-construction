@@ -58,7 +58,7 @@ const Login = () => {
 
             onSuccess: () => {
                 // alert("Login successful!");
-                navigate("/employee/in");
+                navigate("/employee/in-out");
                 zSetLoading(false)
             },
             onError: (error) => {
