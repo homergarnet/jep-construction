@@ -17,6 +17,7 @@ const EmployeeListPage = React.lazy(() => import("../pages/admin/Employee/Employ
 const EmployeeAttendancePage = React.lazy(() => import("../pages/admin/Employee/EmployeeAttendancePage"));
 const ClientLogin = React.lazy(() => import("../pages/client/Login"));
 const PayslipPage = React.lazy(() => import("../pages/admin/Employee/EmployeePayslipPage"));
+const ClientInfo = React.lazy(() => import("../pages/admin/ClientInfo"));
 const ProjectManagement = React.lazy(() => import("../pages/admin/ProjectManagement"));
 const Reviews = React.lazy(() => import("../pages/Reviews"));
 const Messages = React.lazy(() => import("../pages/Messenger/Messages"));
@@ -101,6 +102,14 @@ const Router = createBrowserRouter(
           }
         />
         <Route
+          path="admin/client-info"
+          element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <ClientInfo />
+            </Suspense>
+          }
+        />
+        <Route
           path="admin/project-management"
           element={
             <Suspense fallback={<div>Loading...</div>}>
@@ -148,6 +157,7 @@ const Router = createBrowserRouter(
             </Suspense>
           }
         />
+
       </Route>
 
       {/* Protected routes for role 2 */}

@@ -9,6 +9,7 @@ import {
   MessageCircle,
   SquaresExclude,
   UserPen,
+  BadgePlus,
 } from "lucide-react";
 
 export const adminSidebar = {
@@ -45,6 +46,11 @@ export const adminSidebar = {
         { title: "Attendance", url: "/admin/attendance" },
         { title: "Payslip", url: "/admin/payslip" },
       ],
+    },
+    {
+      title: "Client",
+      url: "/admin/client-info",
+      icon: BadgePlus,
     },
     {
       title: "Project Management",
