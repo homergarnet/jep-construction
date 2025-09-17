@@ -10,22 +10,26 @@ import React, { useState } from 'react'
 type Employee = {
     id: number
     employeeNumber: string,
-    name: string
-    contactNumber: string,
+    email: string,
+    firstName: string,
+    lastName: string,
+    mobileNumber: string,
     position: string,
     salary: number,
-    status: string
+    status: string,
+    address: string,
+    dateOfBirth: string,
 }
 
 const initialEmployees: Employee[] = [
-    { id: 1, employeeNumber: "12345", name: "John Doe", contactNumber: "09123456789", position: "Software Engineer", salary: 50000, status: "Employed" },
-    { id: 2, employeeNumber: "12345", name: "John Doe", contactNumber: "09123456789", position: "Software Engineer", salary: 50000, status: "Terminated" },
-    { id: 3, employeeNumber: "12345", name: "John Doe", contactNumber: "09123456789", position: "Software Engineer", salary: 50000, status: "Employed" },
-    { id: 4, employeeNumber: "12345", name: "John Doe", contactNumber: "09123456789", position: "Software Engineer", salary: 50000, status: "Employed" },
-    { id: 5, employeeNumber: "12345", name: "John Doe", contactNumber: "09123456789", position: "Software Engineer", salary: 50000, status: "Employed" },
-    { id: 6, employeeNumber: "12345", name: "John Doe", contactNumber: "09123456789", position: "Software Engineer", salary: 50000, status: "Employed" },
-    { id: 7, employeeNumber: "12345", name: "John Doe", contactNumber: "09123456789", position: "Software Engineer", salary: 50000, status: "Employed" },
-    { id: 8, employeeNumber: "12345", name: "John Doe", contactNumber: "09123456789", position: "Software Engineer", salary: 50000, status: "Employed" },
+    { id: 1, employeeNumber: "12345", email: "myemail@gmail.com", firstName: "John", lastName: "Doe", mobileNumber: "09123456789", position: "Software Engineer", salary: 50000, status: "Employed", address: "Imus", dateOfBirth: "1990-01-01", },
+    { id: 2, employeeNumber: "12345", email: "myemail@gmail.com", firstName: "John", lastName: "Doe", mobileNumber: "09123456789", position: "Software Engineer", salary: 50000, status: "Terminated", address: "Imus", dateOfBirth: "1990-01-01", },
+    { id: 3, employeeNumber: "12345", email: "myemail@gmail.com", firstName: "John", lastName: "Doe", mobileNumber: "09123456789", position: "Software Engineer", salary: 50000, status: "Employed", address: "Imus", dateOfBirth: "1990-01-01", },
+    { id: 4, employeeNumber: "12345", email: "myemail@gmail.com", firstName: "John", lastName: "Doe", mobileNumber: "09123456789", position: "Software Engineer", salary: 50000, status: "Employed", address: "Imus", dateOfBirth: "1990-01-01", },
+    { id: 5, employeeNumber: "12345", email: "myemail@gmail.com", firstName: "John", lastName: "Doe", mobileNumber: "09123456789", position: "Software Engineer", salary: 50000, status: "Employed", address: "Imus", dateOfBirth: "1990-01-01", },
+    { id: 6, employeeNumber: "12345", email: "myemail@gmail.com", firstName: "John", lastName: "Doe", mobileNumber: "09123456789", position: "Software Engineer", salary: 50000, status: "Employed", address: "Imus", dateOfBirth: "1990-01-01", },
+    { id: 7, employeeNumber: "12345", email: "myemail@gmail.com", firstName: "John", lastName: "Doe", mobileNumber: "09123456789", position: "Software Engineer", salary: 50000, status: "Employed", address: "Imus", dateOfBirth: "1990-01-01", },
+    { id: 8, employeeNumber: "12345", email: "myemail@gmail.com", firstName: "John", lastName: "Doe", mobileNumber: "09123456789", position: "Software Engineer", salary: 50000, status: "Employed", address: "Imus", dateOfBirth: "1990-01-01", },
 ]
 
 const EmployeeListPage = () => {
@@ -45,8 +49,8 @@ const EmployeeListPage = () => {
     const filteredEmployees = employees.filter((emp) => {
         const matchesSearch =
             emp.employeeNumber.toLowerCase().includes(search.toLowerCase()) ||
-            emp.name.toLowerCase().includes(search.toLowerCase()) ||
-            emp.contactNumber?.toLowerCase().includes(search.toLowerCase())
+            emp.firstName.toLowerCase().includes(search.toLowerCase()) ||
+            emp.mobileNumber?.toLowerCase().includes(search.toLowerCase())
 
         const matchesStatus =
             statusFilter === "all" ? true : emp.status === statusFilter
@@ -67,11 +71,15 @@ const EmployeeListPage = () => {
         const newEmployee: Employee = {
             id: employees.length + 1,
             employeeNumber: formData.get("employeeNumber")?.toString() || "",
-            name: formData.get("name")?.toString() || "",
-            contactNumber: formData.get("contactNumber")?.toString() || "",
+            email: formData.get("email")?.toString() || "",
+            firstName: formData.get("firstName")?.toString() || "",
+            lastName: formData.get("lastName")?.toString() || "",
+            mobileNumber: formData.get("mobileNumber")?.toString() || "",
             position: formData.get("position")?.toString() || "",
             salary: Number(formData.get("salary")) || 0,
             status: formData.get("status")?.toString() || "active",
+            address: formData.get("address")?.toString() || "",
+            dateOfBirth: formData.get("dateOfBirth")?.toString() || "",
         }
         setEmployees([...employees, newEmployee])
         setIsOpen(false)
@@ -121,22 +129,24 @@ const EmployeeListPage = () => {
                     <DialogTrigger asChild>
                         <Button>Add Employee</Button>
                     </DialogTrigger>
-                    <DialogContent>
+                    <DialogContent className="max-w-lg w-full"> {/* make dialog wider */}
                         <DialogHeader>
                             <DialogTitle>Add Employee</DialogTitle>
                             <DialogDescription>
                                 Fill in the details to add a new employee.
                             </DialogDescription>
                         </DialogHeader>
-                        <form onSubmit={handleAddEmployee} className="space-y-3">
-                            <Input name="employeeNumber" placeholder="Employee Number" required />
-                            <Input name="name" placeholder="Full Name" required />
-                            <Input name="contactNumber" placeholder="Contact Number" required />
-                            <Input name="position" placeholder="Position" required />
-                            <Input name="salary" type="number" placeholder="Salary" required />
+
+                        <form onSubmit={handleAddEmployee} className="space-y-3 w-full">
+                            <Input name="email" placeholder="Email" required className="w-full" />
+                            <Input name="firstName" placeholder="First Name" required className="w-full" />
+                            <Input name="lastName" placeholder="Last Name" required className="w-full" />
+                            <Input name="mobileNumber" placeholder="Mobile Number" required className="w-full" />
+                            <Input name="position" placeholder="Position" required className="w-full" />
+                            <Input name="salary" type="number" placeholder="Salary" required className="w-full" />
 
                             <Select name="status" defaultValue="active">
-                                <SelectTrigger>
+                                <SelectTrigger className="w-full">
                                     <SelectValue placeholder="Select status" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -145,6 +155,17 @@ const EmployeeListPage = () => {
                                     <SelectItem value="terminated">Terminated</SelectItem>
                                 </SelectContent>
                             </Select>
+
+                            <Input name="address" type="text" placeholder="Address" required className="w-full" />
+                            <div className="flex flex-col space-y-1">
+                                <label className="text-sm font-medium">Birthdate</label>
+                                <Input
+                                    name="birthDate"
+                                    type="date"
+                                    required
+                                    className="w-full text-left [color-scheme:light] appearance-none"
+                                />
+                            </div>
 
                             <Button type="submit" className="w-full">
                                 Save
@@ -160,11 +181,15 @@ const EmployeeListPage = () => {
                 <TableHeader>
                     <TableRow>
                         <TableHead>Employee Number</TableHead>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Contact Number</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>First Name</TableHead>
+                        <TableHead>Last Name</TableHead>
+                        <TableHead>Mobile Number</TableHead>
                         <TableHead>Position</TableHead>
                         <TableHead>Salary</TableHead>
                         <TableHead>Status</TableHead>
+                        <TableHead>Address</TableHead>
+                        <TableHead>Date Of Birth</TableHead>
                         <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                 </TableHeader>
@@ -172,11 +197,15 @@ const EmployeeListPage = () => {
                     {paginatedEmployees.map((emp) => (
                         <TableRow key={emp.id}>
                             <TableCell>{emp.employeeNumber}</TableCell>
-                            <TableCell>{emp.name}</TableCell>
-                            <TableCell>{emp.contactNumber}</TableCell>
+                            <TableCell>{emp.email}</TableCell>
+                            <TableCell>{emp.firstName}</TableCell>
+                            <TableCell>{emp.lastName}</TableCell>
+                            <TableCell>{emp.mobileNumber}</TableCell>
                             <TableCell>{emp.position}</TableCell>
                             <TableCell>{emp.salary}</TableCell>
                             <TableCell>{emp.status}</TableCell>
+                            <TableCell>{emp.address}</TableCell>
+                            <TableCell>{emp.dateOfBirth}</TableCell>
                             <TableCell className="text-right space-x-2">
                                 <Button variant="outline" size="sm">
                                     Edit
