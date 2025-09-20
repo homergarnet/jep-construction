@@ -62,11 +62,6 @@ export const clientSidebar = {
       icon: MessageCircle,
     },
     {
-      title: "Reviews",
-      url: "/client/feedback",
-      icon: Stars,
-    },
-    {
       title: "Profile",
       url: "/client/profile",
       icon: UserPen,
