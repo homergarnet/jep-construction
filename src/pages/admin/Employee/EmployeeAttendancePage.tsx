@@ -13,19 +13,17 @@ type Employee = {
   name: string
   timeIn: string,
   timeOut: string,
-  overtimeHours: string,
-  absent: string,
 }
 
 const initialEmployees: Employee[] = [
-  { id: 1, employeeNumber: "12345", name: "John Doe", timeIn: "09:40AM", timeOut: "05:20PM", overtimeHours: "2.5", absent: "No" },
-  { id: 2, employeeNumber: "12345", name: "John Doe", timeIn: "09:40AM", timeOut: "05:20PM", overtimeHours: "2.5", absent: "No" },
-  { id: 3, employeeNumber: "12345", name: "John Doe", timeIn: "09:40AM", timeOut: "05:20PM", overtimeHours: "2.5", absent: "No" },
-  { id: 4, employeeNumber: "12345", name: "John Doe", timeIn: "09:40AM", timeOut: "05:20PM", overtimeHours: "2.5", absent: "No" },
-  { id: 5, employeeNumber: "12345", name: "John Doe", timeIn: "09:40AM", timeOut: "05:20PM", overtimeHours: "2.5", absent: "No" },
-  { id: 6, employeeNumber: "12345", name: "John Doe", timeIn: "09:40AM", timeOut: "05:20PM", overtimeHours: "2.5", absent: "No" },
-  { id: 7, employeeNumber: "12345", name: "John Doe", timeIn: "09:40AM", timeOut: "05:20PM", overtimeHours: "2.5", absent: "No" },
-  { id: 8, employeeNumber: "12345", name: "John Doe", timeIn: "09:40AM", timeOut: "05:20PM", overtimeHours: "2.5", absent: "No" },
+  { id: 1, employeeNumber: "12345", name: "John Doe", timeIn: "09:40AM", timeOut: "05:20PM"},
+  { id: 2, employeeNumber: "12345", name: "John Doe", timeIn: "09:40AM", timeOut: "05:20PM"},
+  { id: 3, employeeNumber: "12345", name: "John Doe", timeIn: "09:40AM", timeOut: "05:20PM"},
+  { id: 4, employeeNumber: "12345", name: "John Doe", timeIn: "09:40AM", timeOut: "05:20PM"},
+  { id: 5, employeeNumber: "12345", name: "John Doe", timeIn: "09:40AM", timeOut: "05:20PM"},
+  { id: 6, employeeNumber: "12345", name: "John Doe", timeIn: "09:40AM", timeOut: "05:20PM"},
+  { id: 7, employeeNumber: "12345", name: "John Doe", timeIn: "09:40AM", timeOut: "05:20PM"},
+  { id: 8, employeeNumber: "12345", name: "John Doe", timeIn: "09:40AM", timeOut: "05:20PM"},
 ]
 const EmployeeAttendancePage = () => {
 
@@ -89,8 +87,6 @@ const EmployeeAttendancePage = () => {
             <TableHead>Name</TableHead>
             <TableHead>Time In</TableHead>
             <TableHead>Time Out</TableHead>
-            <TableHead>Overtime Hours</TableHead>
-            <TableHead>Absent</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -101,8 +97,6 @@ const EmployeeAttendancePage = () => {
               <TableCell>{emp.name}</TableCell>
               <TableCell>{emp.timeIn}</TableCell>
               <TableCell>{emp.timeOut}</TableCell>
-              <TableCell>{emp.overtimeHours}</TableCell>
-              <TableCell>{emp.absent}</TableCell>
               <TableCell className="text-right space-x-2">
                 <Button variant="outline" size="sm">
                   Edit

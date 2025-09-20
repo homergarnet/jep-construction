@@ -11,8 +11,8 @@ type Client = {
     id: number
     employeeNumber: string,
     email: string,
-    firstName: string,
-    lastName: string,
+    firstname: string,
+    lastname: string,
     mobileNumber: string,
     status: string,
     address: string,
@@ -20,14 +20,14 @@ type Client = {
 }
 
 const initialEmployees: Client[] = [
-    { id: 1, employeeNumber: "12345", email: "myemail@gmail.com", firstName: "John", lastName: "Doe", mobileNumber: "09123456789", status: "active", address: "Imus", dateOfBirth: "1990-01-01", },
-    { id: 2, employeeNumber: "12345", email: "myemail@gmail.com", firstName: "John", lastName: "Doe", mobileNumber: "09123456789", status: "inactive", address: "Imus", dateOfBirth: "1990-01-01", },
-    { id: 3, employeeNumber: "12345", email: "myemail@gmail.com", firstName: "John", lastName: "Doe", mobileNumber: "09123456789", status: "active", address: "Imus", dateOfBirth: "1990-01-01", },
-    { id: 4, employeeNumber: "12345", email: "myemail@gmail.com", firstName: "John", lastName: "Doe", mobileNumber: "09123456789", status: "inactive", address: "Imus", dateOfBirth: "1990-01-01", },
-    { id: 5, employeeNumber: "12345", email: "myemail@gmail.com", firstName: "John", lastName: "Doe", mobileNumber: "09123456789", status: "active", address: "Imus", dateOfBirth: "1990-01-01", },
-    { id: 6, employeeNumber: "12345", email: "myemail@gmail.com", firstName: "John", lastName: "Doe", mobileNumber: "09123456789", status: "inactive", address: "Imus", dateOfBirth: "1990-01-01", },
-    { id: 7, employeeNumber: "12345", email: "myemail@gmail.com", firstName: "John", lastName: "Doe", mobileNumber: "09123456789", status: "active", address: "Imus", dateOfBirth: "1990-01-01", },
-    { id: 8, employeeNumber: "12345", email: "myemail@gmail.com", firstName: "John", lastName: "Doe", mobileNumber: "09123456789", status: "inactive", address: "Imus", dateOfBirth: "1990-01-01", },
+    { id: 1, employeeNumber: "12345", email: "myemail@gmail.com", firstname: "John", lastname: "Doe", mobileNumber: "09123456789", status: "active", address: "Imus", dateOfBirth: "1990-01-01", },
+    { id: 2, employeeNumber: "12345", email: "myemail@gmail.com", firstname: "John", lastname: "Doe", mobileNumber: "09123456789", status: "inactive", address: "Imus", dateOfBirth: "1990-01-01", },
+    { id: 3, employeeNumber: "12345", email: "myemail@gmail.com", firstname: "John", lastname: "Doe", mobileNumber: "09123456789", status: "active", address: "Imus", dateOfBirth: "1990-01-01", },
+    { id: 4, employeeNumber: "12345", email: "myemail@gmail.com", firstname: "John", lastname: "Doe", mobileNumber: "09123456789", status: "inactive", address: "Imus", dateOfBirth: "1990-01-01", },
+    { id: 5, employeeNumber: "12345", email: "myemail@gmail.com", firstname: "John", lastname: "Doe", mobileNumber: "09123456789", status: "active", address: "Imus", dateOfBirth: "1990-01-01", },
+    { id: 6, employeeNumber: "12345", email: "myemail@gmail.com", firstname: "John", lastname: "Doe", mobileNumber: "09123456789", status: "inactive", address: "Imus", dateOfBirth: "1990-01-01", },
+    { id: 7, employeeNumber: "12345", email: "myemail@gmail.com", firstname: "John", lastname: "Doe", mobileNumber: "09123456789", status: "active", address: "Imus", dateOfBirth: "1990-01-01", },
+    { id: 8, employeeNumber: "12345", email: "myemail@gmail.com", firstname: "John", lastname: "Doe", mobileNumber: "09123456789", status: "inactive", address: "Imus", dateOfBirth: "1990-01-01", },
 ]
 
 const ClientInfo = () => {
@@ -47,7 +47,7 @@ const ClientInfo = () => {
     const filteredEmployees = employees.filter((emp) => {
         const matchesSearch =
             emp.employeeNumber.toLowerCase().includes(search.toLowerCase()) ||
-            emp.firstName.toLowerCase().includes(search.toLowerCase()) ||
+            emp.firstname.toLowerCase().includes(search.toLowerCase()) ||
             emp.mobileNumber?.toLowerCase().includes(search.toLowerCase())
 
         const matchesStatus =
@@ -70,8 +70,8 @@ const ClientInfo = () => {
             id: employees.length + 1,
             employeeNumber: formData.get("employeeNumber")?.toString() || "",
             email: formData.get("email")?.toString() || "",
-            firstName: formData.get("firstName")?.toString() || "",
-            lastName: formData.get("lastName")?.toString() || "",
+            firstname: formData.get("firstname")?.toString() || "",
+            lastname: formData.get("lastname")?.toString() || "",
             mobileNumber: formData.get("mobileNumber")?.toString() || "",
             status: formData.get("status")?.toString() || "active",
             address: formData.get("address")?.toString() || "",
@@ -134,8 +134,8 @@ const ClientInfo = () => {
 
                         <form onSubmit={handleAddEmployee} className="space-y-3 w-full">
                             <Input name="email" placeholder="Email" required className="w-full" />
-                            <Input name="firstName" placeholder="First Name" required className="w-full" />
-                            <Input name="lastName" placeholder="Last Name" required className="w-full" />
+                            <Input name="firstname" placeholder="First Name" required className="w-full" />
+                            <Input name="lastname" placeholder="Last Name" required className="w-full" />
                             <Input name="mobileNumber" placeholder="Mobile Number" required className="w-full" />
                             <Select name="status" defaultValue="active">
                                 <SelectTrigger className="w-full">
@@ -187,8 +187,8 @@ const ClientInfo = () => {
                         <TableRow key={emp.id}>
                             <TableCell>{emp.employeeNumber}</TableCell>
                             <TableCell>{emp.email}</TableCell>
-                            <TableCell>{emp.firstName}</TableCell>
-                            <TableCell>{emp.lastName}</TableCell>
+                            <TableCell>{emp.firstname}</TableCell>
+                            <TableCell>{emp.lastname}</TableCell>
                             <TableCell>{emp.mobileNumber}</TableCell>
                             <TableCell>{emp.status}</TableCell>
                             <TableCell>{emp.address}</TableCell>

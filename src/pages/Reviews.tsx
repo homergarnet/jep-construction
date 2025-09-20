@@ -8,38 +8,41 @@ import { Users } from 'lucide-react'
 import React, { useState } from 'react'
 
 type Reviews = {
-    id: number
-    name: string
+    id: number,
+    projectName: string,
+    clientName: string,
     email: string,
-    message: string,
+    mobileNumber: string,
+    rate: number,
+    reviewDescription: string,
     dateTimeCreated: string,
 
 }
 
 const initialEmployees: Reviews[] = [
     {
-        id: 1, name: "John Doe 2", email: "myemail@gmail.com", message: "my review", dateTimeCreated: "2023-08-01"
+        id: 1, projectName: "Project 1", clientName: "John Doe 2", email: "myemail@gmail.com", mobileNumber: "123456789", rate: 5, reviewDescription: "my review", dateTimeCreated: "2023-08-01"
     },
     {
-        id: 2, name: "John Doe 2", email: "myemail@gmail.com", message: "my review", dateTimeCreated: "2023-08-01"
+        id: 2, projectName: "Project 1", clientName: "John Doe 2", email: "myemail@gmail.com", mobileNumber: "123456789", rate: 5, reviewDescription: "my review", dateTimeCreated: "2023-08-01"
     },
     {
-        id: 3, name: "John Doe 2", email: "myemail@gmail.com", message: "my review", dateTimeCreated: "2023-08-01"
+        id: 3, projectName: "Project 1", clientName: "John Doe 2", email: "myemail@gmail.com", mobileNumber: "123456789", rate: 5, reviewDescription: "my review", dateTimeCreated: "2023-08-01"
     },
     {
-        id: 4, name: "John Doe 2", email: "myemail@gmail.com", message: "my review", dateTimeCreated: "2023-08-01"
+        id: 4, projectName: "Project 1", clientName: "John Doe 2", email: "myemail@gmail.com", mobileNumber: "123456789", rate: 5, reviewDescription: "my review", dateTimeCreated: "2023-08-01"
     },
     {
-        id: 5, name: "John Doe 2", email: "myemail@gmail.com", message: "my review", dateTimeCreated: "2023-08-01"
+        id: 5, projectName: "Project 1", clientName: "John Doe 2", email: "myemail@gmail.com", mobileNumber: "123456789", rate: 5, reviewDescription: "my review", dateTimeCreated: "2023-08-01"
     },
     {
-        id: 6, name: "John Doe 2", email: "myemail@gmail.com", message: "my review", dateTimeCreated: "2023-08-01"
+        id: 6, projectName: "Project 1", clientName: "John Doe 2", email: "myemail@gmail.com", mobileNumber: "123456789", rate: 5, reviewDescription: "my review", dateTimeCreated: "2023-08-01"
     },
     {
-        id: 7, name: "John Doe 2", email: "myemail@gmail.com", message: "my review", dateTimeCreated: "2023-08-01"
+        id: 7, projectName: "Project 1", clientName: "John Doe 2", email: "myemail@gmail.com", mobileNumber: "123456789", rate: 5, reviewDescription: "my review", dateTimeCreated: "2023-08-01"
     },
     {
-        id: 8, name: "John Doe 2", email: "myemail@gmail.com", message: "my review", dateTimeCreated: "2023-08-01"
+        id: 8, projectName: "Project 1", clientName: "John Doe 2", email: "myemail@gmail.com", rate: 5, mobileNumber: "123456789", reviewDescription: "my review", dateTimeCreated: "2023-08-01"
     },
 ];
 
@@ -55,7 +58,7 @@ const Reviews = () => {
     // Filtering
     const filteredEmployees = employees.filter((emp) => {
         const matchesSearch =
-            emp.name.toLowerCase().includes(search.toLowerCase()) ||
+            emp.clientName.toLowerCase().includes(search.toLowerCase()) ||
             emp.email?.toLowerCase().includes(search.toLowerCase())
         return matchesSearch
     })
@@ -98,9 +101,12 @@ const Reviews = () => {
                 <TableCaption>A list of employees</TableCaption>
                 <TableHeader>
                     <TableRow>
-                        <TableHead>Name</TableHead>
+                        <TableHead>Project Name</TableHead>
+                        <TableHead>Client Name</TableHead>
                         <TableHead>Email</TableHead>
-                        <TableHead>Message</TableHead>
+                        <TableHead>Mobile Number</TableHead>
+                        <TableHead>Rate</TableHead>
+                        <TableHead>Review</TableHead>
                         <TableHead>Date Time Created</TableHead>
                         <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
@@ -108,14 +114,17 @@ const Reviews = () => {
                 <TableBody>
                     {paginatedEmployees.map((emp) => (
                         <TableRow key={emp.id}>
-                            <TableCell>{emp.name}</TableCell>
+                            <TableCell>{emp.projectName}</TableCell>
+                            <TableCell>{emp.clientName}</TableCell>
                             <TableCell>{emp.email}</TableCell>
-                            <TableCell>{emp.message}</TableCell>
+                            <TableCell>{emp.mobileNumber}</TableCell>
+                            <TableCell>{emp.rate}</TableCell>
+                            <TableCell>{emp.reviewDescription}</TableCell>
                             <TableCell>{emp.dateTimeCreated}</TableCell>
                             <TableCell className="text-right space-x-2">
-                                <Button variant="outline" size="sm">
+                                {/* <Button variant="outline" size="sm">
                                     Edit
-                                </Button>
+                                </Button> */}
                                 <Button
                                     variant="destructive"
                                     size="sm"
