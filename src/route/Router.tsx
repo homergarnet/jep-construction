@@ -25,7 +25,6 @@ const Inventory = React.lazy(() => import("../pages/Inventory"));
 const ClientRequest = React.lazy(() => import("../pages/admin/ClientRequest"));
 const Profile = React.lazy(() => import("../pages/Profile"));
 const MyProjects = React.lazy(() => import("../pages/client/MyProjects"));
-const Feedback = React.lazy(() => import("../pages/client/Feedback"));
 const InOut = React.lazy(() => import("../pages/employee/InOut"));
 const Page404 = React.lazy(() => import("../pages/Page404"));
 
@@ -210,22 +209,6 @@ const Router = createBrowserRouter(
           element={
             <Suspense fallback={<div>Loading...</div>}>
               <Messages />
-            </Suspense>
-          }
-        />
-        <Route
-          path="client/feedback"
-          element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <Feedback />
-            </Suspense>
-          }
-        />
-        <Route
-          path="client/feedback"
-          element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <Profile />
             </Suspense>
           }
         />
