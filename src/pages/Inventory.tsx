@@ -9,19 +9,25 @@ import React, { useState } from 'react'
 
 type Inventory = {
     id: number
-    name: string,
+    clientName: string,
+    itemName: string,
+    category: string,
     quantity: number,
+    unitOfMeasure: string,
+    reOrderLevel: number,
+    reOrderQuantity: number,
+    description: string
 }
 
 const initialInventory: Inventory[] = [
-    { id: 1, name: "Inventory 1", quantity: 10, },
-    { id: 2, name: "Inventory 1", quantity: 10, },
-    { id: 3, name: "Inventory 1", quantity: 10, },
-    { id: 4, name: "Inventory 1", quantity: 10, },
-    { id: 5, name: "Inventory 1", quantity: 10, },
-    { id: 6, name: "Inventory 1", quantity: 10, },
-    { id: 7, name: "Inventory 1", quantity: 10, },
-    { id: 8, name: "Inventory 1", quantity: 10, },
+    { id: 1, clientName: "Client name", itemName: "Inventory 1", category: "Raw Material", quantity: 10, unitOfMeasure: "PCS", reOrderLevel: 2, reOrderQuantity: 8, description: "Description" },
+    { id: 2, clientName: "Client name", itemName: "Inventory 1", category: "Raw Material", quantity: 10, unitOfMeasure: "PCS", reOrderLevel: 2, reOrderQuantity: 8, description: "Description" },
+    { id: 3, clientName: "Client name", itemName: "Inventory 1", category: "Raw Material", quantity: 10, unitOfMeasure: "PCS", reOrderLevel: 2, reOrderQuantity: 8, description: "Description" },
+    { id: 4, clientName: "Client name", itemName: "Inventory 1", category: "Raw Material", quantity: 10, unitOfMeasure: "PCS", reOrderLevel: 2, reOrderQuantity: 8, description: "Description" },
+    { id: 5, clientName: "Client name", itemName: "Inventory 1", category: "Raw Material", quantity: 10, unitOfMeasure: "PCS", reOrderLevel: 2, reOrderQuantity: 8, description: "Description" },
+    { id: 6, clientName: "Client name", itemName: "Inventory 1", category: "Raw Material", quantity: 10, unitOfMeasure: "PCS", reOrderLevel: 2, reOrderQuantity: 8, description: "Description" },
+    { id: 7, clientName: "Client name", itemName: "Inventory 1", category: "Raw Material", quantity: 10, unitOfMeasure: "PCS", reOrderLevel: 2, reOrderQuantity: 8, description: "Description" },
+    { id: 8, clientName: "Client name", itemName: "Inventory 1", category: "Raw Material", quantity: 10, unitOfMeasure: "PCS", reOrderLevel: 2, reOrderQuantity: 8, description: "Description" },
 
 ]
 
@@ -40,7 +46,7 @@ const Inventory = () => {
     // Filtering
     const filteredEmployees = employees.filter((emp) => {
         const matchesSearch =
-            emp.name.toLowerCase().includes(search.toLowerCase())
+            emp.itemName.toLowerCase().includes(search.toLowerCase())
 
         return matchesSearch
     })
@@ -57,8 +63,14 @@ const Inventory = () => {
         const formData = new FormData(event.currentTarget)
         const newEmployee: Inventory = {
             id: employees.length + 1,
-            name: formData.get("name")?.toString() || "",
+            clientName: formData.get("clientName")?.toString() || "",
+            itemName: formData.get("itemName")?.toString() || "",
+            category: formData.get("category")?.toString() || "",
             quantity: Number(formData.get("quantity")) || 0,
+            unitOfMeasure: formData.get("unitOfMeasure")?.toString() || "",
+            reOrderLevel: Number(formData.get("reOrderLevel")) || 0,
+            reOrderQuantity: Number(formData.get("reOrderQuantity")) || 0,
+            description: formData.get("description")?.toString() || "",
         }
         setEmployees([...employees, newEmployee])
         setIsOpen(false)
@@ -103,8 +115,38 @@ const Inventory = () => {
                             </DialogDescription>
                         </DialogHeader>
                         <form onSubmit={handleAddEmployee} className="space-y-3">
-                            <Input name="name" placeholder="Full Name" required />
+                            <Select name="clientName">
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Select client" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="Raw materials">Raw Materials</SelectItem>
+                                    <SelectItem value="Finishing materials">Finishing Materials</SelectItem>
+                                    <SelectItem value="Concrete & masonry">Concrete & Masonry</SelectItem>
+                                    <SelectItem value="Plumbing & electrical">Plumbing & Electrical</SelectItem>
+                                    <SelectItem value="Metal Sheets & plates">Metal Sheets & Plates</SelectItem>
+                                    <SelectItem value="Welding Supplies">Welding Supplies</SelectItem>
+                                </SelectContent>
+                            </Select>
+                            <Input name="itemName" placeholder="Item Name" required />
+                            <Select name="category">
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Select category" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="Raw materials">Raw Materials</SelectItem>
+                                    <SelectItem value="Finishing materials">Finishing Materials</SelectItem>
+                                    <SelectItem value="Concrete & masonry">Concrete & Masonry</SelectItem>
+                                    <SelectItem value="Plumbing & electrical">Plumbing & Electrical</SelectItem>
+                                    <SelectItem value="Metal Sheets & plates">Metal Sheets & Plates</SelectItem>
+                                    <SelectItem value="Welding Supplies">Welding Supplies</SelectItem>
+                                </SelectContent>
+                            </Select>
                             <Input type="number" name="quantity" placeholder="Quantity" required />
+                            <Input name="unitOfMeasure" placeholder="Unit of Measure" required />
+                            <Input name="reOrderLevel" placeholder="Re-Order Level" required />
+                            <Input name="reOrderQuantity" placeholder="Re-Order Quantity" required />
+                            <Input name="descriptionNotes" placeholder="Description/Notes" required />
                             <Button type="submit" className="w-full">
                                 Save
                             </Button>
@@ -119,8 +161,14 @@ const Inventory = () => {
                 <TableHeader>
                     <TableRow>
                         <TableHead>Inventory ID</TableHead>
-                        <TableHead>Name</TableHead>
+                        <TableHead>Client Name</TableHead>
+                        <TableHead>Item Name</TableHead>
+                        <TableHead>Category</TableHead>
                         <TableHead>Quantity</TableHead>
+                        <TableHead>Unit Of Measure</TableHead>
+                        <TableHead>RE-Order Level</TableHead>
+                        <TableHead>RE-Order Quantity</TableHead>
+                        <TableHead>Description/Notes</TableHead>
                         <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                 </TableHeader>
@@ -128,8 +176,14 @@ const Inventory = () => {
                     {paginatedEmployees.map((emp) => (
                         <TableRow key={emp.id}>
                             <TableCell>{emp.id}</TableCell>
-                            <TableCell>{emp.name}</TableCell>
+                            <TableCell>{emp.clientName}</TableCell>
+                            <TableCell>{emp.itemName}</TableCell>
+                            <TableCell>{emp.category}</TableCell>
                             <TableCell>{emp.quantity}</TableCell>
+                            <TableCell>{emp.unitOfMeasure}</TableCell>
+                            <TableCell>{emp.reOrderLevel}</TableCell>
+                            <TableCell>{emp.reOrderQuantity}</TableCell>
+                            <TableCell>{emp.description}</TableCell>
                             <TableCell className="text-right space-x-2">
                                 <Button variant="outline" size="sm">
                                     Edit
