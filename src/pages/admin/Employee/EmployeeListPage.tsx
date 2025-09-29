@@ -1,258 +1,278 @@
-import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Table, TableCaption } from '@/components/ui/table'
 import { Users } from 'lucide-react'
-import React, { useState } from 'react'
-
-type Employee = {
-    id: number
-    employeeNumber: string,
-    email: string,
-    firstname: string,
-    lastname: string,
-    mobileNumber: string,
-    position: string,
-    salary: number,
-    status: string,
-    address: string,
-    dateOfBirth: string,
-}
-
-const initialEmployees: Employee[] = [
-    { id: 1, employeeNumber: "12345", email: "myemail@gmail.com", firstname: "John", lastname: "Doe", mobileNumber: "09123456789", position: "Software Engineer", salary: 50000, status: "Employed", address: "Imus", dateOfBirth: "1990-01-01", },
-    { id: 2, employeeNumber: "12345", email: "myemail@gmail.com", firstname: "John", lastname: "Doe", mobileNumber: "09123456789", position: "Software Engineer", salary: 50000, status: "Terminated", address: "Imus", dateOfBirth: "1990-01-01", },
-    { id: 3, employeeNumber: "12345", email: "myemail@gmail.com", firstname: "John", lastname: "Doe", mobileNumber: "09123456789", position: "Software Engineer", salary: 50000, status: "Employed", address: "Imus", dateOfBirth: "1990-01-01", },
-    { id: 4, employeeNumber: "12345", email: "myemail@gmail.com", firstname: "John", lastname: "Doe", mobileNumber: "09123456789", position: "Software Engineer", salary: 50000, status: "Employed", address: "Imus", dateOfBirth: "1990-01-01", },
-    { id: 5, employeeNumber: "12345", email: "myemail@gmail.com", firstname: "John", lastname: "Doe", mobileNumber: "09123456789", position: "Software Engineer", salary: 50000, status: "Employed", address: "Imus", dateOfBirth: "1990-01-01", },
-    { id: 6, employeeNumber: "12345", email: "myemail@gmail.com", firstname: "John", lastname: "Doe", mobileNumber: "09123456789", position: "Software Engineer", salary: 50000, status: "Employed", address: "Imus", dateOfBirth: "1990-01-01", },
-    { id: 7, employeeNumber: "12345", email: "myemail@gmail.com", firstname: "John", lastname: "Doe", mobileNumber: "09123456789", position: "Software Engineer", salary: 50000, status: "Employed", address: "Imus", dateOfBirth: "1990-01-01", },
-    { id: 8, employeeNumber: "12345", email: "myemail@gmail.com", firstname: "John", lastname: "Doe", mobileNumber: "09123456789", position: "Software Engineer", salary: 50000, status: "Employed", address: "Imus", dateOfBirth: "1990-01-01", },
-]
+import React, { useCallback, useEffect, useState } from 'react'
+import StatusFilter from '../../../components/StatusFilter'
+import EmployeeTblBody from '../../../components/TblBody'
+import TblPagination from '@/components/TblPagination'
+import TblHeader from '@/components/TblHeader'
+import { CREATE_EMPLOYEE, EDIT_EMPLOYEE, employeeColumns, statusOptions } from '@/constants/constants'
+import type { CreateUpdateEmployeeRequest, Employee } from '@/types/employeelist'
+import EmployeeDialog from './components/EmployeeDialog'
+import { employeeListFormSchema, type EmployeeListFormValues } from './schema/employeeListFormSchema'
+import useSwal from '@/hooks/useSwal'
+import { useForm, type FieldErrors } from "react-hook-form";
+import { zodResolver } from '@hookform/resolvers/zod'
+import useEmployeeListContext from '@/store/employeeList/employeeListContext'
+import { Button } from '@/components/ui/button'
+import { useCreateEmployee, useGetEmployeeById, useGetEmployeeList, useRemoveEmployee, useUpdateEmployee } from '@/hooks/useEmployeeList'
+import { debounce } from 'lodash'
+import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 
 const EmployeeListPage = () => {
 
-    const [employees, setEmployees] = React.useState<Employee[]>(initialEmployees)
-    const [search, setSearch] = React.useState("")
-    const [isOpen, setIsOpen] = React.useState(false)
+    const zSetIsOpenDialog = useEmployeeListContext((state) => state.zSetIsOpenDialog);
+    const zDialogTitle = useEmployeeListContext((state) => state.zDialogTitle);
+    const zSetDialogTitle = useEmployeeListContext((state) => state.zSetDialogTitle);
+    const zEmpListAEData = useEmployeeListContext((state) => state.zEmpListAEData);
+    const zSetEmpListAEData = useEmployeeListContext((state) => state.zSetEmpListAEData);
+    const zPage = useEmployeeListContext((state) => state.zPage);
+    const zSetPage = useEmployeeListContext((state) => state.zSetPage);
+    const zPageSize = useEmployeeListContext((state) => state.zPageSize);
+    const zStatusFilter = useEmployeeListContext((state) => state.zStatusFilter);
+    const zSetStatusFilter = useEmployeeListContext((state) => state.zSetStatusFilter);
+    const [empId, setEmpId] = useState(0);
+    const [empIdDupli, setEmpIdDupli] = useState(0);
+    const { showConfirm, showToast } = useSwal();
+    const { confirm, ConfirmDialog } = useConfirmDialog();
+    const createEmployee = useCreateEmployee();
+    const { data: employeeList, isLoading: empListLoading } = useGetEmployeeList({
+        keyword: zStatusFilter,
+        page: zPage,
+        pageSize: zPageSize,
+    });
 
-    // Pagination states
-    const [page, setPage] = React.useState(1)
-    const pageSize = 3
+    const { data: employeeById, isLoading, refetch } = useGetEmployeeById({
+        id: empId,
+    });
 
-    // Status filter
-    const [statusFilter, setStatusFilter] = React.useState<string>("all")
+    const updateEmployee = useUpdateEmployee();
+    const removeEmployee = useRemoveEmployee();
 
-    // Filtering
-    const filteredEmployees = employees.filter((emp) => {
-        const matchesSearch =
-            emp.employeeNumber.toLowerCase().includes(search.toLowerCase()) ||
-            emp.firstname.toLowerCase().includes(search.toLowerCase()) ||
-            emp.mobileNumber?.toLowerCase().includes(search.toLowerCase())
+    const form = useForm<EmployeeListFormValues>({
+        resolver: zodResolver(employeeListFormSchema), // Use Zod for validation
+        defaultValues: {
+            id: undefined,
+            email: "",
+            firstname: "",
+            lastname: "",
+            mobileNumber: "",
+            position: "",
+            salary: 0,
+            status: "",
+            address: "",
+            dateOfBirth: new Date(), // or new Date().toISOString().split("T")[0] if you want today's date
+        },
+        //for validation way choices "onBlur"(When you exit the textbox hover) | "onChange"(When you change the field not recommended performance issue) | "onSubmit" (Default and when user click the button) | "onTouched (on the first load event and every change event)" | "all" (Both change and blur event)
+        mode: "onTouched",
+    });
+    const {
+        register,
+        control,
+        handleSubmit,
+        formState,
+        watch,
+        getValues,
+        setValue,
+        reset,
+        trigger,
+    } = form;
+    const {
+        errors,
+        touchedFields,
+        dirtyFields,
+        isDirty,
+        isValid,
+        isSubmitting,
+        isSubmitted,
+        isSubmitSuccessful,
+        submitCount,
+    } = formState;
 
-        const matchesStatus =
-            statusFilter === "all" ? true : emp.status === statusFilter
+    const totalRecords = employeeList?.TotalRecords ?? 0;
+    const totalPages = Math.ceil(totalRecords / zPageSize);
 
-        return matchesSearch && matchesStatus
-    })
+    const handleSuggested = (value: string) => {
+        console.log("value: ", value);
+        zSetStatusFilter(value);
+    };
 
-    const totalPages = Math.ceil(filteredEmployees.length / pageSize)
+    const debouncedHSOnChange = debounce((value: string) => {
+        handleSuggested(value);
+    }, 1500);
 
-    const paginatedEmployees = filteredEmployees.slice(
-        (page - 1) * pageSize,
-        page * pageSize
+    const handleCreateUpdateEmployeeList = useCallback((type: string, id: number) => {
+        
+        zSetIsOpenDialog(true);
+        zSetDialogTitle(type);
+
+        if (type === EDIT_EMPLOYEE) {
+            setEmpId(id);
+            setEmpIdDupli(id);
+            if (empIdDupli === id) {
+                refetch();
+            }
+
+        }
+    }, [zSetIsOpenDialog, zSetDialogTitle, empIdDupli]);
+
+    const handleStatusChange = useCallback((value: string) => {
+        setValue("status", value, { shouldValidate: true });
+    }, []);
+
+
+    const handleSubmitForm = useCallback(
+        async (data: EmployeeListFormValues) => {
+            console.log("Form submitted ", data)
+            let statusType = zDialogTitle === CREATE_EMPLOYEE ? "Create" : "Edit"
+
+            if (!isValid) return
+
+            try {
+                const ok = await confirm({
+                    title: "You won't be able to revert this!",
+                    description: `Are you sure you want to ${statusType}?`,
+                    confirmLabel: "Yes, Continue",
+                    cancelLabel: "No",
+                })
+
+                if (!ok) return
+
+                let payload: CreateUpdateEmployeeRequest = {
+                    Id: data.id,
+                    Email: data.email,
+                    Firstname: data.firstname,
+                    Lastname: data.lastname,
+                    MobileNumber: data.mobileNumber,
+                    Position: data.position,
+                    Salary: data.salary,
+                    Status: data.status,
+                    Address: data.address,
+                    DateOfBirth: data.dateOfBirth,
+                }
+
+                if (zDialogTitle === CREATE_EMPLOYEE) {
+                    createEmployee.mutate(payload, {
+                        onSuccess: (res) => showToast(res.ApiMessage, "success"),
+                        onError: (error: Error) => showToast(error.message, "error"),
+                    })
+                } else {
+                    updateEmployee.mutate(payload, {
+                        onSuccess: (res) => showToast(res.ApiMessage, "success"),
+                        onError: (error: Error) => showToast(error.message, "error"),
+                    })
+                }
+            } catch (error) {
+                console.error("Failed to submit form", error)
+            }
+        },
+        [zDialogTitle, isValid, confirm]
     )
 
-    const handleAddEmployee = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
-        const formData = new FormData(event.currentTarget)
-        const newEmployee: Employee = {
-            id: employees.length + 1,
-            employeeNumber: formData.get("employeeNumber")?.toString() || "",
-            email: formData.get("email")?.toString() || "",
-            firstname: formData.get("firstname")?.toString() || "",
-            lastname: formData.get("lastname")?.toString() || "",
-            mobileNumber: formData.get("mobileNumber")?.toString() || "",
-            position: formData.get("position")?.toString() || "",
-            salary: Number(formData.get("salary")) || 0,
-            status: formData.get("status")?.toString() || "active",
-            address: formData.get("address")?.toString() || "",
-            dateOfBirth: formData.get("dateOfBirth")?.toString() || "",
-        }
-        setEmployees([...employees, newEmployee])
-        setIsOpen(false)
+    const handleErrorForm = useCallback((errors: FieldErrors<EmployeeListFormValues>) => {
+        console.log("Form Errors: ", errors);
+    }, []);
+
+    const handleResetValue = useCallback(() => {
+        const values: EmployeeListFormValues = {
+            email: "",
+            firstname: "",
+            lastname: "",
+            mobileNumber: "",
+            position: "",
+            salary: 0, // must be a number
+            status: "",
+            address: "",
+            dateOfBirth: new Date(),
+        };
+        reset(values);
+    }, [reset]);
+
+    const handleRemove = async (id: number) => {
+        const ok = await confirm({
+            title: "You won't be able to revert this!",
+            description: `Are you sure you want to remove?`,
+            confirmLabel: "Yes, Continue",
+            cancelLabel: "No",
+        })
+
+        if (!ok) return
+
+        removeEmployee.mutate(id, {
+            onSuccess: (res) => showToast(res.ApiMessage, "success"),
+            onError: (error: Error) => showToast(error.message, "error"),
+        })
     }
 
-    const handleRemove = (id: number) => {
-        setEmployees(employees.filter((emp) => emp.id !== id))
-    }
+    //for update modal fields
+    useEffect(() => {
+        console.log("zEmpListAEData: ", zEmpListAEData);
+        // Update form values when initialValues changes
+        reset(zEmpListAEData);
+
+    }, [zEmpListAEData]);
 
     return (
-        <div className="p-6">
-            <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-                    <Users className="h-6 w-6 text-primary" />
-                    Employee List Page
-                </h2>
-                {/* <Button>Export Report</Button> */}
+        <>
+            <div className="p-6">
+                <div className="flex items-center justify-between">
+                    <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2">
+                        <Users className="h-6 w-6 text-primary" />
+                        Employee List Page
+                    </h2>
+                    {/* <Button>Export Report</Button> */}
+                </div>
+                <p className="text-muted-foreground mt-1">
+                    Track and manage employee records.
+                </p>
+                {/* Header with Status Filter, Search + Add Employee */}
+                <div className="flex justify-end items-center mb-4 space-x-2">
+                    {/* Status Filter */}
+                    <StatusFilter
+                        value={zStatusFilter}
+                        onChange={zSetStatusFilter}
+                        options={statusOptions}
+                        placeholder='Filter by status'
+                    />
+
+                    {/* Search */}
+                    <Input
+                        placeholder="Search employee..."
+                        onChange={(e) => debouncedHSOnChange(e.target.value)} // 👈 extract value
+                        className="w-64"
+                    />
+                    <Button className='cursor-pointer' onClick={(e) => handleCreateUpdateEmployeeList(CREATE_EMPLOYEE, 0)}>{CREATE_EMPLOYEE}</Button>
+                    {/* Add Employee */}
+
+                </div>
+
+                {/* Employee Table */}
+                <Table>
+                    <TableCaption>A list of employees</TableCaption>
+                    <TblHeader columns={employeeColumns} />
+                    <EmployeeTblBody
+                        paginatedEmployees={employeeList?.UserList}
+                        onRemove={handleRemove}
+                        onCreateUpdateEmployeeList={handleCreateUpdateEmployeeList}
+                    />
+                </Table>
+                {/* Pagination */}
+                <div className="flex justify-center mt-4">
+                    <TblPagination
+                        totalPages={totalPages}
+                    />
+                </div>
             </div>
-            <p className="text-muted-foreground mt-1">
-                Track and manage employee records.
-            </p>
-            {/* Header with Status Filter, Search + Add Employee */}
-            <div className="flex justify-end items-center mb-4 space-x-2">
-                {/* Status Filter */}
-                <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="w-[150px]">
-                        <SelectValue placeholder="Filter by Status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="all">All</SelectItem>
-                        <SelectItem value="Employed">Employed</SelectItem>
-                        <SelectItem value="inactive">Inactive</SelectItem>
-                        <SelectItem value="Terminated">Terminated</SelectItem>
-                    </SelectContent>
-                </Select>
-
-                {/* Search */}
-                <Input
-                    placeholder="Search employee..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    className="w-64"
-                />
-
-                {/* Add Employee */}
-                <Dialog open={isOpen} onOpenChange={setIsOpen}>
-                    <DialogTrigger asChild>
-                        <Button>Add Employee</Button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-lg w-full"> {/* make dialog wider */}
-                        <DialogHeader>
-                            <DialogTitle>Add Employee</DialogTitle>
-                            <DialogDescription>
-                                Fill in the details to add a new employee.
-                            </DialogDescription>
-                        </DialogHeader>
-
-                        <form onSubmit={handleAddEmployee} className="space-y-3 w-full">
-                            <Input name="email" placeholder="Email" required className="w-full" />
-                            <Input name="firstname" placeholder="Firstname" required className="w-full" />
-                            <Input name="lastname" placeholder="Lastname" required className="w-full" />
-                            <Input name="mobileNumber" placeholder="Mobile Number" required className="w-full" />
-                            <Input name="position" placeholder="Position" required className="w-full" />
-                            <Input name="salary" type="number" placeholder="Salary" required className="w-full" />
-
-                            <Select name="status" defaultValue="active">
-                                <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select status" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="active">Active</SelectItem>
-                                    <SelectItem value="inactive">Inactive</SelectItem>
-                                    <SelectItem value="terminated">Terminated</SelectItem>
-                                </SelectContent>
-                            </Select>
-
-                            <Input name="address" type="text" placeholder="Address" required className="w-full" />
-                            <div className="flex flex-col space-y-1">
-                                <label className="text-sm font-medium">Birthdate</label>
-                                <Input
-                                    name="birthDate"
-                                    type="date"
-                                    required
-                                    className="w-full text-left [color-scheme:light] appearance-none"
-                                />
-                            </div>
-
-                            <Button type="submit" className="w-full">
-                                Save
-                            </Button>
-                        </form>
-                    </DialogContent>
-                </Dialog>
-            </div>
-
-            {/* Employee Table */}
-            <Table>
-                <TableCaption>A list of employees</TableCaption>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead>Employee Number</TableHead>
-                        <TableHead>Email</TableHead>
-                        <TableHead>Firstname</TableHead>
-                        <TableHead>Lastname</TableHead>
-                        <TableHead>Mobile Number</TableHead>
-                        <TableHead>Position</TableHead>
-                        <TableHead>Salary</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Address</TableHead>
-                        <TableHead>Date Of Birth</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {paginatedEmployees.map((emp) => (
-                        <TableRow key={emp.id}>
-                            <TableCell>{emp.employeeNumber}</TableCell>
-                            <TableCell>{emp.email}</TableCell>
-                            <TableCell>{emp.firstname}</TableCell>
-                            <TableCell>{emp.lastname}</TableCell>
-                            <TableCell>{emp.mobileNumber}</TableCell>
-                            <TableCell>{emp.position}</TableCell>
-                            <TableCell>{emp.salary}</TableCell>
-                            <TableCell>{emp.status}</TableCell>
-                            <TableCell>{emp.address}</TableCell>
-                            <TableCell>{emp.dateOfBirth}</TableCell>
-                            <TableCell className="text-right space-x-2">
-                                <Button variant="outline" size="sm">
-                                    Edit
-                                </Button>
-                                <Button
-                                    variant="destructive"
-                                    size="sm"
-                                    onClick={() => handleRemove(emp.id)}
-                                >
-                                    Remove
-                                </Button>
-                            </TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-
-            {/* Pagination */}
-            <div className="flex justify-center mt-4">
-                <Pagination>
-                    <PaginationContent>
-                        <PaginationItem>
-                            <PaginationPrevious
-                                onClick={() => setPage((p) => Math.max(p - 1, 1))}
-                            />
-                        </PaginationItem>
-
-                        {[...Array(totalPages)].map((_, i) => (
-                            <PaginationItem key={i}>
-                                <PaginationLink
-                                    isActive={page === i + 1}
-                                    onClick={() => setPage(i + 1)}
-                                >
-                                    {i + 1}
-                                </PaginationLink>
-                            </PaginationItem>
-                        ))}
-
-                        <PaginationItem>
-                            <PaginationNext
-                                onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
-                            />
-                        </PaginationItem>
-                    </PaginationContent>
-                </Pagination>
-            </div>
-        </div>
+            <EmployeeDialog
+                onStatusChange={handleStatusChange}
+                onSubmit={handleSubmitForm}
+                onError={handleErrorForm}
+                onReset={handleResetValue}
+                formMethods={form}
+            />
+            {/* Important: must render this once per component */}
+            {ConfirmDialog}
+        </>
     )
 
 
