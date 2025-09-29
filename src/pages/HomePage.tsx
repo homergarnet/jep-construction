@@ -17,7 +17,7 @@ import interior_divider from "@/assets/interior_divider.jpg";
 import trusses_roofing from "@/assets/trusses_roofing.jpg";
 import table_set from "@/assets/table_set.jpg";
 import grils from "@/assets/grils.jpg";
-import GetInTouchForm from './Components/GetInTouchForm';
+import GetInTouchForm from './components/GetInTouchForm';
 
 const HomePage = () => {
     const { theme, setTheme } = useTheme();

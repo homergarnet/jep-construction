@@ -3,7 +3,6 @@ import { toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const useSwal = () => {
-  // Basic alert
   const showAlert = async (
     title: string,
     text: string,
@@ -15,15 +14,16 @@ const useSwal = () => {
       icon,
       confirmButtonText: "OK",
       didOpen: () => {
-        const swalContainer = document.querySelector(
-          ".swal2-container"
-        ) as HTMLElement;
-        swalContainer?.focus(); // Ensure it's an HTMLElement before calling focus()
+        const swalContainer = document.querySelector(".swal2-container") as HTMLElement;
+        console.log("SweetAlert2 container:", swalContainer); // Debug
+        swalContainer?.focus();
+      },
+      customClass: {
+        container: "swal-custom-zindex",
       },
     });
   };
 
-  // Confirmation alert
   const showConfirm = async (
     title: string,
     text: string,
@@ -38,15 +38,16 @@ const useSwal = () => {
       confirmButtonText: confirmText,
       cancelButtonText: cancelText,
       didOpen: () => {
-        const swalContainer = document.querySelector(
-          ".swal2-container"
-        ) as HTMLElement;
-        swalContainer?.focus(); // Ensure it's an HTMLElement before calling focus()
+        const swalContainer = document.querySelector(".swal2-container") as HTMLElement;
+        console.log("SweetAlert2 container:", swalContainer); // Debug
+        swalContainer?.focus();
+      },
+      customClass: {
+        container: "swal-custom-zindex",
       },
     });
   };
 
-  // SweetAlert toast notification
   const showSwalToast = (
     title: string,
     icon: "success" | "error" | "warning" | "info"
@@ -60,15 +61,16 @@ const useSwal = () => {
       timer: 3000,
       timerProgressBar: true,
       didOpen: () => {
-        const swalContainer = document.querySelector(
-          ".swal2-container"
-        ) as HTMLElement;
-        swalContainer?.focus(); // Ensure it's an HTMLElement before calling focus()
+        const swalContainer = document.querySelector(".swal2-container") as HTMLElement;
+        console.log("SweetAlert2 container:", swalContainer); // Debug
+        swalContainer?.focus();
+      },
+      customClass: {
+        container: "swal-custom-zindex",
       },
     });
   };
 
-  // React-Toastify notification
   const showToast = (
     message: string,
     type: "success" | "error" | "warning" | "info"
