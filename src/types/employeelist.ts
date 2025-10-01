@@ -9,20 +9,6 @@ export interface GetEmployeeByIdParams {
   id: number;
 }
 
-// export interface Employee {
-//   id: number;
-//   employeeNumber: string;
-//   email: string;
-//   firstname: string;
-//   lastname: string;
-//   mobileNumber: string;
-//   position: string;
-//   salary: number;
-//   status: string;
-//   address: string;
-//   dateOfBirth: string;
-// }
-
 export interface CreateUpdateEmployeeRequest {
   Id?: number;
   Email: string;

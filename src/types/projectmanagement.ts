@@ -8,20 +8,6 @@ export interface GetProjectManagementByIdParams {
   id: number;
 }
 
-// export interface ProjectManagement {
-//   id: number;
-//   employeeNumber: string;
-//   email: string;
-//   firstname: string;
-//   lastname: string;
-//   mobileNumber: string;
-//   position: string;
-//   salary: number;
-//   status: string;
-//   address: string;
-//   dateOfBirth: string;
-// }
-
 export interface CreateUpdateProjectManagementRequest {
   Id?: number;
   UserId: number;
