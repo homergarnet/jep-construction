@@ -3,7 +3,7 @@ import { Table, TableCaption } from '@/components/ui/table'
 import { Users } from 'lucide-react'
 import React, { useCallback, useEffect, useState } from 'react'
 import StatusFilter from '../../../components/StatusFilter'
-import EmployeeTblBody from '../../../components/TblBody'
+import EmployeeTblBody from './components/EmployeeTblBody'
 import TblPagination from '@/components/TblPagination'
 import TblHeader from '@/components/TblHeader'
 import { CREATE_EMPLOYEE, EDIT_EMPLOYEE, employeeColumns, statusOptions } from '@/constants/constants'
@@ -13,7 +13,7 @@ import { employeeListFormSchema, type EmployeeListFormValues } from './schema/em
 import useSwal from '@/hooks/useSwal'
 import { useForm, type FieldErrors } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod'
-import useEmployeeListContext from '@/store/employeeList/employeeListContext'
+import useEmployeeListContext from '@/store/employee/employeeList/employeeListContext'
 import { Button } from '@/components/ui/button'
 import { useCreateEmployee, useGetEmployeeById, useGetEmployeeList, useRemoveEmployee, useUpdateEmployee } from '@/hooks/useEmployeeList'
 import { debounce } from 'lodash'
@@ -92,13 +92,13 @@ const EmployeeListPage = () => {
     const totalRecords = employeeList?.TotalRecords ?? 0;
     const totalPages = Math.ceil(totalRecords / zPageSize);
 
-    const handleSuggested = (value: string) => {
+    const handleSE = (value: string) => {
         console.log("value: ", value);
         zSetStatusFilter(value);
     };
 
-    const debouncedHSOnChange = debounce((value: string) => {
-        handleSuggested(value);
+    const debouncedHSEnChange = debounce((value: string) => {
+        handleSE(value);
     }, 1500);
 
     const handleCreateUpdateEmployeeList = useCallback((type: string, id: number) => {
@@ -238,7 +238,7 @@ const EmployeeListPage = () => {
                     {/* Search */}
                     <Input
                         placeholder="Search employee..."
-                        onChange={(e) => debouncedHSOnChange(e.target.value)} // 👈 extract value
+                        onChange={(e) => debouncedHSEnChange(e.target.value)} // 👈 extract value
                         className="w-64"
                     />
                     <Button className='cursor-pointer' onClick={(e) => handleCreateUpdateEmployeeList(CREATE_EMPLOYEE, 0)}>{CREATE_EMPLOYEE}</Button>

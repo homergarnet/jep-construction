@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import useEmployeeListContext from '@/store/employeeList/employeeListContext';
+import useEmployeeListContext from '@/store/employee/employeeList/employeeListContext';
 import React from 'react'
 import type { EmployeeListFormValues } from '../schema/employeeListFormSchema';
 import { Controller, FormProvider, type useForm } from 'react-hook-form';

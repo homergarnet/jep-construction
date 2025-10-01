@@ -5,7 +5,7 @@ import type {
   GetEmployeeListParams,
 } from "@/types/employeelist";
 import apiConfig from "./apiConfig";
-import useEmployeeListContext from "@/store/employeeList/employeeListContext";
+import useEmployeeListContext from "@/store/employee/employeeList/employeeListContext";
 import type { EmployeeListFormValues } from "@/pages/admin/employee/schema/employeeListFormSchema";
 
 export const employeeListApi = {

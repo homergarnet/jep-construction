@@ -49,7 +49,7 @@ export const adminSidebar = {
     },
     {
       title: "Client",
-      url: "/admin/client-info",
+      url: "/admin/client-list",
       icon: BadgePlus,
     },
     {

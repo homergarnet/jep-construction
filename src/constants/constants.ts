@@ -67,8 +67,20 @@ export const employeeColumns = [
   { key: "birthDate", label: "Date Of Birth" },
   { key: "actions", label: "Actions", className: "text-right" },
 ];
+
+export const empAttendanceColumns = [
+  { key: "employeeNumber", label: "Employee Number" },
+  { key: "employeeName", label: "Employee Name" },
+  { key: "timeInOut", label: "Time In Out" },
+  { key: "timeInOutType", label: "Time In Out Type" },
+  { key: "timeInOutImage", label: "Time In Out Image" },
+];
+
 export const CREATE_EMPLOYEE = "Create employee";
 export const EDIT_EMPLOYEE = "Edit employee";
+
+export const CREATE_EMP_ATTENDANCE = "Create employee attendance";
+export const EDIT_EMP_ATTENDANCE = "Edit employee attendance";
 export const ADD_SKU = "Add SKU";
 export const UPDATE_SKU = "Update SKU";
 export const DELETE_SKU = "Delete SKU";
