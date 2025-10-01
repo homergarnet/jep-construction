@@ -21,7 +21,7 @@ const ClientListPage = React.lazy(() => import("../pages/admin/ClientListPage"))
 const ProjectManagementPage = React.lazy(() => import("../pages/admin/ProjectManagementPage"));
 const ReviewPage = React.lazy(() => import("../pages/ReviewPage"));
 const Messages = React.lazy(() => import("../pages/Messenger/Messages"));
-const Inventory = React.lazy(() => import("../pages/Inventory"));
+const InventoryPage = React.lazy(() => import("../pages/InventoryPage"));
 const ClientRequestPage = React.lazy(() => import("../pages/admin/ClientRequestPage"));
 const Profile = React.lazy(() => import("../pages/Profile"));
 const MyProjects = React.lazy(() => import("../pages/client/MyProjects"));
@@ -144,7 +144,7 @@ const Router = createBrowserRouter(
           path="admin/inventory"
           element={
             <Suspense fallback={<div>Loading...</div>}>
-              <Inventory />
+              <InventoryPage />
             </Suspense>
           }
         />
@@ -200,7 +200,7 @@ const Router = createBrowserRouter(
           path="client/inventory"
           element={
             <Suspense fallback={<div>Loading...</div>}>
-              <Inventory />
+              <InventoryPage />
             </Suspense>
           }
         />
