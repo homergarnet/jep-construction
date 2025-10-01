@@ -54,6 +54,11 @@ export const statusOptions = [
   { value: "Terminated", label: "Terminated" },
 ];
 
+export const clientListStatusOptions = [
+  { value: "not/a", label: "Select status" }, // 👈 acts like placeholder
+  { value: "inactive", label: "Inactive" },
+];
+
 export const employeeColumns = [
   { key: "employeeNumber", label: "Employee Number" },
   { key: "email", label: "Email" },
@@ -76,11 +81,42 @@ export const empAttendanceColumns = [
   { key: "timeInOutImage", label: "Time In Out Image" },
 ];
 
+export const clientColumns = [
+  { key: "clientNumber", label: "Client Number" },
+  { key: "email", label: "Email" },
+  { key: "firstname", label: "Firstname" },
+  { key: "lastname", label: "Lastname" },
+  { key: "mobileNumber", label: "Mobile Number" },
+  { key: "status", label: "Status" },
+  { key: "address", label: "Address" },
+  { key: "birthDate", label: "Date Of Birth" },
+  { key: "actions", label: "Actions", className: "text-right" },
+];
+
+export const projectManagementColumns = [
+  { key: "projectName", label: "Project Name" },
+  { key: "clientName", label: "Client Name" },
+  { key: "startDate", label: "Start Date" },
+  { key: "endDate", label: "End Date" },
+  { key: "budget", label: "Budget" },
+  { key: "location", label: "Location" },
+  { key: "description", label: "Description" },
+  { key: "completionStatus", label: "Completion Status" },
+  { key: "actions", label: "Actions", className: "text-right" },
+];
+
 export const CREATE_EMPLOYEE = "Create employee";
 export const EDIT_EMPLOYEE = "Edit employee";
 
 export const CREATE_EMP_ATTENDANCE = "Create employee attendance";
 export const EDIT_EMP_ATTENDANCE = "Edit employee attendance";
+
+export const CREATE_CLIENT = "Create client";
+export const EDIT_CLIENT = "Edit client";
+
+export const CREATE_PROJECT_MANAGEMENT = "Create project management";
+export const EDIT_PROJECT_MANAGEMENT = "Edit project management";
+
 export const ADD_SKU = "Add SKU";
 export const UPDATE_SKU = "Update SKU";
 export const DELETE_SKU = "Delete SKU";
@@ -91,3 +127,7 @@ export const EMPLOYEE_ROLE_ID = "2";
 export const CLIENT_ROLE_ID = "3";
 
 export const BRANCH_DEPLOYED = "test branch";
+
+export const EMPLOYEE_TYPE = "employee";
+export const CLIENT_TYPE = "client";
+export const ADMIN_TYPE = "admin";

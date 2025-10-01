@@ -2,39 +2,38 @@ import React from 'react'
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
-import type { UserListDto } from '@/types/employeelist'
-import { formatDateToMMDDYYYY } from '@/utils/formatDateToMMDDYYYY'
-import { EDIT_EMPLOYEE } from '@/constants/constants'
-import { formatNumber } from '@/utils/formatNumber'
 
-type EmployeeTblBodyProps = {
-    paginatedEmployees: UserListDto[] | undefined;
+import { formatDateToMMDDYYYY } from '@/utils/formatDateToMMDDYYYY'
+import { EDIT_CLIENT, EDIT_EMPLOYEE } from '@/constants/constants'
+import { formatNumber } from '@/utils/formatNumber'
+import type { UserListDto } from '@/types/clientlist'
+
+type ClientTblBodyProps = {
+    paginatedClients: UserListDto[] | undefined;
     onRemove: (id: number) => void;
-    onCreateUpdateEmployeeList: (type: string, id: number) => void;
+    onCreateUpdateClientList: (type: string, id: number) => void;
 }
 
-const EmployeeTblBody: React.FC<EmployeeTblBodyProps> = ({
-    paginatedEmployees,
+const ClientTblBody: React.FC<ClientTblBodyProps> = ({
+    paginatedClients,
     onRemove,
-    onCreateUpdateEmployeeList
+    onCreateUpdateClientList
 }) => {
 
     return (
         <TableBody>
-            {paginatedEmployees && paginatedEmployees.map((emp) => (
+            {paginatedClients && paginatedClients.map((emp) => (
                 <TableRow key={emp.Id}>
                     <TableCell>{emp.EmployeeNumber}</TableCell>
                     <TableCell>{emp.Email}</TableCell>
                     <TableCell>{emp.Firstname}</TableCell>
                     <TableCell>{emp.Lastname}</TableCell>
                     <TableCell>{emp.MobileNumber}</TableCell>
-                    <TableCell>{emp.Position}</TableCell>
-                    <TableCell>{formatNumber(emp.Salary)}</TableCell>
                     <TableCell>{emp.Status}</TableCell>
                     <TableCell>{emp.Address}</TableCell>
                     <TableCell>{formatDateToMMDDYYYY(emp.DateOfBirth)}</TableCell>
                     <TableCell className="text-right space-x-2">
-                        <Button className='cursor-pointer' variant="outline" size="sm" onClick={(e) => onCreateUpdateEmployeeList(EDIT_EMPLOYEE, emp.Id)}>
+                        <Button className='cursor-pointer' variant="outline" size="sm" onClick={(e) => onCreateUpdateClientList(EDIT_CLIENT, emp.Id)}>
                             Edit
                         </Button>
                         <Button
@@ -52,4 +51,4 @@ const EmployeeTblBody: React.FC<EmployeeTblBodyProps> = ({
     )
 }
 
-export default EmployeeTblBody
+export default ClientTblBody

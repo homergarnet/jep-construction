@@ -1,18 +1,18 @@
 import type {
-  CreateUpdateEmployeeRequest,
-  EmployeeListResponse,
-  GetEmployeeByIdParams,
-  GetEmployeeListParams,
-} from "@/types/employeelist";
+  CreateUpdateClientRequest,
+  ClientListResponse,
+  GetClientByIdParams,
+  GetClientListParams,
+} from "@/types/clientlist";
 import apiConfig from "./apiConfig";
-import useEmployeeListContext from "@/store/employee/employeeList/employeeListContext";
-import type { EmployeeListFormValues } from "@/pages/admin/employee/schema/employeeListFormSchema";
+import type { ClientListFormValues } from "@/pages/admin/schema/clientListFormSchema";
+import useClientListContext from "@/store/client/clientListContext";
 
-export const employeeListApi = {
-  createEmployee: async (
-    payload: CreateUpdateEmployeeRequest
-  ): Promise<EmployeeListResponse> => {
-    const { data } = await apiConfig.post<EmployeeListResponse>(
+export const clientListApi = {
+  createClient: async (
+    payload: CreateUpdateClientRequest
+  ): Promise<ClientListResponse> => {
+    const { data } = await apiConfig.post<ClientListResponse>(
       "/EmployeeList/create-employee",
       payload
     );
@@ -25,9 +25,9 @@ export const employeeListApi = {
     return data;
   },
 
-  getEmployeeList: async (
-    params: GetEmployeeListParams
-  ): Promise<EmployeeListResponse> => {
+  getClientList: async (
+    params: GetClientListParams
+  ): Promise<ClientListResponse> => {
     const { data } = await apiConfig.get("/EmployeeList/get-employee-list", {
       params,
     });
@@ -39,9 +39,9 @@ export const employeeListApi = {
     return data;
   },
 
-  getEmployeeById: async (
-    params: GetEmployeeByIdParams
-  ): Promise<EmployeeListResponse> => {
+  getClientById: async (
+    params: GetClientByIdParams
+  ): Promise<ClientListResponse> => {
     const { data } = await apiConfig.get("/EmployeeList/get-employee-by-id", {
       params,
     });
@@ -57,9 +57,9 @@ export const employeeListApi = {
       status: data.UserList[0].Status,
       address: data.UserList[0].Address,
       dateOfBirth: data.UserList[0].DateOfBirth.split("T")[0],
-    } as EmployeeListFormValues;
+    } as ClientListFormValues;
 
-    useEmployeeListContext.getState().zSetEmpListAEData(result);
+    useClientListContext.getState().zSetClientListAEData(result);
     if (!data.IsSuccess) {
       throw new Error(data.ApiMessage);
     }
@@ -67,10 +67,10 @@ export const employeeListApi = {
     return data;
   },
 
-  updateEmployee: async (
-    payload: CreateUpdateEmployeeRequest
-  ): Promise<EmployeeListResponse> => {
-    const { data } = await apiConfig.put<EmployeeListResponse>(
+  updateClient: async (
+    payload: CreateUpdateClientRequest
+  ): Promise<ClientListResponse> => {
+    const { data } = await apiConfig.put<ClientListResponse>(
       "/EmployeeList/update-employee",
       payload
     );
@@ -81,8 +81,8 @@ export const employeeListApi = {
     return data;
   },
 
-  removeEmployee: async (id: number): Promise<EmployeeListResponse> => {
-    const { data } = await apiConfig.put<EmployeeListResponse>(
+  removeClient: async (id: number): Promise<ClientListResponse> => {
+    const { data } = await apiConfig.put<ClientListResponse>(
       `/EmployeeList/soft-delete-employee-by-id/${id}`
     );
 

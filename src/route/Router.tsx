@@ -17,8 +17,8 @@ const EmployeeListPage = React.lazy(() => import("../pages/admin/employee/Employ
 const EmployeeAttendancePage = React.lazy(() => import("../pages/admin/employee/EmployeeAttendancePage"));
 const ClientLogin = React.lazy(() => import("../pages/client/Login"));
 const PayslipPage = React.lazy(() => import("../pages/admin/employee/EmployeePayslipPage"));
-const ClientInfo = React.lazy(() => import("../pages/admin/ClientInfo"));
-const ProjectManagement = React.lazy(() => import("../pages/admin/ProjectManagement"));
+const ClientListPage = React.lazy(() => import("../pages/admin/ClientListPage"));
+const ProjectManagementPage = React.lazy(() => import("../pages/admin/ProjectManagementPage"));
 const Reviews = React.lazy(() => import("../pages/Reviews"));
 const Messages = React.lazy(() => import("../pages/Messenger/Messages"));
 const Inventory = React.lazy(() => import("../pages/Inventory"));
@@ -101,10 +101,10 @@ const Router = createBrowserRouter(
           }
         />
         <Route
-          path="admin/client-info"
+          path="admin/client-list"
           element={
             <Suspense fallback={<div>Loading...</div>}>
-              <ClientInfo />
+              <ClientListPage />
             </Suspense>
           }
         />
@@ -112,7 +112,7 @@ const Router = createBrowserRouter(
           path="admin/project-management"
           element={
             <Suspense fallback={<div>Loading...</div>}>
-              <ProjectManagement />
+              <ProjectManagementPage />
             </Suspense>
           }
         />
