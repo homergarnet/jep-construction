@@ -1,0 +1,283 @@
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { useConfirmDialog } from '@/hooks/useConfirmDialog'
+import { useCreateInventory, useGetInventoryById, useGetInventoryList, useRemoveInventory, useUpdateInventory } from '@/hooks/useInventory'
+import useSwal from '@/hooks/useSwal'
+import useInventoryContext from '@/store/inventory/inventoryContext'
+import { Users } from 'lucide-react'
+import React, { useCallback, useEffect, useState } from 'react'
+import { useForm, type FieldErrors } from 'react-hook-form'
+import { inventoryFormSchema, type InventoryFormValues } from './schema/inventoryFormSchema'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { debounce } from 'lodash'
+import { CREATE_INVENTORY, EDIT_INVENTORY, inventoryColumns } from '@/constants/constants'
+import type { CreateUpdateInventoryRequest } from '@/types/inventory'
+import TblHeader from '@/components/TblHeader'
+import InventoryTblBody from './components/InventoryTblBody'
+import TblPagination from '@/components/TblPagination'
+import InventoryDialog from './components/InventoryDialog'
+
+const InventoryPage = () => {
+
+    const zSetIsOpenDialog = useInventoryContext((state) => state.zSetIsOpenDialog);
+    const zDialogTitle = useInventoryContext((state) => state.zDialogTitle);
+    const zSetDialogTitle = useInventoryContext((state) => state.zSetDialogTitle);
+    const zInventoryAEData = useInventoryContext((state) => state.zInventoryAEData);
+    const zSetInventoryAEData = useInventoryContext((state) => state.zSetInventoryAEData);
+    const zPage = useInventoryContext((state) => state.zPage);
+    const zSetPage = useInventoryContext((state) => state.zSetPage);
+    const zPageSize = useInventoryContext((state) => state.zPageSize);
+    const zStatusFilter = useInventoryContext((state) => state.zStatusFilter);
+    const zSetStatusFilter = useInventoryContext((state) => state.zSetStatusFilter);
+    const [inventoryId, setInventoryId] = useState(0);
+    const [inventoryIdDupli, setInventoryIdDupli] = useState(0);
+    const { showConfirm, showToast } = useSwal();
+    const { confirm, ConfirmDialog } = useConfirmDialog();
+    const createInventory = useCreateInventory();
+    const { data: inventoryList, isLoading: inventoryListLoading } = useGetInventoryList({
+        keyword: zStatusFilter,
+        page: zPage,
+        pageSize: zPageSize,
+    });
+
+    const { data: inventoryById, isLoading, refetch } = useGetInventoryById({
+        id: inventoryId,
+    });
+
+    const updateInventory = useUpdateInventory();
+    const removeInventory = useRemoveInventory();
+
+    const form = useForm<InventoryFormValues>({
+        resolver: zodResolver(inventoryFormSchema), // Use Zod for validation
+        defaultValues: {
+            id: undefined,
+            userId: 0,
+            itemName: "",
+            category: "",
+            quantity: 0,
+            unitOfMeasure: "",
+            reOrderLevel: 0,
+            reOrderQuantity: 0,
+            description: "",
+        },
+        //for validation way choices "onBlur"(When you exit the textbox hover) | "onChange"(When you change the field not recommended performance issue) | "onSubmit" (Default and when user click the button) | "onTouched (on the first load event and every change event)" | "all" (Both change and blur event)
+        mode: "onTouched",
+    });
+    const {
+        register,
+        control,
+        handleSubmit,
+        formState,
+        watch,
+        getValues,
+        setValue,
+        reset,
+        trigger,
+    } = form;
+    const {
+        errors,
+        touchedFields,
+        dirtyFields,
+        isDirty,
+        isValid,
+        isSubmitting,
+        isSubmitted,
+        isSubmitSuccessful,
+        submitCount,
+    } = formState;
+
+    const totalRecords = inventoryList?.TotalRecords ?? 0;
+    const totalPages = Math.ceil(totalRecords / zPageSize);
+
+    const handleI = (value: string) => {
+        console.log("value: ", value);
+        zSetStatusFilter(value);
+    };
+
+    const debouncedHIChange = debounce((value: string) => {
+        handleI(value);
+    }, 1500);
+
+    const handleCreateUpdateInventoryList = useCallback((type: string, id: number) => {
+
+        zSetIsOpenDialog(true);
+        zSetDialogTitle(type);
+
+        if (type === EDIT_INVENTORY) {
+            setInventoryId(id);
+            setInventoryIdDupli(id);
+            if (inventoryIdDupli === id) {
+                refetch();
+            }
+
+        }
+    }, [zSetIsOpenDialog, zSetDialogTitle, inventoryIdDupli]);
+
+
+    const handleClientNameChange = useCallback((value: string) => {
+        setValue("userId", parseInt(value), { shouldValidate: true });
+    }, [setValue]);
+
+    const handleCategoryChange = useCallback((value: string) => {
+        setValue("category", value, { shouldValidate: true });
+    }, []);
+
+    const handleSubmitForm = useCallback(
+        async (data: InventoryFormValues) => {
+            console.log("Form submitted ", data)
+            let statusType = zDialogTitle === CREATE_INVENTORY ? "Create" : "Edit"
+
+            if (!isValid) return
+
+            try {
+                const ok = await confirm({
+                    title: "You won't be able to revert this!",
+                    description: `Are you sure you want to ${statusType}?`,
+                    confirmLabel: "Yes, Continue",
+                    cancelLabel: "No",
+                })
+
+                if (!ok) return
+                // UserId: number;
+                // ItemName: string;
+                // Category: string;
+                // Quantity: number;
+                // UnitOfMeasure: string;
+                // ReOrderLevel: number;
+                // ReOrderQuantity: number;
+                // Description: string;
+                let payload: CreateUpdateInventoryRequest = {
+                    Id: data.id,
+                    UserId: data.userId,
+                    ItemName: data.itemName,
+                    Category: data.category,
+                    Quantity: data.quantity,
+                    UnitOfMeasure: data.unitOfMeasure,
+                    ReOrderLevel: data.reOrderLevel,
+                    ReOrderQuantity: data.reOrderQuantity,
+                    Description: data.description,
+                }
+
+                if (zDialogTitle === CREATE_INVENTORY) {
+                    createInventory.mutate(payload, {
+                        onSuccess: (res) => showToast(res.ApiMessage, "success"),
+                        onError: (error: Error) => showToast(error.message, "error"),
+                    })
+                } else {
+                    updateInventory.mutate(payload, {
+                        onSuccess: (res) => showToast(res.ApiMessage, "success"),
+                        onError: (error: Error) => showToast(error.message, "error"),
+                    })
+                }
+            } catch (error) {
+                console.error("Failed to submit form", error)
+            }
+        },
+        [zDialogTitle, isValid, confirm]
+    )
+
+    const handleErrorForm = useCallback((errors: FieldErrors<InventoryFormValues>) => {
+        console.log("Form Errors: ", errors);
+    }, []);
+
+    const handleResetValue = useCallback(() => {
+        const values: InventoryFormValues = {
+            id: 0,
+            userId: 0,
+            itemName: "",
+            category: "",
+            quantity: 0,
+            unitOfMeasure: "",
+            reOrderLevel: 0,
+            reOrderQuantity: 0,
+            description: "",
+        };
+        reset(values);
+    }, [reset]);
+
+    const handleRemove = async (id: number) => {
+        const ok = await confirm({
+            title: "You won't be able to revert this!",
+            description: `Are you sure you want to remove?`,
+            confirmLabel: "Yes, Continue",
+            cancelLabel: "No",
+        })
+
+        if (!ok) return
+
+        removeInventory.mutate(id, {
+            onSuccess: (res) => showToast(res.ApiMessage, "success"),
+            onError: (error: Error) => showToast(error.message, "error"),
+        })
+    }
+
+    //for update modal fields
+    useEffect(() => {
+        console.log("zInventoryAEData: ", zInventoryAEData);
+        // Update form values when initialValues changes
+        reset(zInventoryAEData);
+
+    }, [zInventoryAEData]);
+
+    return (
+        <>
+            <div className="p-6">
+                <div className="flex items-center justify-between">
+                    <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2">
+                        <Users className="h-6 w-6 text-primary" />
+                        Inventory List Page
+                    </h2>
+                    {/* <Button>Export Report</Button> */}
+                </div>
+                <p className="text-muted-foreground mt-1">
+                    Track and manage inventory records.
+                </p>
+                {/* Header with Status Filter, Search + Add Inventory */}
+                <div className="flex justify-end items-center mb-4 space-x-2">
+                    {/* Search */}
+                    <Input
+                        placeholder="Search employee..."
+                        onChange={(e) => debouncedHIChange(e.target.value)} // 👈 extract value
+                        className="w-64"
+                    />
+                    {/* Add Employee */}
+                    <Button className='cursor-pointer' onClick={(e) => handleCreateUpdateInventoryList(CREATE_INVENTORY, 0)}>{CREATE_INVENTORY}</Button>
+                </div>
+
+                {/* Employee Table */}
+                <Table>
+                    <TableCaption>A list of inventories</TableCaption>
+                    <TblHeader columns={inventoryColumns} />
+                    <InventoryTblBody
+                        paginatedInventories={inventoryList?.InventoryList}
+                        onRemove={handleRemove}
+                        onCreateUpdateInventory={handleCreateUpdateInventoryList}
+                    />
+                </Table>
+                {/* Pagination */}
+                <div className="flex justify-center mt-4">
+                    <TblPagination
+                        totalPages={totalPages}
+                    />
+                </div>
+            </div>
+            <InventoryDialog
+                onClientNameChange={handleClientNameChange}
+                onCategoryChange={handleCategoryChange}
+                onSubmit={handleSubmitForm}
+                onError={handleErrorForm}
+                onReset={handleResetValue}
+                formMethods={form}
+            />
+            {/* Important: must render this once per component */}
+            {ConfirmDialog}
+        </>
+
+    )
+}
+
+export default InventoryPage

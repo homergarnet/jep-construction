@@ -126,6 +126,19 @@ export const clientRequestColumns = [
   { key: "actions", label: "Actions", className: "text-right" },
 ];
 
+export const inventoryColumns = [
+  { key: "inventoryId", label: "Inventory ID" },
+  { key: "clientName", label: "Client Name" },
+  { key: "itemName", label: "Item Name" },
+  { key: "category", label: "Category" },
+  { key: "quantity", label: "Quantity" },
+  { key: "unitOfMeasure", label: "Unit of Measure" },
+  { key: "reOrderLevel", label: "RE-Order Level" },
+  { key: "reOrderQuantity", label: "RE-Order Quantity" },
+  { key: "description", label: "Description / Notes" },
+  { key: "actions", label: "Actions", className: "text-right" },
+];
+
 export const CREATE_EMPLOYEE = "Create employee";
 export const EDIT_EMPLOYEE = "Edit employee";
 
@@ -137,6 +150,9 @@ export const EDIT_CLIENT = "Edit client";
 
 export const CREATE_PROJECT_MANAGEMENT = "Create project management";
 export const EDIT_PROJECT_MANAGEMENT = "Edit project management";
+
+export const CREATE_INVENTORY = "Create inventory";
+export const EDIT_INVENTORY = "Edit inventory";
 
 export const ADD_SKU = "Add SKU";
 export const UPDATE_SKU = "Update SKU";
