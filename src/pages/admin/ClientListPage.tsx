@@ -1,57 +1,57 @@
+import StatusFilter from '@/components/StatusFilter'
+import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Table, TableCaption } from '@/components/ui/table'
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { useConfirmDialog } from '@/hooks/useConfirmDialog'
+import useSwal from '@/hooks/useSwal'
+import useClientListContext from '@/store/client/clientListContext'
 import { Users } from 'lucide-react'
 import React, { useCallback, useEffect, useState } from 'react'
-import StatusFilter from '../../../components/StatusFilter'
-import EmployeeTblBody from './components/EmployeeTblBody'
-import TblPagination from '@/components/TblPagination'
-import TblHeader from '@/components/TblHeader'
-import { CREATE_EMPLOYEE, EDIT_EMPLOYEE, EMPLOYEE_TYPE, employeeColumns, statusOptions } from '@/constants/constants'
-import type { CreateUpdateEmployeeRequest } from '@/types/employeelist'
-import EmployeeDialog from './components/EmployeeDialog'
-import { employeeListFormSchema, type EmployeeListFormValues } from './schema/employeeListFormSchema'
-import useSwal from '@/hooks/useSwal'
-import { useForm, type FieldErrors } from "react-hook-form";
+import { clientListFormSchema, type ClientListFormValues } from './schema/clientListFormSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import useEmployeeListContext from '@/store/employee/employeeList/employeeListContext'
-import { Button } from '@/components/ui/button'
-import { useCreateEmployee, useGetEmployeeById, useGetEmployeeList, useRemoveEmployee, useUpdateEmployee } from '@/hooks/useEmployeeList'
+import { useForm, type FieldErrors } from 'react-hook-form'
 import { debounce } from 'lodash'
-import { useConfirmDialog } from '@/hooks/useConfirmDialog'
+import { CLIENT_TYPE, clientColumns, clientListStatusOptions, CREATE_CLIENT, EDIT_CLIENT } from '@/constants/constants'
+import { useCreateClient, useGetClientById, useGetClientList, useRemoveClient, useUpdateClient } from '@/hooks/useClientList'
+import type { CreateUpdateClientRequest } from '@/types/clientlist'
+import TblHeader from '@/components/TblHeader'
+import ClientTblBody from './components/ClientTblBody'
+import TblPagination from '@/components/TblPagination'
+import ClientDialog from './components/ClientDialog'
 
-const EmployeeListPage = () => {
+const ClientListPage = () => {
 
-    const zSetIsOpenDialog = useEmployeeListContext((state) => state.zSetIsOpenDialog);
-    const zDialogTitle = useEmployeeListContext((state) => state.zDialogTitle);
-    const zSetDialogTitle = useEmployeeListContext((state) => state.zSetDialogTitle);
-    const zEmpListAEData = useEmployeeListContext((state) => state.zEmpListAEData);
-    const zSetEmpListAEData = useEmployeeListContext((state) => state.zSetEmpListAEData);
-    const zPage = useEmployeeListContext((state) => state.zPage);
-    const zSetPage = useEmployeeListContext((state) => state.zSetPage);
-    const zPageSize = useEmployeeListContext((state) => state.zPageSize);
-    const zStatusFilter = useEmployeeListContext((state) => state.zStatusFilter);
-    const zSetStatusFilter = useEmployeeListContext((state) => state.zSetStatusFilter);
-    const [empId, setEmpId] = useState(0);
-    const [empIdDupli, setEmpIdDupli] = useState(0);
+    const zSetIsOpenDialog = useClientListContext((state) => state.zSetIsOpenDialog);
+    const zDialogTitle = useClientListContext((state) => state.zDialogTitle);
+    const zSetDialogTitle = useClientListContext((state) => state.zSetDialogTitle);
+    const zClientListAEData = useClientListContext((state) => state.zClientListAEData);
+    const zSetClientListAEData = useClientListContext((state) => state.zSetClientListAEData);
+    const zPage = useClientListContext((state) => state.zPage);
+    const zSetPage = useClientListContext((state) => state.zSetPage);
+    const zPageSize = useClientListContext((state) => state.zPageSize);
+    const zStatusFilter = useClientListContext((state) => state.zStatusFilter);
+    const zSetStatusFilter = useClientListContext((state) => state.zSetStatusFilter);
+    const [clientId, setClientId] = useState(0);
+    const [empIdDupli, setClientIdDupli] = useState(0);
     const { showConfirm, showToast } = useSwal();
     const { confirm, ConfirmDialog } = useConfirmDialog();
-    const createEmployee = useCreateEmployee();
-    const { data: employeeList, isLoading: empListLoading } = useGetEmployeeList({
+    const createClient = useCreateClient();
+    const { data: clientList, isLoading: clientListLoading } = useGetClientList({
         keyword: zStatusFilter,
-        accountType: EMPLOYEE_TYPE,
+        accountType: CLIENT_TYPE,
         page: zPage,
         pageSize: zPageSize,
     });
 
-    const { data: employeeById, isLoading, refetch } = useGetEmployeeById({
-        id: empId,
+    const { data: clientById, isLoading, refetch } = useGetClientById({
+        id: clientId,
     });
 
-    const updateEmployee = useUpdateEmployee();
-    const removeEmployee = useRemoveEmployee();
+    const updateClient = useUpdateClient();
+    const removeClient = useRemoveClient();
 
-    const form = useForm<EmployeeListFormValues>({
-        resolver: zodResolver(employeeListFormSchema), // Use Zod for validation
+    const form = useForm<ClientListFormValues>({
+        resolver: zodResolver(clientListFormSchema), // Use Zod for validation
         defaultValues: {
             id: undefined,
             email: "",
@@ -90,26 +90,26 @@ const EmployeeListPage = () => {
         submitCount,
     } = formState;
 
-    const totalRecords = employeeList?.TotalRecords ?? 0;
+    const totalRecords = clientList?.TotalRecords ?? 0;
     const totalPages = Math.ceil(totalRecords / zPageSize);
 
-    const handleEL = (value: string) => {
+    const handleSC = (value: string) => {
         console.log("value: ", value);
         zSetStatusFilter(value);
     };
 
-    const debouncedHELChange = debounce((value: string) => {
-        handleEL(value);
+    const debouncedHSCnChange = debounce((value: string) => {
+        handleSC(value);
     }, 1500);
 
-    const handleCreateUpdateEmployeeList = useCallback((type: string, id: number) => {
+    const handleCreateUpdateClientList = useCallback((type: string, id: number) => {
 
         zSetIsOpenDialog(true);
         zSetDialogTitle(type);
 
-        if (type === EDIT_EMPLOYEE) {
-            setEmpId(id);
-            setEmpIdDupli(id);
+        if (type === EDIT_CLIENT) {
+            setClientId(id);
+            setClientIdDupli(id);
             if (empIdDupli === id) {
                 refetch();
             }
@@ -123,9 +123,10 @@ const EmployeeListPage = () => {
 
 
     const handleSubmitForm = useCallback(
-        async (data: EmployeeListFormValues) => {
+        async (data: ClientListFormValues) => {
             console.log("Form submitted ", data)
-            let statusType = zDialogTitle === CREATE_EMPLOYEE ? "Create" : "Edit"
+
+            let statusType = zDialogTitle === CREATE_CLIENT ? "Create" : "Edit"
 
             if (!isValid) return
 
@@ -139,27 +140,27 @@ const EmployeeListPage = () => {
 
                 if (!ok) return
 
-                let payload: CreateUpdateEmployeeRequest = {
+                let payload: CreateUpdateClientRequest = {
                     Id: data.id,
                     Email: data.email,
                     Firstname: data.firstname,
                     Lastname: data.lastname,
                     MobileNumber: data.mobileNumber,
-                    Position: data.position,
-                    Salary: data.salary,
+                    Position: "N/A",
+                    Salary: 0,
                     Status: data.status,
                     Address: data.address,
-                    AccountType: EMPLOYEE_TYPE,
+                    AccountType: CLIENT_TYPE,
                     DateOfBirth: data.dateOfBirth,
                 }
 
-                if (zDialogTitle === CREATE_EMPLOYEE) {
-                    createEmployee.mutate(payload, {
+                if (zDialogTitle === CREATE_CLIENT) {
+                    createClient.mutate(payload, {
                         onSuccess: (res) => showToast(res.ApiMessage, "success"),
                         onError: (error: Error) => showToast(error.message, "error"),
                     })
                 } else {
-                    updateEmployee.mutate(payload, {
+                    updateClient.mutate(payload, {
                         onSuccess: (res) => showToast(res.ApiMessage, "success"),
                         onError: (error: Error) => showToast(error.message, "error"),
                     })
@@ -171,12 +172,12 @@ const EmployeeListPage = () => {
         [zDialogTitle, isValid, confirm]
     )
 
-    const handleErrorForm = useCallback((errors: FieldErrors<EmployeeListFormValues>) => {
+    const handleErrorForm = useCallback((errors: FieldErrors<ClientListFormValues>) => {
         console.log("Form Errors: ", errors);
     }, []);
 
     const handleResetValue = useCallback(() => {
-        const values: EmployeeListFormValues = {
+        const values: ClientListFormValues = {
             email: "",
             firstname: "",
             lastname: "",
@@ -200,7 +201,7 @@ const EmployeeListPage = () => {
 
         if (!ok) return
 
-        removeEmployee.mutate(id, {
+        removeClient.mutate(id, {
             onSuccess: (res) => showToast(res.ApiMessage, "success"),
             onError: (error: Error) => showToast(error.message, "error"),
         })
@@ -208,11 +209,11 @@ const EmployeeListPage = () => {
 
     //for update modal fields
     useEffect(() => {
-        console.log("zEmpListAEData: ", zEmpListAEData);
+        console.log("zClientListAEData: ", zClientListAEData);
         // Update form values when initialValues changes
-        reset(zEmpListAEData);
+        reset(zClientListAEData);
 
-    }, [zEmpListAEData]);
+    }, [zClientListAEData]);
 
     return (
         <>
@@ -220,43 +221,42 @@ const EmployeeListPage = () => {
                 <div className="flex items-center justify-between">
                     <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2">
                         <Users className="h-6 w-6 text-primary" />
-                        Employee List Page
+                        Client List Page
                     </h2>
                     {/* <Button>Export Report</Button> */}
                 </div>
                 <p className="text-muted-foreground mt-1">
-                    Track and manage employee records.
+                    Track and manage client records.
                 </p>
-                {/* Header with Status Filter, Search + Add Employee */}
+                {/* Header with Status Filter, Search + Add Client */}
                 <div className="flex justify-end items-center mb-4 space-x-2">
                     {/* Status Filter */}
                     <StatusFilter
                         value={zStatusFilter}
                         onChange={zSetStatusFilter}
-                        options={statusOptions}
+                        options={clientListStatusOptions}
                         placeholder='Filter by status'
                     />
 
                     {/* Search */}
                     <Input
-                        placeholder="Search employee..."
-                        onChange={(e) => debouncedHELChange(e.target.value)} // 👈 extract value
+                        placeholder="Search client..."
+                        onChange={(e) => debouncedHSCnChange(e.target.value)} // 👈 extract value
                         className="w-64"
                     />
-                    {/* Add Employee */}
-                    <Button className='cursor-pointer' onClick={(e) => handleCreateUpdateEmployeeList(CREATE_EMPLOYEE, 0)}>{CREATE_EMPLOYEE}</Button>
 
-
+                    {/* Add Client */}
+                    <Button className='cursor-pointer' onClick={(e) => handleCreateUpdateClientList(CREATE_CLIENT, 0)}>{CREATE_CLIENT}</Button>
                 </div>
 
-                {/* Employee Table */}
+                {/* Client Table */}
                 <Table>
-                    <TableCaption>A list of employees</TableCaption>
-                    <TblHeader columns={employeeColumns} />
-                    <EmployeeTblBody
-                        paginatedEmployees={employeeList?.UserList}
+                    <TableCaption>A list of clients</TableCaption>
+                    <TblHeader columns={clientColumns} />
+                    <ClientTblBody
+                        paginatedClients={clientList?.UserList}
                         onRemove={handleRemove}
-                        onCreateUpdateEmployeeList={handleCreateUpdateEmployeeList}
+                        onCreateUpdateClientList={handleCreateUpdateClientList}
                     />
                 </Table>
                 {/* Pagination */}
@@ -266,7 +266,7 @@ const EmployeeListPage = () => {
                     />
                 </div>
             </div>
-            <EmployeeDialog
+            <ClientDialog
                 onStatusChange={handleStatusChange}
                 onSubmit={handleSubmitForm}
                 onError={handleErrorForm}
@@ -281,4 +281,4 @@ const EmployeeListPage = () => {
 
 }
 
-export default EmployeeListPage
+export default ClientListPage
