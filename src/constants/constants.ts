@@ -116,6 +116,16 @@ export const reviewColumns = [
   { key: "actions", label: "Actions", className: "text-right" },
 ];
 
+export const clientRequestColumns = [
+  { key: "projectName", label: "Project Name" },
+  { key: "Name", label: "Name" },
+  { key: "email", label: "Email" },
+  { key: "mobileNumber", label: "Mobile Number" },
+  { key: "messageDescription", label: "Message Description" },
+  { key: "dateTimeCreated", label: "Date Time Created" },
+  { key: "actions", label: "Actions", className: "text-right" },
+];
+
 export const CREATE_EMPLOYEE = "Create employee";
 export const EDIT_EMPLOYEE = "Edit employee";
 

@@ -22,7 +22,7 @@ const ProjectManagementPage = React.lazy(() => import("../pages/admin/ProjectMan
 const ReviewPage = React.lazy(() => import("../pages/ReviewPage"));
 const Messages = React.lazy(() => import("../pages/Messenger/Messages"));
 const Inventory = React.lazy(() => import("../pages/Inventory"));
-const ClientRequest = React.lazy(() => import("../pages/admin/ClientRequest"));
+const ClientRequestPage = React.lazy(() => import("../pages/admin/ClientRequestPage"));
 const Profile = React.lazy(() => import("../pages/Profile"));
 const MyProjects = React.lazy(() => import("../pages/client/MyProjects"));
 const InOut = React.lazy(() => import("../pages/employee/InOut"));
@@ -128,7 +128,7 @@ const Router = createBrowserRouter(
           path="admin/client-request"
           element={
             <Suspense fallback={<div>Loading...</div>}>
-              <ClientRequest />
+              <ClientRequestPage />
             </Suspense>
           }
         />
