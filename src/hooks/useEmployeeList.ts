@@ -1,5 +1,5 @@
 import { employeeListApi } from "@/api/employeeListApi";
-import useEmployeeListContext from "@/store/employeeList/employeeListContext";
+import useEmployeeListContext from "@/store/employee/employeeList/employeeListContext";
 import type {
   CreateUpdateEmployeeRequest,
   EmployeeListResponse,

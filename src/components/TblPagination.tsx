@@ -1,6 +1,6 @@
 import React from 'react'
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from './ui/pagination'
-import useEmployeeListContext from '@/store/employeeList/employeeListContext'
+import useEmployeeListContext from '@/store/employee/employeeList/employeeListContext'
 import z from 'zod'
 import { cn } from '@/lib/utils'
 

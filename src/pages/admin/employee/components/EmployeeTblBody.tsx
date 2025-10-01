@@ -13,7 +13,7 @@ type EmployeTblBodyProps = {
     onCreateUpdateEmployeeList: (type: string, id: number) => void;
 }
 
-const TblBody: React.FC<EmployeTblBodyProps> = ({
+const EmployeeTblBody: React.FC<EmployeTblBodyProps> = ({
     paginatedEmployees,
     onRemove,
     onCreateUpdateEmployeeList
@@ -52,4 +52,4 @@ const TblBody: React.FC<EmployeTblBodyProps> = ({
     )
 }
 
-export default TblBody
+export default EmployeeTblBody

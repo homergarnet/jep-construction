@@ -1,149 +1,256 @@
-import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import TblHeader from '@/components/TblHeader'
 import { Input } from '@/components/ui/input'
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { CREATE_EMP_ATTENDANCE, EDIT_EMP_ATTENDANCE, empAttendanceColumns } from '@/constants/constants'
 import { Users } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
+import EmpAttendanceTblBody from './components/EmpAttendanceTblBody'
+import { useGetEmpAttendanceById, useGetEmpAttendanceList, useRemoveEmpAttendance, useUpdateEmpAttendance } from '@/hooks/useEmpAttendance'
+import useEmpAttendanceContext from '@/store/employee/empAttendance/empAttendanceContext'
+import TblPagination from '@/components/TblPagination'
+import { debounce } from 'lodash'
+import useSwal from '@/hooks/useSwal'
+import { useConfirmDialog } from '@/hooks/useConfirmDialog'
+import EmpAttendanceDialog from './components/EmpAttendanceDialog'
+import type { EmployeeListFormValues } from './schema/employeeListFormSchema'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { empAttendanceFormSchema, type EmpAttendanceFormValues } from './schema/empAttendanceFormSchema'
+import { useForm, type FieldErrors } from 'react-hook-form'
+import type { CreateUpdateEmpAttendanceRequest } from '@/types/empAttendance'
 
-type Employee = {
-  id: number
-  employeeNumber: string,
-  name: string
-  timeIn: string,
-  timeOut: string,
-}
-
-const initialEmployees: Employee[] = [
-  { id: 1, employeeNumber: "12345", name: "John Doe", timeIn: "09:40AM", timeOut: "05:20PM"},
-  { id: 2, employeeNumber: "12345", name: "John Doe", timeIn: "09:40AM", timeOut: "05:20PM"},
-  { id: 3, employeeNumber: "12345", name: "John Doe", timeIn: "09:40AM", timeOut: "05:20PM"},
-  { id: 4, employeeNumber: "12345", name: "John Doe", timeIn: "09:40AM", timeOut: "05:20PM"},
-  { id: 5, employeeNumber: "12345", name: "John Doe", timeIn: "09:40AM", timeOut: "05:20PM"},
-  { id: 6, employeeNumber: "12345", name: "John Doe", timeIn: "09:40AM", timeOut: "05:20PM"},
-  { id: 7, employeeNumber: "12345", name: "John Doe", timeIn: "09:40AM", timeOut: "05:20PM"},
-  { id: 8, employeeNumber: "12345", name: "John Doe", timeIn: "09:40AM", timeOut: "05:20PM"},
-]
 const EmployeeAttendancePage = () => {
 
-  const [employees, setEmployees] = React.useState<Employee[]>(initialEmployees)
-  const [search, setSearch] = React.useState("")
+  const zSetIsOpenDialog = useEmpAttendanceContext((state) => state.zSetIsOpenDialog);
+  const zDialogTitle = useEmpAttendanceContext((state) => state.zDialogTitle);
+  const zSetDialogTitle = useEmpAttendanceContext((state) => state.zSetDialogTitle);
+  const zPage = useEmpAttendanceContext((state) => state.zPage);
+  const zSetPage = useEmpAttendanceContext((state) => state.zSetPage);
+  const zPageSize = useEmpAttendanceContext((state) => state.zPageSize);
+  const zStatusFilter = useEmpAttendanceContext((state) => state.zStatusFilter);
+  const zSetStatusFilter = useEmpAttendanceContext((state) => state.zSetStatusFilter);
+  const zEmpAttendanceAEData = useEmpAttendanceContext((state) => state.zEmpAttendanceAEData);
 
-  // Pagination states
-  const [page, setPage] = React.useState(1)
-  const pageSize = 3
+  const [empAttendanceId, setEmpAttendanceId] = useState(0);
+  const [empAttendanceIdDupli, setEmpAttendanceIdDupli] = useState(0);
+  const { showConfirm, showToast } = useSwal();
+  const { confirm, ConfirmDialog } = useConfirmDialog();
+  const { data: empAttendanceList, isLoading: empAttendanceLoading } = useGetEmpAttendanceList({
+    keyword: zStatusFilter,
+    page: zPage,
+    pageSize: zPageSize,
+  });
 
-  // Filtering
-  const filteredEmployees = employees.filter((emp) => {
-    const matchesSearch =
-      emp.employeeNumber.toLowerCase().includes(search.toLowerCase()) ||
-      emp.name.toLowerCase().includes(search.toLowerCase())
-    return matchesSearch
-  })
+  const { data: empAttendanceById, isLoading, refetch } = useGetEmpAttendanceById({
+    id: empAttendanceId,
+  });
 
-  const totalPages = Math.ceil(filteredEmployees.length / pageSize)
+  const updateEmpAttendance = useUpdateEmpAttendance();
+  const removeEmpAttendance = useRemoveEmpAttendance();
 
-  const paginatedEmployees = filteredEmployees.slice(
-    (page - 1) * pageSize,
-    page * pageSize
+  const form = useForm<EmpAttendanceFormValues>({
+    resolver: zodResolver(empAttendanceFormSchema), // Use Zod for validation
+    defaultValues: {
+      id: undefined,
+      timeInOut: "",
+      timeInOutType: "",
+
+    },
+    //for validation way choices "onBlur"(When you exit the textbox hover) | "onChange"(When you change the field not recommended performance issue) | "onSubmit" (Default and when user click the button) | "onTouched (on the first load event and every change event)" | "all" (Both change and blur event)
+    mode: "onTouched",
+  });
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState,
+    watch,
+    getValues,
+    setValue,
+    reset,
+    trigger,
+  } = form;
+  const {
+    errors,
+    touchedFields,
+    dirtyFields,
+    isDirty,
+    isValid,
+    isSubmitting,
+    isSubmitted,
+    isSubmitSuccessful,
+    submitCount,
+  } = formState;
+
+  const totalRecords = empAttendanceList?.TotalRecords ?? 0;
+  const totalPages = Math.ceil(totalRecords / zPageSize);
+
+  const handleSE = (value: string) => {
+    console.log("value: ", value);
+    zSetStatusFilter(value);
+  };
+
+  const debouncedHSEnChange = debounce((value: string) => {
+    handleSE(value);
+  }, 1500);
+
+  const handleCreateUpdateEmpAttendanceList = useCallback((type: string, id: number) => {
+
+    zSetIsOpenDialog(true);
+    zSetDialogTitle(type);
+
+    if (type === EDIT_EMP_ATTENDANCE) {
+      setEmpAttendanceId(id);
+      setEmpAttendanceIdDupli(id);
+      if (empAttendanceIdDupli === id) {
+        refetch();
+      }
+
+    }
+  }, [zSetIsOpenDialog, zSetDialogTitle, empAttendanceIdDupli]);
+
+  const handleTimeInOutTypeChange = useCallback((value: string) => {
+    setValue("timeInOutType", value, { shouldValidate: true });
+  }, []);
+
+
+  const handleSubmitForm = useCallback(
+    async (data: EmpAttendanceFormValues) => {
+      console.log("Form submitted ", data)
+      let statusType = zDialogTitle === CREATE_EMP_ATTENDANCE ? "Create" : "Edit"
+
+      if (!isValid) return
+
+      try {
+        const ok = await confirm({
+          title: "You won't be able to revert this!",
+          description: `Are you sure you want to ${statusType}?`,
+          confirmLabel: "Yes, Continue",
+          cancelLabel: "No",
+        })
+
+        if (!ok) return
+
+        let payload: CreateUpdateEmpAttendanceRequest = {
+          Id: data.id,
+          TimeInOut: data.timeInOut,
+          TimeInOutType: data.timeInOutType,
+        }
+
+        if (zDialogTitle === CREATE_EMP_ATTENDANCE) {
+          // createEmployee.mutate(payload, {
+          //   onSuccess: (res) => showToast(res.ApiMessage, "success"),
+          //   onError: (error: Error) => showToast(error.message, "error"),
+          // })
+        } else {
+          updateEmpAttendance.mutate(payload, {
+            onSuccess: (res) => showToast(res.ApiMessage, "success"),
+            onError: (error: Error) => showToast(error.message, "error"),
+          })
+        }
+      } catch (error) {
+        console.error("Failed to submit form", error)
+      }
+    },
+    [zDialogTitle, isValid, confirm]
   )
 
+  const handleErrorForm = useCallback((errors: FieldErrors<EmployeeListFormValues>) => {
+    console.log("Form Errors: ", errors);
+  }, []);
 
-  const handleRemove = (id: number) => {
-    setEmployees(employees.filter((emp) => emp.id !== id))
+  const handleResetValue = useCallback(() => {
+    const values: EmployeeListFormValues = {
+      email: "",
+      firstname: "",
+      lastname: "",
+      mobileNumber: "",
+      position: "",
+      salary: 0, // must be a number
+      status: "",
+      address: "",
+      dateOfBirth: new Date(),
+    };
+    reset(values);
+  }, [reset]);
+
+  const handleRemove = async (id: number) => {
+    const ok = await confirm({
+      title: "You won't be able to revert this!",
+      description: `Are you sure you want to remove?`,
+      confirmLabel: "Yes, Continue",
+      cancelLabel: "No",
+    })
+
+    if (!ok) return
+
+    removeEmpAttendance.mutate(id, {
+      onSuccess: (res) => showToast(res.ApiMessage, "success"),
+      onError: (error: Error) => showToast(error.message, "error"),
+    })
   }
 
+  //for update modal fields
+  useEffect(() => {
+    console.log("zEmpAttendanceAEData: ", zEmpAttendanceAEData);
+    // Update form values when initialValues changes
+    reset(zEmpAttendanceAEData);
+
+  }, [zEmpAttendanceAEData]);
+
   return (
-    <div className="p-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-          <Users className="h-6 w-6 text-primary" />
-          Employee Attendance
-        </h2>
-        {/* <Button>Export Report</Button> */}
-      </div>
-      <p className="text-muted-foreground mt-1">
-        Track and manage employee daily attendance records.
-      </p>
+    <>
+      <div className="p-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2">
+            <Users className="h-6 w-6 text-primary" />
+            Employee Attendance
+          </h2>
+          {/* <Button>Export Report</Button> */}
+        </div>
+        <p className="text-muted-foreground mt-1">
+          Track and manage employee daily attendance records.
+        </p>
 
-      {/* Header with Status Filter, Search + Add Employee */}
-      <div className="flex justify-end items-center mb-4 space-x-2">
-        {/* Search */}
-        <Input
-          placeholder="Search employee..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-64"
-        />
-      </div>
+        {/* Header with Status Filter, Search + Add Employee */}
+        <div className="flex justify-end items-center mb-4 space-x-2">
+          {/* Search */}
+          <Input
+            placeholder="Search employee..."
+            onChange={(e) => debouncedHSEnChange(e.target.value)} // 👈 extract value
+            className="w-64"
+          />
+        </div>
 
-      {/* Employee Table */}
-      <Table>
-        <TableCaption>A list of employees</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Employee Number</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Time In</TableHead>
-            <TableHead>Time Out</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {paginatedEmployees.map((emp) => (
-            <TableRow key={emp.id}>
-              <TableCell>{emp.employeeNumber}</TableCell>
-              <TableCell>{emp.name}</TableCell>
-              <TableCell>{emp.timeIn}</TableCell>
-              <TableCell>{emp.timeOut}</TableCell>
-              <TableCell className="text-right space-x-2">
-                <Button variant="outline" size="sm">
-                  Edit
-                </Button>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => handleRemove(emp.id)}
-                >
-                  Remove
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+        {/* Employee Table */}
+        <Table>
+          <TableCaption>A list of attendance</TableCaption>
+          <TblHeader columns={empAttendanceColumns} />
+          <EmpAttendanceTblBody
+            paginatedAttendance={empAttendanceList?.AttendanceList}
+            onRemove={handleRemove}
+            onCreateUpdateEmpAttendanceList={handleCreateUpdateEmpAttendanceList}
+          />
+        </Table>
 
-      {/* Pagination */}
-      <div className="flex justify-center mt-4">
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious
-                onClick={() => setPage((p) => Math.max(p - 1, 1))}
-              />
-            </PaginationItem>
+        {/* Pagination */}
+        <div className="flex justify-center mt-4">
+          <TblPagination
+            totalPages={totalPages}
+          />
+        </div>
+      </div >
+      <EmpAttendanceDialog
+        onTimeInOutTypeChange={handleTimeInOutTypeChange}
+        onSubmit={handleSubmitForm}
+        onError={handleErrorForm}
+        onReset={handleResetValue}
+        formMethods={form}
+      />
+      {/* Important: must render this once per component */}
+      {ConfirmDialog}
+    </>
 
-            {[...Array(totalPages)].map((_, i) => (
-              <PaginationItem key={i}>
-                <PaginationLink
-                  isActive={page === i + 1}
-                  onClick={() => setPage(i + 1)}
-                >
-                  {i + 1}
-                </PaginationLink>
-              </PaginationItem>
-            ))}
 
-            <PaginationItem>
-              <PaginationNext
-                onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      </div>
-    </div >
   )
 }
 
