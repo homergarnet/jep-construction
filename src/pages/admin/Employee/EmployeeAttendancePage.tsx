@@ -211,11 +211,11 @@ const EmployeeAttendancePage = () => {
           Track and manage employee daily attendance records.
         </p>
 
-        {/* Header with Status Filter, Search + Add Employee */}
+        {/* Header with Status Filter, Search + Add attendance */}
         <div className="flex justify-end items-center mb-4 space-x-2">
           {/* Search */}
           <Input
-            placeholder="Search employee..."
+            placeholder="Search attendance..."
             onChange={(e) => debouncedHSEnChange(e.target.value)} // 👈 extract value
             className="w-64"
           />
