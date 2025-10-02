@@ -23,7 +23,7 @@ const ReviewPage = React.lazy(() => import("../pages/ReviewPage"));
 const Messages = React.lazy(() => import("../pages/Messenger/Messages"));
 const InventoryPage = React.lazy(() => import("../pages/InventoryPage"));
 const ClientRequestPage = React.lazy(() => import("../pages/admin/ClientRequestPage"));
-const Profile = React.lazy(() => import("../pages/Profile"));
+const ProfilePage = React.lazy(() => import("../pages/ProfilePage"));
 const MyProjects = React.lazy(() => import("../pages/client/MyProjects"));
 const InOut = React.lazy(() => import("../pages/employee/InOut"));
 const Page404 = React.lazy(() => import("../pages/Page404"));
@@ -152,7 +152,7 @@ const Router = createBrowserRouter(
           path="admin/profile"
           element={
             <Suspense fallback={<div>Loading...</div>}>
-              <Profile />
+              <ProfilePage />
             </Suspense>
           }
         />
@@ -181,7 +181,7 @@ const Router = createBrowserRouter(
           path="employee/profile"
           element={
             <Suspense fallback={<div>Loading...</div>}>
-              <Profile />
+              <ProfilePage />
             </Suspense>
           }
         />
@@ -216,7 +216,7 @@ const Router = createBrowserRouter(
           path="client/profile"
           element={
             <Suspense fallback={<div>Loading...</div>}>
-              <Profile />
+              <ProfilePage />
             </Suspense>
           }
         />
