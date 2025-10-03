@@ -7,9 +7,6 @@ import {
 import ProtectedRoute from "./ProtectedRoute";
 import React from "react";
 
-
-import InOutList from "@/pages/employee/InOutList";
-
 const HomePage = React.lazy(() => import("../pages/HomePage"));
 const Login = React.lazy(() => import("../pages/admin/Login"));
 const EmployeeLogin = React.lazy(() => import("../pages/employee/Login"));
@@ -24,7 +21,6 @@ const Messages = React.lazy(() => import("../pages/Messenger/Messages"));
 const InventoryPage = React.lazy(() => import("../pages/InventoryPage"));
 const ClientRequestPage = React.lazy(() => import("../pages/admin/ClientRequestPage"));
 const ProfilePage = React.lazy(() => import("../pages/ProfilePage"));
-const MyProjects = React.lazy(() => import("../pages/client/MyProjects"));
 const InOut = React.lazy(() => import("../pages/employee/InOut"));
 const Page404 = React.lazy(() => import("../pages/Page404"));
 
@@ -173,7 +169,7 @@ const Router = createBrowserRouter(
           path="employee/in-out-list"
           element={
             <Suspense fallback={<div>Loading...</div>}>
-              <InOutList />
+              <EmployeeAttendancePage />
             </Suspense>
           }
         />
@@ -192,7 +188,7 @@ const Router = createBrowserRouter(
           path="client/my-projects"
           element={
             <Suspense fallback={<div>Loading...</div>}>
-              <MyProjects />
+              <ProjectManagementPage />
             </Suspense>
           }
         />

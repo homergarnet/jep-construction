@@ -79,6 +79,7 @@ export const empAttendanceColumns = [
   { key: "timeInOut", label: "Time In Out" },
   { key: "timeInOutType", label: "Time In Out Type" },
   { key: "timeInOutImage", label: "Time In Out Image" },
+  { key: "actions", label: "Actions", className: "text-right" },
 ];
 
 export const clientColumns = [
@@ -151,6 +152,9 @@ export const EDIT_CLIENT = "Edit client";
 export const CREATE_PROJECT_MANAGEMENT = "Create project management";
 export const EDIT_PROJECT_MANAGEMENT = "Edit project management";
 
+export const CREATE_REVIEW = "Create review";
+export const EDIT_REVIEW = "Edit review";
+
 export const CREATE_INVENTORY = "Create inventory";
 export const EDIT_INVENTORY = "Edit inventory";
 
@@ -168,3 +172,7 @@ export const BRANCH_DEPLOYED = "test branch";
 export const EMPLOYEE_TYPE = "employee";
 export const CLIENT_TYPE = "client";
 export const ADMIN_TYPE = "admin";
+
+export const ADMIN_TYPE_NUM = "1";
+export const EMPLOYEE_TYPE_NUM = "2";
+export const CLIENT_TYPE_NUM = "3";

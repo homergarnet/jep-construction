@@ -1,9 +1,17 @@
 // src/store.ts
 
+import type { ReviewFormValues } from "@/pages/schema/reviewFormSchema";
 import create from "zustand";
 
+const initialData: ReviewFormValues = {
+  id: undefined,
+  projectManagementId: 0,
+  rate: 0,
+  reviewDescription: "",
+};
+
 //for definining of types
-interface EmployeeListFormState {
+interface ReviewFormState {
   zIsOpenDialog: boolean;
   zSetIsOpenDialog: (zIsOpenDialog: boolean) => void;
   zDialogTitle: string;
@@ -14,11 +22,14 @@ interface EmployeeListFormState {
   zSetPageSize: (zPageSize: number) => void;
   zStatusFilter: string;
   zSetStatusFilter: (zStatusFilter: string) => void;
+  // for updating and creating review data
+  zReviewAEData: ReviewFormValues;
+  zSetReviewAEData: (data: ReviewFormValues) => void;
 }
 
 //for inialization
 // Create the Zustand store with type annotations
-const useReviewContext = create<EmployeeListFormState>((set) => ({
+const useReviewContext = create<ReviewFormState>((set) => ({
   zIsOpenDialog: false,
   zSetIsOpenDialog: (zIsOpenDialog: boolean) => set({ zIsOpenDialog }),
   zDialogTitle: "",
@@ -29,6 +40,8 @@ const useReviewContext = create<EmployeeListFormState>((set) => ({
   zSetPageSize: (zPageSize: number) => set({ zPageSize }),
   zStatusFilter: "",
   zSetStatusFilter: (zStatusFilter: string) => set({ zStatusFilter }),
+  zReviewAEData: initialData,
+  zSetReviewAEData: (data) => set({ zReviewAEData: data }),
 }));
 
 export default useReviewContext;

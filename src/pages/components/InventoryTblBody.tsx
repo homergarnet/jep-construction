@@ -3,7 +3,8 @@ import React from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import type { InventoryDto } from '@/types/inventory';
-import { EDIT_INVENTORY } from '@/constants/constants';
+import { ADMIN_TYPE_NUM, EDIT_INVENTORY } from '@/constants/constants';
+import { getJwtRoleId } from '@/utils/getJwtRoleId';
 
 
 type InventoryTblBodyProps = {
@@ -17,13 +18,13 @@ const InventoryTblBody: React.FC<InventoryTblBodyProps> = ({
     onRemove,
     onCreateUpdateInventory
 }) => {
-
+    const roleId = getJwtRoleId();
     return (
         <TableBody>
             {paginatedInventories && paginatedInventories.map((emp) => (
                 <TableRow key={emp.Id}>
                     <TableCell>{emp.Id}</TableCell>
-                    <TableCell>{emp.ClientName}</TableCell>
+                    {roleId === ADMIN_TYPE_NUM && <TableCell>{emp.ClientName}</TableCell>}
                     <TableCell>{emp.ItemName}</TableCell>
                     <TableCell>{emp.Category}</TableCell>
                     <TableCell>{emp.Quantity}</TableCell>
@@ -31,19 +32,22 @@ const InventoryTblBody: React.FC<InventoryTblBodyProps> = ({
                     <TableCell>{emp.ReOrderLevel}</TableCell>
                     <TableCell>{emp.ReOrderQuantity}</TableCell>
                     <TableCell>{emp.Description}</TableCell>
-
                     <TableCell className="text-right space-x-2">
-                        <Button className='cursor-pointer' variant="outline" size="sm" onClick={(e) => onCreateUpdateInventory(EDIT_INVENTORY, emp.Id)}>
-                            Edit
-                        </Button>
-                        <Button
-                            className='cursor-pointer'
-                            variant="destructive"
-                            size="sm"
-                            onClick={() => onRemove(emp.Id)}
-                        >
-                            Remove
-                        </Button>
+                        {roleId === ADMIN_TYPE_NUM && (
+                            <>
+                                <Button className='cursor-pointer' variant="outline" size="sm" onClick={(e) => onCreateUpdateInventory(EDIT_INVENTORY, emp.Id)}>
+                                    Edit
+                                </Button>
+                                <Button
+                                    className='cursor-pointer'
+                                    variant="destructive"
+                                    size="sm"
+                                    onClick={() => onRemove(emp.Id)}
+                                >
+                                    Remove
+                                </Button>
+                            </>
+                        )}
                     </TableCell>
                 </TableRow>
             ))}

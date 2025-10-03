@@ -14,16 +14,20 @@ import { useForm, type FieldErrors } from 'react-hook-form'
 import { projectManagementFormSchema, type ProjectManagementFormValues } from './schema/projectManagementFormSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { debounce } from 'lodash'
-import { CREATE_PROJECT_MANAGEMENT, EDIT_PROJECT_MANAGEMENT, projectManagementColumns } from '@/constants/constants'
+import { ADMIN_TYPE_NUM, CREATE_PROJECT_MANAGEMENT, EDIT_PROJECT_MANAGEMENT, projectManagementColumns } from '@/constants/constants'
 import type { CreateUpdateProjectManagementRequest } from '@/types/projectmanagement'
 import TblHeader from '@/components/TblHeader'
 import TblPagination from '@/components/TblPagination'
 import ProjectManagementTblBody from './components/ProjectManagementTblBody'
 import ProjectManagementDialog from './components/ProjectManagementDialog'
+import { getJwtRoleId } from '@/utils/getJwtRoleId'
 
 
 const ProjectManagementPage = () => {
+
+    const roleId = getJwtRoleId();
     const zSetIsOpenDialog = useProjectManagementContext((state) => state.zSetIsOpenDialog);
+    const zSetIsOpenDialog2 = useProjectManagementContext((state) => state.zSetIsOpenDialog2);
     const zDialogTitle = useProjectManagementContext((state) => state.zDialogTitle);
     const zSetDialogTitle = useProjectManagementContext((state) => state.zSetDialogTitle);
     const zProjectManagementAEData = useProjectManagementContext((state) => state.zProjectManagementAEData);
@@ -116,6 +120,21 @@ const ProjectManagementPage = () => {
 
         }
     }, [zSetIsOpenDialog, zSetDialogTitle, projManagementIdDupli]);
+
+    const handleCreateUpdateReview = useCallback((type: string, id: number) => {
+
+        zSetIsOpenDialog2(true);
+        zSetDialogTitle(type);
+
+        // if (type === EDIT_PROJECT_MANAGEMENT) {
+        //     setProjManagementId(id);
+        //     setProjManagementIdDupli(id);
+        //     if (projManagementIdDupli === id) {
+        //         refetch();
+        //     }
+
+        // }
+    }, [zSetIsOpenDialog2, zSetDialogTitle, projManagementIdDupli]);
 
     const handleClientNameChange = useCallback((value: string) => {
         setValue("userId", parseInt(value), { shouldValidate: true });
@@ -234,15 +253,13 @@ const ProjectManagementPage = () => {
                         className="w-64"
                     />
                     {/* Add Project Management */}
-                    <Button className='cursor-pointer' onClick={(e) => handleCreateUpdateProjectManagement(CREATE_PROJECT_MANAGEMENT, 0)}>{CREATE_PROJECT_MANAGEMENT}</Button>
-
-
+                    {roleId === ADMIN_TYPE_NUM && <Button className='cursor-pointer' onClick={(e) => handleCreateUpdateProjectManagement(CREATE_PROJECT_MANAGEMENT, 0)}>{CREATE_PROJECT_MANAGEMENT}</Button>}
                 </div>
 
                 {/* Employee Table */}
                 <Table>
                     <TableCaption>A list of employees</TableCaption>
-                    <TblHeader columns={projectManagementColumns} />
+                    <TblHeader columns={projectManagementColumns} headerType="project management" />
                     <ProjectManagementTblBody
                         paginatedProjectManagements={projectManagementList?.ProjectManagementList}
                         onRemove={handleRemove}

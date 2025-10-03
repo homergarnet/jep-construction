@@ -14,15 +14,16 @@ import { useForm, type FieldErrors } from 'react-hook-form'
 import { inventoryFormSchema, type InventoryFormValues } from './schema/inventoryFormSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { debounce } from 'lodash'
-import { CREATE_INVENTORY, EDIT_INVENTORY, inventoryColumns } from '@/constants/constants'
+import { ADMIN_TYPE_NUM, CREATE_INVENTORY, EDIT_INVENTORY, inventoryColumns } from '@/constants/constants'
 import type { CreateUpdateInventoryRequest } from '@/types/inventory'
 import TblHeader from '@/components/TblHeader'
 import InventoryTblBody from './components/InventoryTblBody'
 import TblPagination from '@/components/TblPagination'
 import InventoryDialog from './components/InventoryDialog'
+import { getJwtRoleId } from '@/utils/getJwtRoleId'
 
 const InventoryPage = () => {
-
+    const roleId = getJwtRoleId();
     const zSetIsOpenDialog = useInventoryContext((state) => state.zSetIsOpenDialog);
     const zDialogTitle = useInventoryContext((state) => state.zDialogTitle);
     const zSetDialogTitle = useInventoryContext((state) => state.zSetDialogTitle);
@@ -224,6 +225,7 @@ const InventoryPage = () => {
     }, [zInventoryAEData]);
 
     return (
+
         <>
             <div className="p-6">
                 <div className="flex items-center justify-between">
@@ -240,24 +242,26 @@ const InventoryPage = () => {
                 <div className="flex justify-end items-center mb-4 space-x-2">
                     {/* Search */}
                     <Input
-                        placeholder="Search employee..."
+                        placeholder="Search inventory..."
                         onChange={(e) => debouncedHIChange(e.target.value)} // 👈 extract value
                         className="w-64"
                     />
-                    {/* Add Employee */}
-                    <Button className='cursor-pointer' onClick={(e) => handleCreateUpdateInventoryList(CREATE_INVENTORY, 0)}>{CREATE_INVENTORY}</Button>
+                    {/* Add Inventory */}
+                    {roleId === ADMIN_TYPE_NUM && <Button className='cursor-pointer' onClick={(e) => handleCreateUpdateInventoryList(CREATE_INVENTORY, 0)}>{CREATE_INVENTORY}</Button>}
                 </div>
 
                 {/* Employee Table */}
-                <Table>
-                    <TableCaption>A list of inventories</TableCaption>
-                    <TblHeader columns={inventoryColumns} />
-                    <InventoryTblBody
-                        paginatedInventories={inventoryList?.InventoryList}
-                        onRemove={handleRemove}
-                        onCreateUpdateInventory={handleCreateUpdateInventoryList}
-                    />
-                </Table>
+                <div className="w-full overflow-x-auto">
+                    <Table className="w-full table-auto">
+                        <TableCaption>A list of inventories</TableCaption>
+                        <TblHeader columns={inventoryColumns} headerType="inventory" />
+                        <InventoryTblBody
+                            paginatedInventories={inventoryList?.InventoryList}
+                            onRemove={handleRemove}
+                            onCreateUpdateInventory={handleCreateUpdateInventoryList}
+                        />
+                    </Table>
+                </div>
                 {/* Pagination */}
                 <div className="flex justify-center mt-4">
                     <TblPagination

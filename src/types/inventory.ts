@@ -1,5 +1,6 @@
 export interface GetInventoryParams {
   keyword?: string;
+  userId?: number;
   page: number;
   pageSize: number;
 }

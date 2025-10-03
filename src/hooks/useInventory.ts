@@ -1,4 +1,5 @@
 import { inventoryApi } from "@/api/inventoryApi";
+import { ADMIN_TYPE_NUM } from "@/constants/constants";
 import useInventoryContext from "@/store/inventory/inventoryContext";
 import type {
   CreateUpdateInventoryRequest,
@@ -6,6 +7,7 @@ import type {
   GetInventoryParams,
   InventoryResponse,
 } from "@/types/inventory";
+import { getJwtRoleId, getJwtUserId } from "@/utils/getJwtRoleId";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useCreateInventory = () => {
@@ -33,6 +35,7 @@ export const useCreateInventory = () => {
 };
 
 export const useGetInventoryList = (params: GetInventoryParams) => {
+  params.userId = getJwtRoleId() === ADMIN_TYPE_NUM ? 0 : getJwtUserId();
   return useQuery<InventoryResponse>({
     queryKey: ["inventories", params],
     queryFn: () => inventoryApi.getInventoryList(params),
