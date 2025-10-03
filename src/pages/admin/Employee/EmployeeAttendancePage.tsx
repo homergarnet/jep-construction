@@ -1,7 +1,7 @@
 import TblHeader from '@/components/TblHeader'
 import { Input } from '@/components/ui/input'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { CREATE_EMP_ATTENDANCE, EDIT_EMP_ATTENDANCE, empAttendanceColumns } from '@/constants/constants'
+import { ADMIN_TYPE_NUM, CREATE_EMP_ATTENDANCE, EDIT_EMP_ATTENDANCE, empAttendanceColumns } from '@/constants/constants'
 import { Users } from 'lucide-react'
 import React, { useCallback, useEffect, useState } from 'react'
 import EmpAttendanceTblBody from './components/EmpAttendanceTblBody'
@@ -17,9 +17,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { empAttendanceFormSchema, type EmpAttendanceFormValues } from './schema/empAttendanceFormSchema'
 import { useForm, type FieldErrors } from 'react-hook-form'
 import type { CreateUpdateEmpAttendanceRequest } from '@/types/empAttendance'
+import { getJwtRoleId } from '@/utils/getJwtRoleId'
 
 const EmployeeAttendancePage = () => {
-
+  const roleId = getJwtRoleId();
   const zSetIsOpenDialog = useEmpAttendanceContext((state) => state.zSetIsOpenDialog);
   const zDialogTitle = useEmpAttendanceContext((state) => state.zDialogTitle);
   const zSetDialogTitle = useEmpAttendanceContext((state) => state.zSetDialogTitle);
@@ -208,7 +209,7 @@ const EmployeeAttendancePage = () => {
           {/* <Button>Export Report</Button> */}
         </div>
         <p className="text-muted-foreground mt-1">
-          Track and manage employee daily attendance records.
+          {roleId === ADMIN_TYPE_NUM ? "Track and manage employee daily attendance records." : "Daily attendance records."}
         </p>
 
         {/* Header with Status Filter, Search + Add attendance */}
@@ -224,7 +225,7 @@ const EmployeeAttendancePage = () => {
         {/* Employee Table */}
         <Table>
           <TableCaption>A list of attendance</TableCaption>
-          <TblHeader columns={empAttendanceColumns} />
+          <TblHeader columns={empAttendanceColumns} headerType="attendance" />
           <EmpAttendanceTblBody
             paginatedAttendance={empAttendanceList?.AttendanceList}
             onRemove={handleRemove}

@@ -1,7 +1,9 @@
 import { Button } from '@/components/ui/button';
 import { TableBody, TableCell, TableRow } from '@/components/ui/table';
-import { EDIT_EMP_ATTENDANCE } from '@/constants/constants';
+import { ADMIN_TYPE_NUM, EDIT_EMP_ATTENDANCE } from '@/constants/constants';
 import type { AttendanceListDto } from '@/types/empAttendance';
+import { formatDateToMMDDYYYYhhmmA } from '@/utils/formatDateToMMDDYYYYhhmmA';
+import { getJwtRoleId } from '@/utils/getJwtRoleId';
 import React from 'react'
 
 type EmployeTblBodyProps = {
@@ -15,14 +17,16 @@ const EmpAttendanceTblBody: React.FC<EmployeTblBodyProps> = ({
     onRemove,
     onCreateUpdateEmpAttendanceList
 }) => {
+    const roleId = getJwtRoleId();
     const apiRoot = import.meta.env.VITE_APP_API_ROOT_ENDPOINT;
     return (
         <TableBody>
             {paginatedAttendance && paginatedAttendance.map((emp) => (
                 <TableRow key={emp.Id}>
                     <TableCell>{emp.EmployeeNumber}</TableCell>
-                    <TableCell>{emp.EmployeeName}</TableCell>
-                    <TableCell>{emp.TimeInOut}</TableCell>
+                    {roleId === ADMIN_TYPE_NUM && <TableCell>{emp.EmployeeName}</TableCell>}
+                    <TableCell>{formatDateToMMDDYYYYhhmmA(emp.TimeInOut)}</TableCell>
+                    <TableCell>{emp.TimeInOutType}</TableCell>
 
                     {/* Make TimeInOutImage an <img> */}
                     <TableCell>
@@ -37,17 +41,22 @@ const EmpAttendanceTblBody: React.FC<EmployeTblBodyProps> = ({
                         )}
                     </TableCell>
                     <TableCell className="text-right space-x-2">
-                        <Button className='cursor-pointer' variant="outline" size="sm" onClick={(e) => onCreateUpdateEmpAttendanceList(EDIT_EMP_ATTENDANCE, emp.Id)}>
-                            Edit
-                        </Button>
-                        <Button
-                            className='cursor-pointer'
-                            variant="destructive"
-                            size="sm"
-                            onClick={() => onRemove(emp.Id)}
-                        >
-                            Remove
-                        </Button>
+                        {roleId === ADMIN_TYPE_NUM && (
+                            <>
+                                <Button className='cursor-pointer' variant="outline" size="sm" onClick={(e) => onCreateUpdateEmpAttendanceList(EDIT_EMP_ATTENDANCE, emp.Id)}>
+                                    Edit
+                                </Button>
+                                <Button
+                                    className='cursor-pointer'
+                                    variant="destructive"
+                                    size="sm"
+                                    onClick={() => onRemove(emp.Id)}
+                                >
+                                    Remove
+                                </Button>
+                            </>
+                        )}
+
                     </TableCell>
                 </TableRow>
             ))}

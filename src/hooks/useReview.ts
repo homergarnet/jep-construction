@@ -1,12 +1,27 @@
 import { reviewApi } from "@/api/reviewApi";
 import useReviewContext from "@/store/review/reviewContext";
-import type { GetReviewParams, ReviewResponse } from "@/types/review";
+import type {
+  GetReviewByIdParams,
+  GetReviewParams,
+  ReviewResponse,
+} from "@/types/review";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useGetReviewList = (params: GetReviewParams) => {
   return useQuery<ReviewResponse>({
     queryKey: ["reviews", params],
     queryFn: () => reviewApi.getReviewList(params),
+  });
+};
+
+export const useGetReviewById = (
+  params: GetReviewByIdParams,
+  enabled = true
+) => {
+  return useQuery<ReviewResponse>({
+    queryKey: ["review", params.id],
+    queryFn: () => reviewApi.getReviewById(params),
+    enabled: !!params.id && enabled,
   });
 };
 

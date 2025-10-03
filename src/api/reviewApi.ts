@@ -1,13 +1,14 @@
-import type { GetReviewByIdParams, GetReviewParams, ReviewResponse } from "@/types/review";
+import type {
+  GetReviewByIdParams,
+  GetReviewParams,
+  ReviewResponse,
+} from "@/types/review";
 import apiConfig from "./apiConfig";
-
+import type { ReviewFormValues } from "@/pages/schema/reviewFormSchema";
+import useReviewContext from "@/store/review/reviewContext";
 
 export const reviewApi = {
-
-
-  getReviewList: async (
-    params: GetReviewParams
-  ): Promise<ReviewResponse> => {
+  getReviewList: async (params: GetReviewParams): Promise<ReviewResponse> => {
     const { data } = await apiConfig.get("/Review/get-review-list", {
       params,
     });
@@ -19,47 +20,42 @@ export const reviewApi = {
     return data;
   },
 
-//   getReviewById: async (
-//     params: GetReviewByIdParams
-//   ): Promise<ReviewResponse> => {
-//     const { data } = await apiConfig.get("/Review/get-review-by-id", {
-//       params,
-//     });
+  getReviewById: async (
+    params: GetReviewByIdParams
+  ): Promise<ReviewResponse> => {
+    const { data } = await apiConfig.get("/Review/get-review-by-id", {
+      params,
+    });
+    // projectManagementId: z.number(),
+    // rate: z.number(),
+    // reviewDescription: z.string().min(1, "Review description is required"),
+    const result = {
+      id: data.ReviewList[0].Id,
+      rate: data.ReviewList[0].Rate,
+      reviewDescription: data.ReviewList[0].reviewDescription,
+    } as ReviewFormValues;
 
-//     const result = {
-//       id: data.UserList[0].Id,
-//       email: data.UserList[0].Email,
-//       firstname: data.UserList[0].Firstname,
-//       lastname: data.UserList[0].Lastname,
-//       mobileNumber: data.UserList[0].MobileNumber,
-//       position: data.UserList[0].Position,
-//       salary: data.UserList[0].Salary,
-//       status: data.UserList[0].Status,
-//       address: data.UserList[0].Address,
-//       dateOfBirth: data.UserList[0].DateOfBirth.split("T")[0],
-//     } as EmployeeListFormValues;
+    useReviewContext.getState().zSetReviewAEData(result);
+    if (!data.IsSuccess) {
+      throw new Error(data.ApiMessage);
+    }
 
-//     useEmployeeListContext.getState().zSetEmpListAEData(result);
-//     if (!data.IsSuccess) {
-//       throw new Error(data.ApiMessage);
-//     }
+    return data;
+  },
 
-//     return data;
-//   },
+  //   updateReview: async (
+  //     payload: CreateUpdateEmployeeRequest
+  //   ): Promise<EmployeeListResponse> => {
+  //     const { data } = await apiConfig.put<EmployeeListResponse>(
+  //       "/EmployeeList/update-employee",
+  //       payload
+  //     );
 
-//   updateReview: async (
-//     payload: CreateUpdateEmployeeRequest
-//   ): Promise<EmployeeListResponse> => {
-//     const { data } = await apiConfig.put<EmployeeListResponse>(
-//       "/EmployeeList/update-employee",
-//       payload
-//     );
-
-//     if (!data.IsSuccess) {
-//       throw new Error(data.ApiMessage);
-//     }
-//     return data;
-//   },
+  //     if (!data.IsSuccess) {
+  //       throw new Error(data.ApiMessage);
+  //     }
+  //     return data;
+  //   },
 
   removeReview: async (id: number): Promise<ReviewResponse> => {
     const { data } = await apiConfig.put<ReviewResponse>(

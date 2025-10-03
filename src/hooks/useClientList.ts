@@ -8,7 +8,7 @@ import type {
 } from "@/types/clientlist";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-export const useCreateClient = () => {
+export const useCreateClientRequest = () => {
   const queryClient = useQueryClient();
   const zPage = useClientListContext((state) => state.zPage);
   const zPageSize = useClientListContext((state) => state.zPageSize);
@@ -16,7 +16,7 @@ export const useCreateClient = () => {
 
   return useMutation({
     mutationFn: (payload: CreateUpdateClientRequest) =>
-      clientListApi.createClient(payload),
+      clientListApi.createClientRequest(payload),
     onSuccess: (res) => {
       // pass it in zustand store if we want dynamic
       queryClient.invalidateQueries({

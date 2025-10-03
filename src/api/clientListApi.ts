@@ -9,7 +9,7 @@ import type { ClientListFormValues } from "@/pages/admin/schema/clientListFormSc
 import useClientListContext from "@/store/client/clientListContext";
 
 export const clientListApi = {
-  createClient: async (
+  createClientRequest: async (
     payload: CreateUpdateClientRequest
   ): Promise<ClientListResponse> => {
     const { data } = await apiConfig.post<ClientListResponse>(

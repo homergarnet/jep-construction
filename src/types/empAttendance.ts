@@ -1,5 +1,6 @@
 export interface GetEmpAttendanceListParams {
   keyword?: string;
+  userId?: number;
   page: number;
   pageSize: number;
 }

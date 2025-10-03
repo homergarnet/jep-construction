@@ -18,6 +18,8 @@ const initialData: ProjectManagementFormValues = {
 interface ProjectManagementFormState {
   zIsOpenDialog: boolean;
   zSetIsOpenDialog: (zIsOpenDialog: boolean) => void;
+  zIsOpenDialog2: boolean;
+  zSetIsOpenDialog2: (zIsOpenDialog2: boolean) => void;
   zDialogTitle: string;
   zSetDialogTitle: (zDialogTitle: string) => void;
   zPage: number;
@@ -37,6 +39,8 @@ const useProjectManagementContext = create<ProjectManagementFormState>(
   (set) => ({
     zIsOpenDialog: false,
     zSetIsOpenDialog: (zIsOpenDialog: boolean) => set({ zIsOpenDialog }),
+    zIsOpenDialog2: false,
+    zSetIsOpenDialog2: (zIsOpenDialog2: boolean) => set({ zIsOpenDialog2 }),
     zDialogTitle: "",
     zSetDialogTitle: (zDialogTitle: string) => set({ zDialogTitle }),
     zPage: 1,

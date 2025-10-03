@@ -1,4 +1,5 @@
 import { empAttendanceListApi } from "@/api/empAttendanceListApi";
+import { ADMIN_TYPE, ADMIN_TYPE_NUM } from "@/constants/constants";
 import useEmpAttendanceContext from "@/store/employee/empAttendance/empAttendanceContext";
 import type {
   CreateUpdateEmpAttendanceRequest,
@@ -6,9 +7,11 @@ import type {
   GetEmpAttendanceByIdParams,
   GetEmpAttendanceListParams,
 } from "@/types/empAttendance";
+import { getJwtRoleId, getJwtUserId } from "@/utils/getJwtRoleId";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useGetEmpAttendanceList = (params: GetEmpAttendanceListParams) => {
+  params.userId = getJwtRoleId() === ADMIN_TYPE_NUM ? 0 : getJwtUserId();
   return useQuery<EmpAttendanceListResponse>({
     queryKey: ["empattendances", params],
     queryFn: () => empAttendanceListApi.getEmpAttendanceList(params),
@@ -39,7 +42,12 @@ export const useUpdateEmpAttendance = () => {
       queryClient.invalidateQueries({
         queryKey: [
           "empattendances",
-          { keyword: zStatusFilter, page: zPage, pageSize: zPageSize },
+          {
+            keyword: zStatusFilter,
+            userId: getJwtRoleId() === ADMIN_TYPE_NUM ? 0 : getJwtUserId(),
+            page: zPage,
+            pageSize: zPageSize,
+          },
         ],
       });
     },
@@ -61,7 +69,12 @@ export const useRemoveEmpAttendance = () => {
       queryClient.invalidateQueries({
         queryKey: [
           "empattendances",
-          { keyword: zStatusFilter, page: zPage, pageSize: zPageSize },
+          {
+            keyword: zStatusFilter,
+            userId: getJwtRoleId() === ADMIN_TYPE_NUM ? 0 : getJwtUserId(),
+            page: zPage,
+            pageSize: zPageSize,
+          },
         ],
       });
     },
