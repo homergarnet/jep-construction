@@ -8,8 +8,25 @@ import apiConfig from "./apiConfig";
 import type { EmpAttendanceFormValues } from "@/pages/admin/employee/schema/empAttendanceFormSchema";
 import useEmpAttendanceContext from "@/store/employee/empAttendance/empAttendanceContext";
 import type { useRemoveEmpAttendance } from "@/hooks/useEmpAttendance";
+import type { CreateUpdateInOutRequest } from "@/types/inout";
 
 export const empAttendanceListApi = {
+  createAttendance: async (
+    payload: CreateUpdateInOutRequest
+  ): Promise<EmpAttendanceListResponse> => {
+    const { data } = await apiConfig.post<EmpAttendanceListResponse>(
+      "/Attendance/time-in-out",
+      payload
+    );
+
+    if (!data.IsSuccess) {
+      throw new Error(data.ApiMessage);
+    }
+
+    // Return the full response, not just ApiMessage
+    return data;
+  },
+
   getEmpAttendanceList: async (
     params: GetEmpAttendanceListParams
   ): Promise<EmpAttendanceListResponse> => {
