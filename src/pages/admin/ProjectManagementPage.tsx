@@ -21,6 +21,8 @@ import TblPagination from '@/components/TblPagination'
 import ProjectManagementTblBody from './components/ProjectManagementTblBody'
 import ProjectManagementDialog from './components/ProjectManagementDialog'
 import { getJwtRoleId } from '@/utils/getJwtRoleId'
+import ReviewDialog from './components/ReviewDialog'
+import useReviewContext from '@/store/review/reviewContext'
 
 
 const ProjectManagementPage = () => {
@@ -32,13 +34,18 @@ const ProjectManagementPage = () => {
     const zSetDialogTitle = useProjectManagementContext((state) => state.zSetDialogTitle);
     const zProjectManagementAEData = useProjectManagementContext((state) => state.zProjectManagementAEData);
     const zSetprojectManagementAEData = useProjectManagementContext((state) => state.zSetprojectManagementAEData);
+    const zReviewAEData = useReviewContext((state) => state.zReviewAEData);
     const zPage = useProjectManagementContext((state) => state.zPage);
     const zSetPage = useProjectManagementContext((state) => state.zSetPage);
     const zPageSize = useProjectManagementContext((state) => state.zPageSize);
     const zStatusFilter = useProjectManagementContext((state) => state.zStatusFilter);
     const zSetStatusFilter = useProjectManagementContext((state) => state.zSetStatusFilter);
-    const [projManagementId, setProjManagementId] = useState(0);
-    const [projManagementIdDupli, setProjManagementIdDupli] = useState(0);
+    const zProjectManagementId = useProjectManagementContext((state) => state.zProjectManagementId);
+    const zSetProjectManagementId = useProjectManagementContext((state) => state.zSetProjectManagementId);
+    const zSetReviewId = useProjectManagementContext((state) => state.zSetReviewId);
+    const clearReviewAEData = useReviewContext((state) => state.clearReviewAEData);
+    const zSetIsCreateReview = useReviewContext((state) => state.zSetIsCreateReview);
+
     const { showConfirm, showToast } = useSwal();
     const { confirm, ConfirmDialog } = useConfirmDialog();
     const createProjectManagement = useCreateProjectManagement();
@@ -49,7 +56,7 @@ const ProjectManagementPage = () => {
     });
 
     const { data: projectManagementById, isLoading, refetch } = useGetProjectManagementById({
-        id: projManagementId,
+        id: zProjectManagementId,
     });
 
     const updateProjectManagement = useUpdateProjectManagement();
@@ -110,31 +117,18 @@ const ProjectManagementPage = () => {
 
         zSetIsOpenDialog(true);
         zSetDialogTitle(type);
+        zSetProjectManagementId(id);
 
-        if (type === EDIT_PROJECT_MANAGEMENT) {
-            setProjManagementId(id);
-            setProjManagementIdDupli(id);
-            if (projManagementIdDupli === id) {
-                refetch();
-            }
+    }, [zSetIsOpenDialog, zSetDialogTitle, zSetProjectManagementId]);
 
-        }
-    }, [zSetIsOpenDialog, zSetDialogTitle, projManagementIdDupli]);
-
-    const handleCreateUpdateReview = useCallback((type: string, id: number) => {
-
+    const handleCreateUpdateReview = useCallback((type: string, projectManagementId: number, reviewId: number) => {
+        // always set the createReview to true
+        zSetIsCreateReview(true);
         zSetIsOpenDialog2(true);
         zSetDialogTitle(type);
-
-        // if (type === EDIT_PROJECT_MANAGEMENT) {
-        //     setProjManagementId(id);
-        //     setProjManagementIdDupli(id);
-        //     if (projManagementIdDupli === id) {
-        //         refetch();
-        //     }
-
-        // }
-    }, [zSetIsOpenDialog2, zSetDialogTitle, projManagementIdDupli]);
+        zSetProjectManagementId(projectManagementId);
+        zSetReviewId(reviewId);
+    }, [zSetIsCreateReview, zSetIsOpenDialog2, zSetDialogTitle, zSetProjectManagementId, zSetReviewId]);
 
     const handleClientNameChange = useCallback((value: string) => {
         setValue("userId", parseInt(value), { shouldValidate: true });
@@ -159,7 +153,7 @@ const ProjectManagementPage = () => {
                 if (!ok) return
 
                 let payload: CreateUpdateProjectManagementRequest = {
-                    Id: data.id,
+                    Id: zProjectManagementId,
                     UserId: data.userId,
                     ProjectName: data.projectName,
                     StartDate: data.startDate,
@@ -264,6 +258,7 @@ const ProjectManagementPage = () => {
                         paginatedProjectManagements={projectManagementList?.ProjectManagementList}
                         onRemove={handleRemove}
                         onCreateUpdateProjectManagement={handleCreateUpdateProjectManagement}
+                        onCreateUpdateReview={handleCreateUpdateReview}
                     />
                 </Table>
                 {/* Pagination */}
@@ -279,6 +274,8 @@ const ProjectManagementPage = () => {
                 onError={handleErrorForm}
                 onReset={handleResetValue}
                 formMethods={form}
+            />
+            <ReviewDialog
             />
             {/* Important: must render this once per component */}
             {ConfirmDialog}

@@ -1,5 +1,6 @@
 export interface GetProjectManagementParams {
   keyword?: string;
+  userId?: number;
   page: number;
   pageSize: number;
 }
@@ -23,6 +24,7 @@ export interface CreateUpdateProjectManagementRequest {
 export interface ProjectManagementDto {
   Id: number;
   ProjectId: number;
+  ReviewId: number;
   ProjectName: string;
   ClientName: string;
   StartDate: string;

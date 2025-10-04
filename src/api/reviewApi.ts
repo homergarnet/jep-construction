@@ -1,4 +1,5 @@
 import type {
+  CreateUpdateReviewRequest,
   GetReviewByIdParams,
   GetReviewParams,
   ReviewResponse,
@@ -8,6 +9,22 @@ import type { ReviewFormValues } from "@/pages/schema/reviewFormSchema";
 import useReviewContext from "@/store/review/reviewContext";
 
 export const reviewApi = {
+  createReview: async (
+    payload: CreateUpdateReviewRequest
+  ): Promise<ReviewResponse> => {
+    const { data } = await apiConfig.post<ReviewResponse>(
+      "/Review/create-review",
+      payload
+    );
+
+    if (!data.IsSuccess) {
+      throw new Error(data.ApiMessage);
+    }
+
+    // Return the full response, not just ApiMessage
+    return data;
+  },
+
   getReviewList: async (params: GetReviewParams): Promise<ReviewResponse> => {
     const { data } = await apiConfig.get("/Review/get-review-list", {
       params,
@@ -26,15 +43,18 @@ export const reviewApi = {
     const { data } = await apiConfig.get("/Review/get-review-by-id", {
       params,
     });
+    if (Array.isArray(data.ReviewList) && data.ReviewList.length > 0) {
+      useReviewContext.getState().zSetIsCreateReview(false);
+    }
     // projectManagementId: z.number(),
     // rate: z.number(),
     // reviewDescription: z.string().min(1, "Review description is required"),
     const result = {
       id: data.ReviewList[0].Id,
       rate: data.ReviewList[0].Rate,
-      reviewDescription: data.ReviewList[0].reviewDescription,
+      reviewDescription: data.ReviewList[0].ReviewDescription,
     } as ReviewFormValues;
-
+    console.log("data: ", data);
     useReviewContext.getState().zSetReviewAEData(result);
     if (!data.IsSuccess) {
       throw new Error(data.ApiMessage);
@@ -43,19 +63,19 @@ export const reviewApi = {
     return data;
   },
 
-  //   updateReview: async (
-  //     payload: CreateUpdateEmployeeRequest
-  //   ): Promise<EmployeeListResponse> => {
-  //     const { data } = await apiConfig.put<EmployeeListResponse>(
-  //       "/EmployeeList/update-employee",
-  //       payload
-  //     );
+  updateReview: async (
+    payload: CreateUpdateReviewRequest
+  ): Promise<ReviewResponse> => {
+    const { data } = await apiConfig.put<ReviewResponse>(
+      "/Review/update-review",
+      payload
+    );
 
-  //     if (!data.IsSuccess) {
-  //       throw new Error(data.ApiMessage);
-  //     }
-  //     return data;
-  //   },
+    if (!data.IsSuccess) {
+      throw new Error(data.ApiMessage);
+    }
+    return data;
+  },
 
   removeReview: async (id: number): Promise<ReviewResponse> => {
     const { data } = await apiConfig.put<ReviewResponse>(

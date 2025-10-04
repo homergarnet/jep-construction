@@ -28,9 +28,14 @@ interface ProjectManagementFormState {
   zSetPageSize: (zPageSize: number) => void;
   zStatusFilter: string;
   zSetStatusFilter: (zStatusFilter: string) => void;
+  zProjectManagementId: number;
+  zSetProjectManagementId: (zProjectManagementId: number) => void;
+  zReviewId: number;
+  zSetReviewId: (zReviewId: number) => void;
   // for updating and creating projectManagement data
   zProjectManagementAEData: ProjectManagementFormValues;
   zSetprojectManagementAEData: (data: ProjectManagementFormValues) => void;
+  clearProjectManagementAEData: () => Promise<void>;
 }
 
 //for inialization
@@ -49,9 +54,17 @@ const useProjectManagementContext = create<ProjectManagementFormState>(
     zSetPageSize: (zPageSize: number) => set({ zPageSize }),
     zStatusFilter: "not/a",
     zSetStatusFilter: (zStatusFilter: string) => set({ zStatusFilter }),
+    zProjectManagementId: 0,
+    zSetProjectManagementId: (zProjectManagementId: number) =>
+      set({ zProjectManagementId }),
+    zReviewId: 0,
+    zSetReviewId: (zReviewId: number) => set({ zReviewId }),
     zProjectManagementAEData: initialData,
     zSetprojectManagementAEData: (data) =>
       set({ zProjectManagementAEData: data }),
+    clearProjectManagementAEData: async () => {
+      set({ zProjectManagementAEData: initialData });
+    },
   })
 );
 

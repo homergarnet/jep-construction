@@ -5,7 +5,6 @@ import create from "zustand";
 
 const initialData: ReviewFormValues = {
   id: undefined,
-  projectManagementId: 0,
   rate: 0,
   reviewDescription: "",
 };
@@ -22,9 +21,12 @@ interface ReviewFormState {
   zSetPageSize: (zPageSize: number) => void;
   zStatusFilter: string;
   zSetStatusFilter: (zStatusFilter: string) => void;
+  zIsCreateReview: boolean;
+  zSetIsCreateReview: (zIsCreateReview: boolean) => void;
   // for updating and creating review data
   zReviewAEData: ReviewFormValues;
   zSetReviewAEData: (data: ReviewFormValues) => void;
+  clearReviewAEData: () => Promise<void>;
 }
 
 //for inialization
@@ -40,8 +42,13 @@ const useReviewContext = create<ReviewFormState>((set) => ({
   zSetPageSize: (zPageSize: number) => set({ zPageSize }),
   zStatusFilter: "",
   zSetStatusFilter: (zStatusFilter: string) => set({ zStatusFilter }),
+  zIsCreateReview: true,
+  zSetIsCreateReview: (zIsCreateReview: boolean) => set({ zIsCreateReview }),
   zReviewAEData: initialData,
   zSetReviewAEData: (data) => set({ zReviewAEData: data }),
+  clearReviewAEData: async () => {
+    set({ zReviewAEData: initialData });
+  },
 }));
 
 export default useReviewContext;

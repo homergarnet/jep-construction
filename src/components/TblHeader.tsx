@@ -53,13 +53,13 @@ export const TblHeader: React.FC<DataTableHeaderProps> = ({ columns, headerType 
                         }
                     }
                     else if (headerType === "project management") {
-                        if (col.key !== "actions" || roleId === ADMIN_TYPE_NUM) {
+                        if (col.key !== "clientName" || roleId === ADMIN_TYPE_NUM) {
                             return (
                                 <TableHead key={col.key} className={col.className}>
                                     {col.label}
                                 </TableHead>
                             )
-                        } else if (col.key !== "actions") {
+                        } else if (col.key !== "clientName") {
                             return (
                                 <TableHead key={col.key} className={col.className}>
                                     {col.label}

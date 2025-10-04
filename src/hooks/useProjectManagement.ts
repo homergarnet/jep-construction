@@ -1,4 +1,5 @@
 import { projectManagementApi } from "@/api/projectManagementApi";
+import { ADMIN_TYPE_NUM } from "@/constants/constants";
 import useProjectManagementContext from "@/store/projectManagement/projectManagementContext";
 import type {
   CreateUpdateProjectManagementRequest,
@@ -6,6 +7,7 @@ import type {
   GetProjectManagementParams,
   ProjectManagementResponse,
 } from "@/types/projectmanagement";
+import { getJwtRoleId, getJwtUserId } from "@/utils/getJwtRoleId";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useCreateProjectManagement = () => {
@@ -37,6 +39,7 @@ export const useCreateProjectManagement = () => {
 export const useGetProjectManagementList = (
   params: GetProjectManagementParams
 ) => {
+  params.userId = getJwtRoleId() === ADMIN_TYPE_NUM ? 0 : getJwtUserId();
   return useQuery<ProjectManagementResponse>({
     queryKey: ["projectmanagements", params],
     queryFn: () => projectManagementApi.getProjectManagementList(params),
