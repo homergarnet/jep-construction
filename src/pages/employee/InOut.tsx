@@ -1,5 +1,9 @@
 import { Button } from '@/components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { useCreateInOut } from '@/hooks/useInOut'
+import useSwal from '@/hooks/useSwal'
+import type { CreateUpdateInOutRequest } from '@/types/inout'
+import { getJwtUserId } from '@/utils/getJwtRoleId'
 import React, { useEffect, useRef, useState } from 'react'
 
 interface AttendanceRow {
@@ -12,6 +16,9 @@ interface AttendanceRow {
 
 
 const InOut = () => {
+  const employeeId = getJwtUserId();
+  const createInOut = useCreateInOut();
+  const { showConfirm, showToast } = useSwal();
   const [currentTime, setCurrentTime] = useState<string>("")
   const [location, setLocation] = useState<string>("")
   const [stream, setStream] = useState<MediaStream | null>(null)
@@ -85,6 +92,18 @@ const InOut = () => {
         const { latitude, longitude } = pos.coords
         const loc = await fetchCityCountry(latitude, longitude)
         const img = captureImage()
+        let payload: CreateUpdateInOutRequest = {
+          Id: 0,
+          EmployeeId: employeeId,
+          Location: loc,
+          TimeInOutType: "in",
+          TImeInOutImage: img,
+
+        }
+        createInOut.mutate(payload, {
+          onSuccess: (res) => showToast(res.ApiMessage, "success"),
+          onError: (error: Error) => showToast(error.message, "error"),
+        })
         setRecords((prev) => [
           ...prev,
           {
@@ -98,14 +117,33 @@ const InOut = () => {
   }
 
   const handleTimeOut = () => {
-    const img = captureImage()
-    setRecords((prev) => {
-      if (prev.length === 0) return prev
-      const updated = [...prev]
-      updated[updated.length - 1].timeOut = new Date().toLocaleTimeString()
-      updated[updated.length - 1].timeOutImage = img
-      return updated
-    })
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(async (pos) => {
+        const { latitude, longitude } = pos.coords
+        const loc = await fetchCityCountry(latitude, longitude)
+        const img = captureImage()
+        let payload: CreateUpdateInOutRequest = {
+          Id: 0,
+          EmployeeId: employeeId,
+          Location: loc,
+          TimeInOutType: "out",
+          TImeInOutImage: img,
+
+        }
+        createInOut.mutate(payload, {
+          onSuccess: (res) => showToast(res.ApiMessage, "success"),
+          onError: (error: Error) => showToast(error.message, "error"),
+        })
+        setRecords((prev) => {
+          if (prev.length === 0) return prev
+          const updated = [...prev]
+          updated[updated.length - 1].timeOut = new Date().toLocaleTimeString()
+          updated[updated.length - 1].timeOutImage = img
+          return updated
+        })
+      })
+    }
+
   }
 
   return (
@@ -133,7 +171,7 @@ const InOut = () => {
       <canvas ref={canvasRef} className="hidden" />
 
       {/* table */}
-      {records.length > 0 && (
+      {/* {records.length > 0 && (
         <table className="mt-6 w-full max-w-4xl border border-gray-300 text-sm">
           <thead>
             <tr className="bg-gray-100">
@@ -164,7 +202,7 @@ const InOut = () => {
             ))}
           </tbody>
         </table>
-      )}
+      )} */}
     </div>
   )
 }
