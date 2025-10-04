@@ -1,5 +1,6 @@
 export interface GetReviewParams {
   keyword?: string;
+  userId?: number;
   page: number;
   pageSize: number;
 }

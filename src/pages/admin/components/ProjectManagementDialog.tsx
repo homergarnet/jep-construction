@@ -44,6 +44,8 @@ const ProjectManagementDialog: React.FC<ProjectManagementDialogProps> = ({
         (state) => state.zSetIsOpenDialog
     );
     const zDialogTitle = useProjectManagementContext((state) => state.zDialogTitle);
+    const zSetProjectManagementId = useProjectManagementContext((state) => state.zSetProjectManagementId);
+    const clearProjectManagementAEData = useProjectManagementContext((state) => state.clearProjectManagementAEData);
 
     const {
         register,
@@ -59,8 +61,8 @@ const ProjectManagementDialog: React.FC<ProjectManagementDialogProps> = ({
             onOpenChange={(open) => {
                 zSetIsOpenDialog(open);
                 if (!open) {
-                    reset(); // clears form
-                    onReset(); // external reset callback
+                    zSetProjectManagementId(0);
+                    clearProjectManagementAEData();
                 }
             }}
         >

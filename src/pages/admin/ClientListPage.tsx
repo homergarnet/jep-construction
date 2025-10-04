@@ -12,7 +12,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm, type FieldErrors } from 'react-hook-form'
 import { debounce } from 'lodash'
 import { CLIENT_TYPE, clientColumns, clientListStatusOptions, CREATE_CLIENT, EDIT_CLIENT } from '@/constants/constants'
-import { useCreateClient, useGetClientById, useGetClientList, useRemoveClient, useUpdateClient } from '@/hooks/useClientList'
+import { useCreateClientRequest, useGetClientById, useGetClientList, useRemoveClient, useUpdateClient } from '@/hooks/useClientList'
 import type { CreateUpdateClientRequest } from '@/types/clientlist'
 import TblHeader from '@/components/TblHeader'
 import ClientTblBody from './components/ClientTblBody'
@@ -35,7 +35,7 @@ const ClientListPage = () => {
     const [empIdDupli, setClientIdDupli] = useState(0);
     const { showConfirm, showToast } = useSwal();
     const { confirm, ConfirmDialog } = useConfirmDialog();
-    const createClient = useCreateClient();
+    const createClient = useCreateClientRequest();
     const { data: clientList, isLoading: clientListLoading } = useGetClientList({
         keyword: zStatusFilter,
         accountType: CLIENT_TYPE,
