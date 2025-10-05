@@ -1,17 +1,17 @@
 import React from 'react'
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from './ui/pagination'
-import useEmployeeListContext from '@/store/employee/employeeList/employeeListContext'
 import { cn } from '@/lib/utils'
+import useReviewContext from '@/store/review/reviewContext'
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
 
 type TablePaginationProps = {
     totalPages: number
 }
 
-const TblPagination: React.FC<TablePaginationProps> = ({ totalPages }) => {
+const ReviewPagination: React.FC<TablePaginationProps> = ({ totalPages }) => {
 
-    const zPage = useEmployeeListContext((state) => state.zPage);
-    const zSetPage = useEmployeeListContext((state) => state.zSetPage);
-    const zPageSize = useEmployeeListContext((state) => state.zPageSize);
+    const zPage = useReviewContext((state) => state.zPage);
+    const zSetPage = useReviewContext((state) => state.zSetPage);
+    const zPageSize = useReviewContext((state) => state.zPageSize);
 
     if (totalPages <= 1) return null // hide if only 1 page
     return (
@@ -64,4 +64,4 @@ const TblPagination: React.FC<TablePaginationProps> = ({ totalPages }) => {
     );
 }
 
-export default TblPagination
+export default ReviewPagination

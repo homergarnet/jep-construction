@@ -1,7 +1,7 @@
 import StatusFilter from '@/components/StatusFilter'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Table, TableCaption } from '@/components/ui/table'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import useSwal from '@/hooks/useSwal'
 import useClientListContext from '@/store/client/clientListContext'
@@ -16,8 +16,8 @@ import { useCreateClientRequest, useGetClientById, useGetClientList, useRemoveCl
 import type { CreateUpdateClientRequest } from '@/types/clientlist'
 import TblHeader from '@/components/TblHeader'
 import ClientTblBody from './components/ClientTblBody'
-import TblPagination from '@/components/TblPagination'
 import ClientDialog from './components/ClientDialog'
+import ClientListPagination from './components/ClientListPagination'
 
 const ClientListPage = () => {
 
@@ -261,7 +261,7 @@ const ClientListPage = () => {
                 </Table>
                 {/* Pagination */}
                 <div className="flex justify-center mt-4">
-                    <TblPagination
+                    <ClientListPagination
                         totalPages={totalPages}
                     />
                 </div>

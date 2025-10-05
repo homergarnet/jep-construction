@@ -1,29 +1,25 @@
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Table, TableCaption } from '@/components/ui/table'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import { useCreateProjectManagement, useGetProjectManagementById, useGetProjectManagementList, useRemoveProjectManagement, useUpdateProjectManagement } from '@/hooks/useProjectManagement'
 import useSwal from '@/hooks/useSwal'
 import useProjectManagementContext from '@/store/projectManagement/projectManagementContext'
 import { Users } from 'lucide-react'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useForm, type FieldErrors } from 'react-hook-form'
 import { projectManagementFormSchema, type ProjectManagementFormValues } from './schema/projectManagementFormSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { debounce } from 'lodash'
-import { ADMIN_TYPE_NUM, CREATE_PROJECT_MANAGEMENT, EDIT_PROJECT_MANAGEMENT, projectManagementColumns } from '@/constants/constants'
+import { ADMIN_TYPE_NUM, CREATE_PROJECT_MANAGEMENT, projectManagementColumns } from '@/constants/constants'
 import type { CreateUpdateProjectManagementRequest } from '@/types/projectmanagement'
 import TblHeader from '@/components/TblHeader'
-import TblPagination from '@/components/TblPagination'
 import ProjectManagementTblBody from './components/ProjectManagementTblBody'
 import ProjectManagementDialog from './components/ProjectManagementDialog'
 import { getJwtRoleId } from '@/utils/getJwtRoleId'
 import ReviewDialog from './components/ReviewDialog'
 import useReviewContext from '@/store/review/reviewContext'
-
+import PMPagination from './components/PMPaginatinon'
 
 const ProjectManagementPage = () => {
 
@@ -263,7 +259,7 @@ const ProjectManagementPage = () => {
                 </Table>
                 {/* Pagination */}
                 <div className="flex justify-center mt-4">
-                    <TblPagination
+                    <PMPagination
                         totalPages={totalPages}
                     />
                 </div>

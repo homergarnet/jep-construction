@@ -1,8 +1,6 @@
 import TblHeader from '@/components/TblHeader'
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Table, TableCaption } from '@/components/ui/table'
 import { reviewColumns } from '@/constants/constants'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import { useGetReviewList, useRemoveReview } from '@/hooks/useReview'
@@ -10,10 +8,9 @@ import useSwal from '@/hooks/useSwal'
 import useReviewContext from '@/store/review/reviewContext'
 import { debounce } from 'lodash'
 import { Users } from 'lucide-react'
-import React, { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import React from 'react'
 import ReviewTblBody from './admin/components/ReviewTblBody'
-import TblPagination from '@/components/TblPagination'
+import ReviewPagination from './admin/components/ReviewPagination'
 
 const ReviewPage = () => {
 
@@ -97,7 +94,7 @@ const ReviewPage = () => {
                 </Table>
                 {/* Pagination */}
                 <div className="flex justify-center mt-4">
-                    <TblPagination
+                    <ReviewPagination
                         totalPages={totalPages}
                     />
                 </div>
