@@ -1,9 +1,6 @@
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Table, TableCaption } from '@/components/ui/table'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import { useCreateInventory, useGetInventoryById, useGetInventoryList, useRemoveInventory, useUpdateInventory } from '@/hooks/useInventory'
 import useSwal from '@/hooks/useSwal'
@@ -18,9 +15,9 @@ import { ADMIN_TYPE_NUM, CREATE_INVENTORY, EDIT_INVENTORY, inventoryColumns } fr
 import type { CreateUpdateInventoryRequest } from '@/types/inventory'
 import TblHeader from '@/components/TblHeader'
 import InventoryTblBody from './components/InventoryTblBody'
-import TblPagination from '@/components/TblPagination'
 import InventoryDialog from './components/InventoryDialog'
 import { getJwtRoleId } from '@/utils/getJwtRoleId'
+import InventoryPagination from './admin/components/InventoryPagination'
 
 const InventoryPage = () => {
     const roleId = getJwtRoleId();
@@ -264,7 +261,7 @@ const InventoryPage = () => {
                 </div>
                 {/* Pagination */}
                 <div className="flex justify-center mt-4">
-                    <TblPagination
+                    <InventoryPagination
                         totalPages={totalPages}
                     />
                 </div>

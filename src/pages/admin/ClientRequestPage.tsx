@@ -1,21 +1,16 @@
 import TblHeader from '@/components/TblHeader'
-import TblPagination from '@/components/TblPagination'
-import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Table, TableCaption } from '@/components/ui/table'
 import { clientRequestColumns } from '@/constants/constants'
-import { useGetClientList } from '@/hooks/useClientList'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import useSwal from '@/hooks/useSwal'
 import useClientRequestContext from '@/store/clientRequest/clientRequestContext'
 import { debounce } from 'lodash'
 import { Users } from 'lucide-react'
-import React, { useState } from 'react'
+import React from 'react'
 import ClientRequestTblBody from './components/ClientRequestTblBody'
 import { useGetClientRequestList, useRemoveClientRequest } from '@/hooks/useClientRequest'
+import ClientRequestPagination from './components/ClientRequestPagination'
 
 const ClientRequestPage = () => {
     const zSetIsOpenDialog = useClientRequestContext((state) => state.zSetIsOpenDialog);
@@ -98,7 +93,7 @@ const ClientRequestPage = () => {
                 </Table>
                 {/* Pagination */}
                 <div className="flex justify-center mt-4">
-                    <TblPagination
+                    <ClientRequestPagination
                         totalPages={totalPages}
                     />
                 </div>
