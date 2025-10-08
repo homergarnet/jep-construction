@@ -46,37 +46,9 @@ import {
 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { NewChatSheet } from "./NewChatSheet";
+import type { Conversation, Message, User } from "@/types/messages";
 
 // --- Sample Data -------------------------------------------------------------
-
-type User = {
-    id: string
-    name: string
-    avatar: string
-    online?: boolean
-}
-
-type Message = {
-    id: string;
-    authorId: string;
-    authorName: string;
-    authorAvatar?: string;
-    text?: string;
-    imageUrl?: string;
-    fileName?: string;
-    fileSize?: string;
-    createdAt: string; // ISO
-    status?: "sending" | "sent" | "delivered" | "read";
-};
-
-type Conversation = {
-    id: string;
-    title: string;
-    lastMessage: string | null;
-    unread: number;
-    participants: { id: string; name: string; avatar?: string; online?: boolean }[];
-};
-
 const ME = { id: "me", name: "You", avatar: "https://i.pravatar.cc/100?img=13" };
 
 const conversationsSeed: Conversation[] = [
@@ -555,11 +527,11 @@ function ConversationRow({ c, active, onClick }: { c: Conversation; active?: boo
             <div className="flex items-center gap-3">
                 <Avatar className="h-10 w-10">
                     <AvatarImage src={c.participants.find(p => p.id !== ME.id)?.avatar} />
-                    <AvatarFallback>{c.title[0]}</AvatarFallback>
+                    <AvatarFallback>{c.title[0]} </AvatarFallback>
                 </Avatar>
                 <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between gap-2">
-                        <span className="truncate font-medium">{c.title}</span>
+                        <span className="truncate font-medium">{c.title} Convo checkpoint</span>
                         {c.unread > 0 && (
                             <span className="ml-2 inline-flex min-w-[1.5rem] items-center justify-center rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-semibold text-primary-foreground">
                                 {c.unread}
@@ -600,7 +572,9 @@ const Sidebar = ({
             </div>
             <ScrollArea className="flex-1 min-h-0"> {/* min-h-0 is important for scroll */}
                 <div className="space-y-1 p-2">
+                    Conversation Row
                     {items.map((c) => (
+                        // for unread logic
                         <ConversationRow
                             key={c.id}
                             c={c}
@@ -731,6 +705,7 @@ const ChatAppUI = () => {
                                     <SheetHeader className="p-3">
                                         <SheetTitle>Chats</SheetTitle>
                                     </SheetHeader>
+                                    {/* for unread logic */}
                                     <Sidebar
                                         items={conversations}
                                         activeId={activeId}
@@ -763,6 +738,7 @@ const ChatAppUI = () => {
                                             className="h-[calc(85vh-160px)] overflow-auto mx-auto space-y-2 px-3 py-4"
                                         >
                                             <DateDivider label="Today" />
+                                            Message list
                                             <AnimatePresence initial={false}>
                                                 {messages.map((msg) => {
                                                     const isMine = msg.authorId === ME.id
