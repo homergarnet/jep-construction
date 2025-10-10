@@ -46,8 +46,12 @@ import {
 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { NewChatSheet } from "./NewChatSheet";
-import type { Conversation, Message, User } from "@/types/messages";
-
+import type { Conversation, ConvoRowDto, ConvoRowResponse, Message, MessageDto, User } from "@/types/messages";
+import useMessageContext from "@/store/message/messageContext";
+import { useGetConvoRowList, useGetMessageList, useSetReadById } from "@/hooks/useMessage";
+import { getJwtUserId } from "@/utils/getJwtRoleId";
+import { formatDateToMMDDYYYYhhmmA } from "@/utils/formatDateToMMDDYYYYhhmmA";
+const apiRoot = import.meta.env.VITE_APP_API_ROOT_ENDPOINT;
 // --- Sample Data -------------------------------------------------------------
 const ME = { id: "me", name: "You", avatar: "https://i.pravatar.cc/100?img=13" };
 
@@ -316,7 +320,7 @@ const MessageStatusIcon = ({ status }: { status?: Message["status"] }) => {
     return null;
 }
 
-const MessageBubble = ({ msg, isMine }: { msg: Message; isMine: boolean }) => {
+const MessageBubble = ({ msg, isMine }: { msg: MessageDto; isMine: boolean }) => {
     return (
         <div className={classNames(
             "flex gap-2 items-end",
@@ -324,8 +328,8 @@ const MessageBubble = ({ msg, isMine }: { msg: Message; isMine: boolean }) => {
         )}>
             {!isMine && (
                 <Avatar className="h-8 w-8">
-                    <AvatarImage src={msg.authorAvatar} alt={msg.authorName} />
-                    <AvatarFallback>{msg.authorName[0]}</AvatarFallback>
+                    <AvatarImage src={apiRoot + msg.ProfileImage} alt={"image"} />
+                    <AvatarFallback>{msg.ProfileImage}</AvatarFallback>
                 </Avatar>
             )}
             <motion.div
@@ -343,26 +347,26 @@ const MessageBubble = ({ msg, isMine }: { msg: Message; isMine: boolean }) => {
                         <img src={msg.imageUrl} alt="attachment" className="max-h-64 w-full object-cover" />
                     </a>
                 )} */}
-                {msg.fileName && (
+                {/* {msg.fileName && (
                     <div className="flex items-center gap-2 text-sm">
                         <FileText className="h-4 w-4" />
                         <span className="font-medium">{msg.fileName}</span>
                         {msg.fileSize && <span className="text-muted-foreground">· {msg.fileSize}</span>}
                     </div>
-                )}
-                {msg.text && <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.text}</p>}
+                )} */}
+                {msg.Message && <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.Message}</p>}
                 <div className={classNames(
                     "mt-1 flex items-center gap-2 text-[10px]",
                     isMine ? "justify-end" : "justify-start text-muted-foreground"
                 )}>
-                    <span>{timeShort(msg.createdAt)}</span>
-                    {isMine && <MessageStatusIcon status={msg.status} />}
+                    <span>{formatDateToMMDDYYYYhhmmA(msg.DateTimeCreated)}</span>
+                    {/* {isMine && <MessageStatusIcon status={msg.status} />} */}
                 </div>
             </motion.div>
             {isMine && (
                 <Avatar className="h-8 w-8">
-                    <AvatarImage src={msg.authorAvatar} alt={msg.authorName} />
-                    <AvatarFallback>{msg.authorName[0]}</AvatarFallback>
+                    <AvatarImage src={apiRoot + msg.ProfileImage} alt={"image"} />
+                    <AvatarFallback>{msg.ProfileImage}</AvatarFallback>
                 </Avatar>
             )}
         </div>
@@ -459,26 +463,26 @@ const Composer = ({
     );
 }
 
-const ChatHeader = ({ active, onDelete }: { active: Conversation; onDelete: () => void }) => {
-    const others = active.participants.filter((p) => p.id !== ME.id);
-    const online = others.some((p) => p.online);
+const ChatHeader = ({ active, onDelete }: { active: ConvoRowDto; onDelete: () => void }) => {
+
+    const online = true;
 
     return (
         <div className="flex items-center justify-between px-4 py-3 border-b">
             <div className="flex items-center gap-3">
                 <div className="relative">
                     <Avatar className="h-9 w-9">
-                        <AvatarImage src={others[0]?.avatar} />
-                        <AvatarFallback>{others[0]?.name?.[0] ?? "?"}</AvatarFallback>
+                        <AvatarImage src={apiRoot + active.ConvoImage} />
+                        <AvatarFallback>{active.ConvoName}</AvatarFallback>
                     </Avatar>
                     {online && (
                         <span className="absolute -bottom-0 -right-0 h-3 w-3 rounded-full bg-emerald-500 ring-2 ring-background" />
                     )}
                 </div>
                 <div>
-                    <div className="font-medium leading-tight">{active.title}</div>
+                    <div className="font-medium leading-tight">{active.ConvoName}</div>
                     <div className="text-xs text-muted-foreground">
-                        {online ? "Online" : "Last seen recently"}
+                        {/* {online ? "Online" : "Last seen recently"} */}
                     </div>
                 </div>
             </div>
@@ -489,19 +493,19 @@ const ChatHeader = ({ active, onDelete }: { active: Conversation; onDelete: () =
                 <Button variant="ghost" size="icon" className="rounded-2xl">
                     <Video className="h-5 w-5" />
                 </Button> */}
-                <DropdownMenu>
+                {/* <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon" className="rounded-2xl">
                             <MoreVertical className="h-5 w-5" />
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                        {/* <DropdownMenuItem>
+                        <DropdownMenuItem>
                             <Pin className="mr-2 h-4 w-4" /> Pin conversation
                         </DropdownMenuItem>
                         <DropdownMenuItem>
                             <Search className="mr-2 h-4 w-4" /> Search in chat
-                        </DropdownMenuItem> */}
+                        </DropdownMenuItem>
                         <DropdownMenuItem
                             className="text-red-600"
                             onClick={onDelete}
@@ -509,13 +513,14 @@ const ChatHeader = ({ active, onDelete }: { active: Conversation; onDelete: () =
                             <Trash2 className="mr-2 h-4 w-4" /> Delete
                         </DropdownMenuItem>
                     </DropdownMenuContent>
-                </DropdownMenu>
+                </DropdownMenu> */}
             </div>
         </div>
     );
 }
 
-function ConversationRow({ c, active, onClick }: { c: Conversation; active?: boolean; onClick: () => void }) {
+function ConversationRow({ c, active, onClick }: { c: ConvoRowDto; active?: boolean; onClick: () => void }) {
+
     return (
         <button
             onClick={onClick}
@@ -526,25 +531,25 @@ function ConversationRow({ c, active, onClick }: { c: Conversation; active?: boo
         >
             <div className="flex items-center gap-3">
                 <Avatar className="h-10 w-10">
-                    <AvatarImage src={c.participants.find(p => p.id !== ME.id)?.avatar} />
-                    <AvatarFallback>{c.title[0]} </AvatarFallback>
+                    <AvatarImage src={apiRoot + c.ConvoImage} />
+                    <AvatarFallback>{c.ConvoName} </AvatarFallback>
                 </Avatar>
                 <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between gap-2">
-                        <span className="truncate font-medium">{c.title} Convo checkpoint</span>
-                        {c.unread > 0 && (
+                        <span className="truncate font-medium">{c.ConvoName}</span>
+                        {c.UnreadCount > 0 && (
                             <span className="ml-2 inline-flex min-w-[1.5rem] items-center justify-center rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-semibold text-primary-foreground">
-                                {c.unread}
+                                {c.UnreadCount}
                             </span>
                         )}
                     </div>
                     <div
                         className={classNames(
                             "truncate text-sm",
-                            c.unread > 0 ? "font-semibold text-foreground" : "text-muted-foreground"
+                            c.UnreadCount > 0 ? "font-semibold text-foreground" : "text-muted-foreground"
                         )}
                     >
-                        {c.lastMessage}
+                        {c.LastMessage}
                     </div>
                 </div>
             </div>
@@ -555,33 +560,55 @@ function ConversationRow({ c, active, onClick }: { c: Conversation; active?: boo
 // ---------- Sidebar ----------
 
 const Sidebar = ({
-    items,
     activeId,
     setActiveId,
-    onCreateConversation,
 }: {
-    items: Conversation[]
     activeId: string
     setActiveId: (id: string) => void
-    onCreateConversation: (u: User) => void
 }) => {
+
+    const zConvoPage = useMessageContext((state) => state.zConvoPage);
+    const zSetConvoUserId = useMessageContext((state) => state.zSetConvoUserId);
+    const zConvoPageSize = useMessageContext((state) => state.zConvoPageSize);
+
+    const { data: convoRowList, isLoading: convoRowListLoading } = useGetConvoRowList({
+        page: zConvoPage,
+        pageSize: zConvoPageSize,
+    });
+
+    const setReadById = useSetReadById();
+
+
     return (
         <div className="flex h-screen flex-col"> {/* ensure full screen height */}
             <div className="p-2 border-b">
-                <NewChatSheet onCreate={onCreateConversation} />
+                <NewChatSheet onSetActiveId={setActiveId} />
             </div>
             <ScrollArea className="flex-1 min-h-0"> {/* min-h-0 is important for scroll */}
                 <div className="space-y-1 p-2">
-                    Conversation Row
-                    {items.map((c) => (
-                        // for unread logic
-                        <ConversationRow
-                            key={c.id}
-                            c={c}
-                            active={c.id === activeId}
-                            onClick={() => setActiveId(c.id)}
-                        />
-                    ))}
+                    {convoRowList && convoRowList.ConvoList.map((c) => {
+
+                        return (
+                            // for unread logic
+                            <ConversationRow
+                                key={c.ConvoUserId}
+                                c={c}
+                                active={c.ConvoUserId.toString() === activeId}
+                                onClick={() => {
+                                    setReadById.mutate(c.ConvoUserId, {
+                                        onSuccess: (res) => {
+                                            console.log("res: ", res);
+                                            zSetConvoUserId(c.ConvoUserId)
+                                        },
+                                        onError: (error: Error) => { console.log("error: ", error) },
+                                    })
+
+                                    setActiveId(c.ConvoUserId.toString())
+                                }}
+                            />
+                        )
+                    }
+                    )}
                 </div>
             </ScrollArea>
         </div>
@@ -591,18 +618,44 @@ const Sidebar = ({
 // ---------- Main Chat App ----------
 
 const ChatAppUI = () => {
-    const [conversations, setConversations] = useState<Conversation[]>(conversationsSeed)
-    const [activeId, setActiveId] = useState<string>(conversationsSeed[0].id)
-    const [messagesMap, setMessagesMap] = useState<Record<string, Message[]>>(messagesSeed)
+    const userId = getJwtUserId() ?? 0;
+    const zConvoPage = useMessageContext((state) => state.zConvoPage);
+    const zSetConvoPage = useMessageContext((state) => state.zSetConvoPage);
+    const zConvoPageSize = useMessageContext((state) => state.zConvoPageSize);
+
+    const zMessagePage = useMessageContext((state) => state.zMessagePage);
+    const zMessagePageSize = useMessageContext((state) => state.zMessagePageSize);
+    const zMessageFilter = useMessageContext((state) => state.zMessageFilter);
+    const zConvoUserId = useMessageContext((state) => state.zConvoUserId);
+
+    const { data: convoRowList, isLoading: convoRowListLoading } = useGetConvoRowList({
+        page: zConvoPage,
+        pageSize: zConvoPageSize,
+    });
+
+    const { data: messageList, isLoading: messageListLoading } = useGetMessageList({
+        keyword: zMessageFilter,
+        convoUserId: zConvoUserId,
+        page: zMessagePage,
+        pageSize: zMessagePageSize,
+    });
+
+    // const [conversations, setConversations] = useState<Conversation[]>(conversationsSeed)
+    const initialActiveId = convoRowList?.ConvoList?.[0]?.ConvoUserId?.toString() ?? "";
+    const [activeId, setActiveId] = useState<string>(initialActiveId);
+    // const [messagesMap, setMessagesMap] = useState<Record<string, Message[]>>(messagesSeed)
     const [mobileOpen, setMobileOpen] = useState(false)
     const listRef = useRef<HTMLDivElement>(null)
 
-    const active = conversations.find((c) => c.id === activeId)
-    const messages = active ? messagesMap[active.id] || [] : []
+    const active = convoRowList?.ConvoList.find(c =>
+        c.ConvoUserId.toString() === activeId.toString()
+    );
+
+    // const messages = active ? messagesMap[active.ConvoUserId] || [] : []
 
     useEffect(() => {
         listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
-    }, [messages.length]);
+    }, [messageList && messageList.MessageList.length]);
 
     const handleSend = (text: string) => {
         if (!active) return
@@ -615,60 +668,60 @@ const ChatAppUI = () => {
             createdAt: new Date().toISOString(),
             status: "sending",
         }
-        setMessagesMap((m) => ({
-            ...m,
-            [active.id]: [...(m[active.id] || []), temp],
-        }))
-        // Simulate server ack
-        setTimeout(() => {
-            setMessagesMap((m) => ({
-                ...m,
-                [active.id]: (m[active.id] || []).map((x) =>
-                    x.id === temp.id ? { ...x, status: "read" } : x
-                ),
-            }))
-        }, 800)
+        // setMessagesMap((m) => ({
+        //     ...m,
+        //     [active.id]: [...(m[active.id] || []), temp],
+        // }))
+        // // Simulate server ack
+        // setTimeout(() => {
+        //     setMessagesMap((m) => ({
+        //         ...m,
+        //         [active.id]: (m[active.id] || []).map((x) =>
+        //             x.id === temp.id ? { ...x, status: "read" } : x
+        //         ),
+        //     }))
+        // }, 800)
     }
 
     const handleCreateConversation = (user: User) => {
-        const existing = conversations.find((c) =>
-            c.participants.some((p) => p.id === user.id)
-        )
-        if (existing) {
-            setActiveId(existing.id)
-            return
-        }
+        // const existing = conversations.find((c) =>
+        //     c.participants.some((p) => p.id === user.id)
+        // )
+        // if (existing) {
+        //     setActiveId(existing.id)
+        //     return
+        // }
 
-        const newConv: Conversation = {
-            id: Date.now().toString(),
-            title: user.name,
-            participants: [ME, user],
-            lastMessage: null,
-            unread: 0,
-        }
+        // const newConv: Conversation = {
+        //     id: Date.now().toString(),
+        //     title: user.name,
+        //     participants: [ME, user],
+        //     lastMessage: null,
+        //     unread: 0,
+        // }
 
-        setConversations((prev) => [newConv, ...prev])
-        setActiveId(newConv.id)
-        setMessagesMap((prev) => ({ ...prev, [newConv.id]: [] }))
+        // setConversations((prev) => [newConv, ...prev])
+        // setActiveId(newConv.id)
+        // setMessagesMap((prev) => ({ ...prev, [newConv.id]: [] }))
     }
 
-    const handleDeleteConversation = (id: string) => {
-        setConversations((prev) => prev.filter((c) => c.id !== id))
+    const handleDeleteConversation = (id: number) => {
+        // setConversations((prev) => prev.filter((c) => c.id !== id))
 
-        setMessagesMap((prev) => {
-            const copy = { ...prev }
-            delete copy[id]
-            return copy
-        })
+        // setMessagesMap((prev) => {
+        //     const copy = { ...prev }
+        //     delete copy[id]
+        //     return copy
+        // })
 
-        if (activeId === id) {
-            const next = conversations.find((c) => c.id !== id)
-            if (next) {
-                setActiveId(next.id)
-            } else {
-                setActiveId("")
-            }
-        }
+        // if (activeId === id) {
+        //     const next = conversations.find((c) => c.id !== id)
+        //     if (next) {
+        //         setActiveId(next.id)
+        //     } else {
+        //         setActiveId("")
+        //     }
+        // }
     }
 
     return (
@@ -678,17 +731,16 @@ const ChatAppUI = () => {
                     {/* Sidebar (desktop) */}
                     <div className="hidden border-r md:block">
                         <Sidebar
-                            items={conversations}
                             activeId={activeId}
                             setActiveId={(id) => {
+
                                 setActiveId(id)
-                                setConversations((prev) =>
-                                    prev.map((conv) =>
-                                        conv.id === id ? { ...conv, unread: 0 } : conv
-                                    )
-                                )
+                                // setConversations((prev) =>
+                                //     prev.map((conv) =>
+                                //         conv.id === id ? { ...conv, unread: 0 } : conv
+                                //     )
+                                // )
                             }}
-                            onCreateConversation={handleCreateConversation}
                         />
                     </div>
 
@@ -707,28 +759,26 @@ const ChatAppUI = () => {
                                     </SheetHeader>
                                     {/* for unread logic */}
                                     <Sidebar
-                                        items={conversations}
                                         activeId={activeId}
                                         setActiveId={(id) => {
                                             setActiveId(id)
-                                            setConversations((prev) =>
-                                                prev.map((conv) =>
-                                                    conv.id === id ? { ...conv, unread: 0 } : conv
-                                                )
-                                            )
+                                            // setConversations((prev) =>
+                                            //     prev.map((conv) =>
+                                            //         conv.id === id ? { ...conv, unread: 0 } : conv
+                                            //     )
+                                            // )
                                         }}
-                                        onCreateConversation={handleCreateConversation}
                                     />
                                 </SheetContent>
                             </Sheet>
-                            <div className="text-sm font-medium">{active?.title}</div>
+                            <div className="text-sm font-medium">{active?.ConvoName}</div>
                         </div>
 
                         {active ? (
                             <>
                                 <ChatHeader
                                     active={active}
-                                    onDelete={() => handleDeleteConversation(active.id)}
+                                    onDelete={() => handleDeleteConversation(active.ConvoUserId)}
                                 />
                                 <div className="flex-1 min-h-0">   {/* 👈 allow flex child to shrink */}
                                     <ScrollArea className="h-[calc(85vh-160px)]">
@@ -740,10 +790,10 @@ const ChatAppUI = () => {
                                             <DateDivider label="Today" />
                                             Message list
                                             <AnimatePresence initial={false}>
-                                                {messages.map((msg) => {
-                                                    const isMine = msg.authorId === ME.id
+                                                {messageList && messageList.MessageList.map((msg) => {
+                                                    const isMine = msg.SenderId === userId
                                                     return (
-                                                        <motion.div key={msg.id} layout>
+                                                        <motion.div key={msg.Id} layout>
                                                             <MessageBubble msg={msg} isMine={isMine} />
                                                         </motion.div>
                                                     )

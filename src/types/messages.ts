@@ -33,19 +33,18 @@ export interface User {
 
 export interface GetMessageParams {
   keyword?: string;
-  userId: number;
+  convoUserId: number;
   page: number;
   pageSize: number;
 }
 
 export interface GetConvoRowParams {
-  userId: number;
   page: number;
   pageSize: number;
 }
 
 export interface GetMessageUserParams {
-  userId: number;
+  keyword?: string;
   page: number;
   pageSize: number;
 }
@@ -59,13 +58,14 @@ export interface CreateUpdateMessageRequest {
 }
 
 export interface MessageDto {
+  Id: number;
   UserId: number;
   SenderId: number;
   ReceiverId: number;
   Message: string;
   ProfileImage: string;
   IsEnabled: boolean;
-  DateTimeCreated: Date;
+  DateTimeCreated: string;
 }
 
 export interface ConvoRowDto {
