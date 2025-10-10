@@ -14,6 +14,7 @@ import type {
   CreateUpdateMessageRequest,
   GetConvoRowParams,
   GetMessageParams,
+  GetMessageUserParams,
   MessageResponse,
 } from "@/types/messages";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -56,7 +57,7 @@ export const useGetConvoRowList = (params: GetConvoRowParams) => {
   });
 };
 
-export const useGetMessageUserList = (params: GetConvoRowParams) => {
+export const useGetMessageUserList = (params: GetMessageUserParams) => {
   return useQuery<EmployeeListResponse>({
     queryKey: ["messageUsers", params],
     queryFn: () => messageApi.getMessageUserList(params),
@@ -67,17 +68,12 @@ export const useSetReadById = () => {
   const queryClient = useQueryClient();
   const zPage = useMessageContext((state) => state.zPage);
   const zPageSize = useMessageContext((state) => state.zPageSize);
-  const zStatusFilter = useMessageContext((state) => state.zStatusFilter);
 
   return useMutation({
-    mutationFn: ({ senderId, userId }: { senderId: number; userId: number }) =>
-      messageApi.setReadById(senderId, userId),
+    mutationFn: (senderId: number) => messageApi.setReadById(senderId),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [
-          "convos",
-          { keyword: zStatusFilter, page: zPage, pageSize: zPageSize },
-        ],
+        queryKey: ["convos", { page: zPage, pageSize: zPageSize }],
       });
     },
     onError: (error: Error) => {

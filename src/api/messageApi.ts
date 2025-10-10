@@ -75,12 +75,9 @@ export const messageApi = {
     return data;
   },
 
-  setReadById: async (
-    senderId: number,
-    userId: number
-  ): Promise<MessageResponse> => {
+  setReadById: async (senderId: number): Promise<MessageResponse> => {
     const { data } = await apiConfig.put<MessageResponse>(
-      `/Message/set-read-by-id/${senderId}/${userId}`
+      `/Message/set-read-by-id/${senderId}`
     );
 
     if (!data.IsSuccess) {
