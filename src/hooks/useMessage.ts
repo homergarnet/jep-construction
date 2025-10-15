@@ -21,9 +21,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useCreateMessage = () => {
   const queryClient = useQueryClient();
-  const zPage = useMessageContext((state) => state.zPage);
-  const zPageSize = useMessageContext((state) => state.zPageSize);
-  const zStatusFilter = useMessageContext((state) => state.zStatusFilter);
+  const zMessagePage = useMessageContext((state) => state.zMessagePage);
+  const zMessagePageSize = useMessageContext((state) => state.zMessagePageSize);
+  const zMessageFilter = useMessageContext((state) => state.zMessageFilter);
+  const zConvoUserId = useMessageContext((state) => state.zConvoUserId);
 
   return useMutation({
     mutationFn: (payload: CreateUpdateMessageRequest) =>
@@ -33,8 +34,17 @@ export const useCreateMessage = () => {
       queryClient.invalidateQueries({
         queryKey: [
           "messages",
-          { keyword: zStatusFilter, page: zPage, pageSize: zPageSize },
+          {
+            keyword: zMessageFilter,
+            convoUserId: zConvoUserId,
+            page: zMessagePage,
+            pageSize: zMessagePageSize,
+          },
         ],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["convos"], // <-- your conversation query key here
       });
     },
     onError: (error: Error) => {
