@@ -10,6 +10,7 @@ import {
   SquaresExclude,
   UserPen,
   BadgePlus,
+  ToolCase,
 } from "lucide-react";
 
 export const adminSidebar = {
@@ -37,41 +38,53 @@ export const adminSidebar = {
   ],
   navMain: [
     {
-      title: "Employee",
+      title: "HR",
       url: "#",
       icon: IdCardLanyard,
       isActive: true,
       items: [
         { title: "Employee List", url: "/admin/employee-list" },
         { title: "Attendance", url: "/admin/attendance" },
-        { title: "Payslip", url: "/admin/payslip" },
+        // { title: "Payslip", url: "/admin/payslip" },
       ],
     },
     {
-      title: "Client",
-      url: "/admin/client-list",
-      icon: BadgePlus,
+      title: "CRM",
+      url: "#",
+      icon: ToolCase,
+      isActive: true,
+      items: [
+        { title: "Client", url: "/admin/client-list" },
+        { title: "Reviews", url: "/admin/reviews" },
+        { title: "Client Request", url: "/admin/client-request" },
+        { title: "Messages", url: "/admin/messages" },
+      ],
     },
+    // {
+    //   title: "Client",
+    //   url: "/admin/client-list",
+    //   icon: BadgePlus,
+    // },
     {
       title: "Project Management",
       url: "/admin/project-management",
       icon: FolderDot,
     },
-    {
-      title: "Reviews",
-      url: "/admin/reviews",
-      icon: Stars,
-    },
-    {
-      title: "Client Request",
-      url: "/admin/client-request",
-      icon: GitPullRequest,
-    },
-    {
-      title: "Messages",
-      url: "/admin/messages",
-      icon: MessageCircle,
-    },
+    // {
+    //   title: "Reviews",
+    //   url: "/admin/reviews",
+    //   icon: Stars,
+    // },
+    // {
+    //   title: "Client Request",
+    //   url: "/admin/client-request",
+    //   icon: GitPullRequest,
+    // },
+    // {
+    //   title: "Messages",
+    //   url: "/admin/messages",
+    //   icon: MessageCircle,
+    // },
     {
       title: "Inventory",
       url: "/admin/inventory",

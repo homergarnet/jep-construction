@@ -34,6 +34,7 @@ export interface User {
 export interface GetMessageParams {
   keyword?: string;
   convoUserId: number;
+  orderBy: string;
   page: number;
   pageSize: number;
 }

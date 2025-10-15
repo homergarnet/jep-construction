@@ -10,33 +10,11 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet"
 import { Plus } from "lucide-react"
-import { useGetMessageUserList } from "@/hooks/useMessage"
+import { useGetMessageUserList, useSetReadById } from "@/hooks/useMessage"
 import useMessageContext from "@/store/message/messageContext"
 import { debounce } from "lodash"
 
-// Example mock users (replace with API later)
-const MOCK_USERS = [
-    { id: "2", name: "Alice", avatar: "https://i.pravatar.cc/150?u=alice" },
-    { id: "3", name: "Bob", avatar: "https://i.pravatar.cc/150?u=bob" },
-    { id: "4", name: "Charlie", avatar: "https://i.pravatar.cc/150?u=charlie" },
-    { id: "5", name: "libs", avatar: "https://i.pravatar.cc/150?u=charlie" },
-    { id: "6", name: "live", avatar: "https://i.pravatar.cc/150?u=charlie" },
-    { id: "7", name: "long", avatar: "https://i.pravatar.cc/150?u=charlie" },
-    { id: "8", name: "little", avatar: "https://i.pravatar.cc/150?u=charlie" },
-    { id: "9", name: "litter", avatar: "https://i.pravatar.cc/150?u=charlie" },
-    { id: "10", name: "rome", avatar: "https://i.pravatar.cc/150?u=charlie" },
-    { id: "11", name: "lonter", avatar: "https://i.pravatar.cc/150?u=charlie" },
-    { id: "12", name: "teriaki", avatar: "https://i.pravatar.cc/150?u=charlie" },
-    { id: "13", name: "can do", avatar: "https://i.pravatar.cc/150?u=charlie" },
-    { id: "14", name: "dohan", avatar: "https://i.pravatar.cc/150?u=charlie" },
-    { id: "15", name: "roda", avatar: "https://i.pravatar.cc/150?u=charlie" },
-    { id: "16", name: "soda", avatar: "https://i.pravatar.cc/150?u=charlie" },
-    { id: "17", name: "rone", avatar: "https://i.pravatar.cc/150?u=charlie" },
-    { id: "18", name: "rin", avatar: "https://i.pravatar.cc/150?u=charlie" },
-    { id: "19", name: "Charlie last", avatar: "https://i.pravatar.cc/150?u=charlie" },
-]
-
-export function NewChatSheet({ onSetActiveId }: { onSetActiveId: (id: string) => void }) {
+const NewChatSheet = ({ onSetActiveId }: { onSetActiveId: (id: string) => void }) => {
     const apiRoot = import.meta.env.VITE_APP_API_ROOT_ENDPOINT;
 
     const zPage = useMessageContext((state) => state.zPage);
@@ -44,12 +22,14 @@ export function NewChatSheet({ onSetActiveId }: { onSetActiveId: (id: string) =>
     const zPageSize = useMessageContext((state) => state.zPageSize);
     const zStatusFilter = useMessageContext((state) => state.zStatusFilter);
     const zSetStatusFilter = useMessageContext((state) => state.zSetStatusFilter);
+    const zSetConvoUserId = useMessageContext((state) => state.zSetConvoUserId);
 
     const { data: messageUserList, isLoading: messageUserListLoading } = useGetMessageUserList({
         keyword: zStatusFilter,
         page: zPage,
         pageSize: zPageSize,
     });
+    const setReadById = useSetReadById();
     const messageUserListLength = messageUserList?.TotalRecords ?? 0;
     const [isMaxScroll, setIsMaxScroll] = useState(false);
     const [allUsers, setAllUsers] = useState<any[]>([]);
@@ -124,6 +104,14 @@ export function NewChatSheet({ onSetActiveId }: { onSetActiveId: (id: string) =>
                                 key={u.Id}
                                 onClick={() => {
                                     onSetActiveId(u.Id.toString())
+                                    setReadById.mutate(u.Id, {
+                                        onSuccess: (res) => {
+                                            console.log("res: ", res);
+                                            zSetConvoUserId(u.Id)
+
+                                        },
+                                        onError: (error: Error) => { console.log("error: ", error) },
+                                    })
                                 }}
                                 className="flex items-center gap-3 rounded-lg p-2 hover:bg-muted w-full text-left"
                             >
@@ -140,3 +128,5 @@ export function NewChatSheet({ onSetActiveId }: { onSetActiveId: (id: string) =>
         </Sheet>
     )
 }
+
+export default NewChatSheet;

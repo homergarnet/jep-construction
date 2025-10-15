@@ -45,266 +45,14 @@ import {
     Trash2,
 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { NewChatSheet } from "./NewChatSheet";
-import type { Conversation, ConvoRowDto, ConvoRowResponse, Message, MessageDto, User } from "@/types/messages";
+import NewChatSheet from "./NewChatSheet";
+import type { Conversation, ConvoRowDto, ConvoRowResponse, CreateUpdateMessageRequest, Message, MessageDto, User } from "@/types/messages";
 import useMessageContext from "@/store/message/messageContext";
-import { useGetConvoRowList, useGetMessageList, useSetReadById } from "@/hooks/useMessage";
+import { useCreateMessage, useGetConvoRowList, useGetMessageList, useSetReadById } from "@/hooks/useMessage";
 import { getJwtUserId } from "@/utils/getJwtRoleId";
 import { formatDateToMMDDYYYYhhmmA } from "@/utils/formatDateToMMDDYYYYhhmmA";
+import useSwal from "@/hooks/useSwal";
 const apiRoot = import.meta.env.VITE_APP_API_ROOT_ENDPOINT;
-// --- Sample Data -------------------------------------------------------------
-const ME = { id: "me", name: "You", avatar: "https://i.pravatar.cc/100?img=13" };
-
-const conversationsSeed: Conversation[] = [
-    {
-        id: "c1",
-        title: "Team Alpha",
-        lastMessage: "Let’s lock scope by EOD.",
-        unread: 2,
-        participants: [
-            { id: "me", name: "You", avatar: ME.avatar, online: true },
-            { id: "u2", name: "Maya", avatar: "https://i.pravatar.cc/100?img=5", online: true },
-            { id: "u3", name: "Ken", avatar: "https://i.pravatar.cc/100?img=32" },
-        ],
-    },
-    {
-        id: "c2",
-        title: "Design Squad",
-        lastMessage: "Pushed the latest Figma.",
-        unread: 0,
-        participants: [
-            { id: "me", name: "You", avatar: ME.avatar },
-            { id: "u4", name: "Isha", avatar: "https://i.pravatar.cc/100?img=20", online: true },
-        ],
-    },
-    {
-        id: "c3",
-        title: "Design Squad",
-        participants: [
-            ME,
-            { id: "4", name: "Jane", avatar: "/jane.png" },
-            { id: "5", name: "Mark", avatar: "/mark.png" },
-        ],
-        lastMessage: "Let’s review the new mockups tomorrow",
-        unread: 3, // ✅ unread by default
-    },
-    {
-        id: "c4",
-        title: "Design Squad",
-        participants: [
-            ME,
-            { id: "4", name: "Jane", avatar: "/jane.png" },
-            { id: "5", name: "Mark", avatar: "/mark.png" },
-        ],
-        lastMessage: "Let’s review the new mockups tomorrow",
-        unread: 3, // ✅ unread by default
-    },
-    {
-        id: "c5",
-        title: "Design Squad",
-        participants: [
-            ME,
-            { id: "4", name: "Jane", avatar: "/jane.png" },
-            { id: "5", name: "Mark", avatar: "/mark.png" },
-        ],
-        lastMessage: "Let’s review the new mockups tomorrow",
-        unread: 3, // ✅ unread by default
-    },
-    {
-        id: "c6",
-        title: "Design Squad",
-        participants: [
-            ME,
-            { id: "4", name: "Jane", avatar: "/jane.png" },
-            { id: "5", name: "Mark", avatar: "/mark.png" },
-        ],
-        lastMessage: "Let’s review the new mockups tomorrow",
-        unread: 3, // ✅ unread by default
-    },
-    {
-        id: "c7",
-        title: "Design Squad",
-        participants: [
-            ME,
-            { id: "4", name: "Jane", avatar: "/jane.png" },
-            { id: "5", name: "Mark", avatar: "/mark.png" },
-        ],
-        lastMessage: "Let’s review the new mockups tomorrow",
-        unread: 3, // ✅ unread by default
-    },
-    {
-        id: "c8",
-        title: "Design Squad",
-        participants: [
-            ME,
-            { id: "4", name: "Jane", avatar: "/jane.png" },
-            { id: "5", name: "Mark", avatar: "/mark.png" },
-        ],
-        lastMessage: "Let’s review the new mockups tomorrow",
-        unread: 3, // ✅ unread by default
-    },
-    {
-        id: "c9",
-        title: "Design Squad",
-        participants: [
-            ME,
-            { id: "4", name: "Jane", avatar: "/jane.png" },
-            { id: "5", name: "Mark", avatar: "/mark.png" },
-        ],
-        lastMessage: "Let’s review the new mockups tomorrow",
-        unread: 3, // ✅ unread by default
-    },
-    {
-        id: "c10",
-        title: "Design Squad",
-        participants: [
-            ME,
-            { id: "4", name: "Jane", avatar: "/jane.png" },
-            { id: "5", name: "Mark", avatar: "/mark.png" },
-        ],
-        lastMessage: "Let’s review the new mockups tomorrow",
-        unread: 3, // ✅ unread by default
-    },
-    {
-        id: "c11",
-        title: "Design Squad",
-        participants: [
-            ME,
-            { id: "4", name: "Jane", avatar: "/jane.png" },
-            { id: "5", name: "Mark", avatar: "/mark.png" },
-        ],
-        lastMessage: "Let’s review the new mockups tomorrow",
-        unread: 3, // ✅ unread by default
-    },
-    {
-        id: "c12",
-        title: "Design Squad",
-        participants: [
-            ME,
-            { id: "4", name: "Jane", avatar: "/jane.png" },
-            { id: "5", name: "Mark", avatar: "/mark.png" },
-        ],
-        lastMessage: "Let’s review the new mockups tomorrow",
-        unread: 3, // ✅ unread by default
-    },
-    {
-        id: "c13",
-        title: "Design Squad",
-        participants: [
-            ME,
-            { id: "4", name: "Jane", avatar: "/jane.png" },
-            { id: "5", name: "Mark", avatar: "/mark.png" },
-        ],
-        lastMessage: "Let’s review the new mockups tomorrow",
-        unread: 3, // ✅ unread by default
-    },
-    {
-        id: "c14",
-        title: "Design Squad",
-        participants: [
-            ME,
-            { id: "4", name: "Jane", avatar: "/jane.png" },
-            { id: "5", name: "Mark", avatar: "/mark.png" },
-        ],
-        lastMessage: "Let’s review the new mockups tomorrow",
-        unread: 3, // ✅ unread by default
-    },
-    {
-        id: "c15",
-        title: "Design Squad",
-        participants: [
-            ME,
-            { id: "4", name: "Jane", avatar: "/jane.png" },
-            { id: "5", name: "Mark", avatar: "/mark.png" },
-        ],
-        lastMessage: "Let’s review the new mockups tomorrow",
-        unread: 3, // ✅ unread by default
-    },
-    {
-        id: "c16",
-        title: "Design Squad",
-        participants: [
-            ME,
-            { id: "4", name: "Jane", avatar: "/jane.png" },
-            { id: "5", name: "Mark", avatar: "/mark.png" },
-        ],
-        lastMessage: "Let’s review the new mockups tomorrow",
-        unread: 3, // ✅ unread by default
-    },
-    {
-        id: "c17",
-        title: "Design Squad",
-        participants: [
-            ME,
-            { id: "4", name: "Jane", avatar: "/jane.png" },
-            { id: "5", name: "Mark", avatar: "/mark.png" },
-        ],
-        lastMessage: "Let’s review the new mockups tomorrow",
-        unread: 3, // ✅ unread by default
-    },
-    {
-        id: "c18",
-        title: "Design Squad",
-        participants: [
-            ME,
-            { id: "4", name: "Jane", avatar: "/jane.png" },
-            { id: "5", name: "Mark", avatar: "/mark.png" },
-        ],
-        lastMessage: "Let’s review the new mockups tomorrow",
-        unread: 3, // ✅ unread by default
-    },
-];
-
-const messagesSeed: Record<string, Message[]> = {
-    c1: [
-        {
-            id: "m1",
-            authorId: "u2",
-            authorName: "Maya",
-            authorAvatar: "https://i.pravatar.cc/100?img=5",
-            text: "Morning! Standup in 10?",
-            createdAt: new Date(Date.now() - 1000 * 60 * 45).toISOString(),
-            status: "read",
-        },
-        {
-            id: "m2",
-            authorId: "me",
-            authorName: "You",
-            authorAvatar: ME.avatar,
-            text: "Yup, hopping in.",
-            createdAt: new Date(Date.now() - 1000 * 60 * 43).toISOString(),
-            status: "read",
-        },
-        {
-            id: "m3",
-            authorId: "u3",
-            authorName: "Ken",
-            authorAvatar: "https://i.pravatar.cc/100?img=32",
-            imageUrl: "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=1000&q=802zz",
-            text: "Draft banner – thoughts?",
-            createdAt: new Date(Date.now() - 1000 * 60 * 39).toISOString(),
-            status: "delivered",
-        },
-    ],
-    c2: [
-        {
-            id: "m21",
-            authorId: "u4",
-            authorName: "Isha",
-            authorAvatar: "https://i.pravatar.cc/100?img=20",
-            text: "Shared the new components.",
-            createdAt: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString(),
-            status: "read",
-        },
-    ],
-    c3: [],
-};
-
-// --- Helpers ----------------------------------------------------------------
-const timeShort = (iso: string) => {
-    const d = new Date(iso);
-    return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-}
 
 const classNames = (...args: (string | false | null | undefined)[]) => args.filter(Boolean).join(' ');
 
@@ -519,7 +267,7 @@ const ChatHeader = ({ active, onDelete }: { active: ConvoRowDto; onDelete: () =>
     );
 }
 
-function ConversationRow({ c, active, onClick }: { c: ConvoRowDto; active?: boolean; onClick: () => void }) {
+const ConversationRow = ({ c, active, onClick }: { c: ConvoRowDto; active?: boolean; onClick: () => void }) => {
 
     return (
         <button
@@ -561,10 +309,10 @@ function ConversationRow({ c, active, onClick }: { c: ConvoRowDto; active?: bool
 
 const Sidebar = ({
     activeId,
-    setActiveId,
+    onSetActiveId,
 }: {
     activeId: string
-    setActiveId: (id: string) => void
+    onSetActiveId: (id: string) => void
 }) => {
 
     const zConvoPage = useMessageContext((state) => state.zConvoPage);
@@ -576,13 +324,15 @@ const Sidebar = ({
         pageSize: zConvoPageSize,
     });
 
+
+
     const setReadById = useSetReadById();
 
 
     return (
         <div className="flex h-screen flex-col"> {/* ensure full screen height */}
             <div className="p-2 border-b">
-                <NewChatSheet onSetActiveId={setActiveId} />
+                <NewChatSheet onSetActiveId={onSetActiveId} />
             </div>
             <ScrollArea className="flex-1 min-h-0"> {/* min-h-0 is important for scroll */}
                 <div className="space-y-1 p-2">
@@ -597,13 +347,13 @@ const Sidebar = ({
                                 onClick={() => {
                                     setReadById.mutate(c.ConvoUserId, {
                                         onSuccess: (res) => {
-                                            console.log("res: ", res);
+
                                             zSetConvoUserId(c.ConvoUserId)
                                         },
                                         onError: (error: Error) => { console.log("error: ", error) },
                                     })
 
-                                    setActiveId(c.ConvoUserId.toString())
+                                    onSetActiveId(c.ConvoUserId.toString())
                                 }}
                             />
                         )
@@ -617,70 +367,76 @@ const Sidebar = ({
 
 // ---------- Main Chat App ----------
 
-const ChatAppUI = () => {
+const Messages = () => {
+
     const userId = getJwtUserId() ?? 0;
     const zConvoPage = useMessageContext((state) => state.zConvoPage);
     const zSetConvoPage = useMessageContext((state) => state.zSetConvoPage);
     const zConvoPageSize = useMessageContext((state) => state.zConvoPageSize);
-
     const zMessagePage = useMessageContext((state) => state.zMessagePage);
+    const zSetMessagePage = useMessageContext((state) => state.zSetMessagePage);
     const zMessagePageSize = useMessageContext((state) => state.zMessagePageSize);
     const zMessageFilter = useMessageContext((state) => state.zMessageFilter);
     const zConvoUserId = useMessageContext((state) => state.zConvoUserId);
-
+    const zSetIsConvoChange = useMessageContext((state) => state.zSetIsConvoChange);
+    const { showConfirm, showToast } = useSwal();
+    const createMessage = useCreateMessage();
     const { data: convoRowList, isLoading: convoRowListLoading } = useGetConvoRowList({
         page: zConvoPage,
         pageSize: zConvoPageSize,
     });
 
-    const { data: messageList, isLoading: messageListLoading } = useGetMessageList({
+    const { data: messageList, isFetching: messageListLoading } = useGetMessageList({
         keyword: zMessageFilter,
         convoUserId: zConvoUserId,
+        orderBy: "DESC",
         page: zMessagePage,
         pageSize: zMessagePageSize,
     });
+
+    const messageListLength = messageList?.TotalRecords ?? 0;
 
     // const [conversations, setConversations] = useState<Conversation[]>(conversationsSeed)
     const initialActiveId = convoRowList?.ConvoList?.[0]?.ConvoUserId?.toString() ?? "";
     const [activeId, setActiveId] = useState<string>(initialActiveId);
     // const [messagesMap, setMessagesMap] = useState<Record<string, Message[]>>(messagesSeed)
     const [mobileOpen, setMobileOpen] = useState(false)
-    const listRef = useRef<HTMLDivElement>(null)
-
     const active = convoRowList?.ConvoList.find(c =>
         c.ConvoUserId.toString() === activeId.toString()
     );
 
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+    const [isMaxScroll, setIsMaxScroll] = useState(false);
+    const [allUsers, setAllUsers] = useState<any[]>([]);
     // const messages = active ? messagesMap[active.ConvoUserId] || [] : []
-
-    useEffect(() => {
-        listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
-    }, [messageList && messageList.MessageList.length]);
 
     const handleSend = (text: string) => {
         if (!active) return
-        const temp: Message = {
-            id: Math.random().toString(36).slice(2),
-            authorId: ME.id,
-            authorName: ME.name,
-            authorAvatar: ME.avatar,
-            text,
-            createdAt: new Date().toISOString(),
-            status: "sending",
+
+        let payload: CreateUpdateMessageRequest = {
+            UserId: userId,
+            SenderId: userId,
+            ReceiverId: parseInt(activeId),
+            Message: text,
+
         }
-        // setMessagesMap((m) => ({
-        //     ...m,
-        //     [active.id]: [...(m[active.id] || []), temp],
-        // }))
-        // // Simulate server ack
-        // setTimeout(() => {
-        //     setMessagesMap((m) => ({
-        //         ...m,
-        //         [active.id]: (m[active.id] || []).map((x) =>
-        //             x.id === temp.id ? { ...x, status: "read" } : x
-        //         ),
-        //     }))
-        // }, 800)
+
+        createMessage.mutate(payload, {
+            onSuccess: (res) => {
+                let message: MessageDto = {
+                    Id: res.MessageList[0].Id,
+                    UserId: userId,
+                    SenderId: userId,
+                    ReceiverId: parseInt(activeId),
+                    Message: text,
+                    ProfileImage: res.MessageList[0].ProfileImage,
+                    IsEnabled: true,
+                    DateTimeCreated: res.MessageList[0].DateTimeCreated
+                }
+                setAllUsers(prev => [...prev, message]);
+            },
+            onError: (error: Error) => showToast(error.message, "error"),
+        });
     }
 
     const handleCreateConversation = (user: User) => {
@@ -724,6 +480,88 @@ const ChatAppUI = () => {
         // }
     }
 
+    const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+        const { zIsConvoChange } = useMessageContext.getState(); // ✅ reads latest value
+        const target = e.currentTarget;
+        const scrollPercentage =
+            (target.scrollTop / (target.scrollHeight - target.clientHeight)) * 100;
+        // const isGreaterThan = Math.ceil(messageUserListLength / zPageSize);
+        // Detect when scrolling near the top instead of bottom
+        if (target.scrollTop <= 50 && !messageListLoading && !isMaxScroll && !zIsConvoChange) {
+
+            zSetMessagePage(zMessagePage + 1); // ✅ go to next page
+            if (zMessagePage + 1 === Math.ceil(messageListLength / zMessagePageSize)) {
+                setIsMaxScroll(true);
+            }
+            // Example logic:
+            // zSetPage(zPage + 1);
+        }
+    };
+
+    // trigger after clicking convo
+    useEffect(() => {
+        setAllUsers([])
+        zSetMessagePage(1)
+        zSetIsConvoChange(true);
+        const timer = setTimeout(() => {
+            if (messagesEndRef.current) {
+
+                setIsMaxScroll(false)
+                messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
+                zSetIsConvoChange(false);
+            }
+        }, 500); // 👈 delay in ms (tweak 50–150 if needed)
+
+        return () => clearTimeout(timer); // cleanup timeout
+    }, [zConvoUserId]);
+
+    useEffect(() => {
+        if (messageList?.MessageList) {
+
+            if (zMessagePage === 1) {
+
+                setAllUsers(messageList.MessageList.slice().reverse());// reset messages on convo change
+            } else {
+
+                setAllUsers(prev => {
+                    const newMessages = messageList.MessageList
+                        .filter(newMsg => !prev.some(oldMsg => oldMsg.Id === newMsg.Id))
+                        .reverse(); // 👈 reverse here
+                    return [...newMessages, ...prev]; // prepend only unique messages
+                });
+
+                // prepend older messages
+            }
+        }
+
+        if (!messageListLoading && messagesEndRef.current) {
+            // ✅ wait for DOM render first
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    messagesEndRef.current?.scrollTo({
+                        top: messagesEndRef.current.scrollTop + 100, // ✅ add 100px
+                        behavior: "smooth",
+                    });
+                });
+            });
+
+        }
+    }, [messageList]);
+
+
+    // useEffect(() => {
+    //     if (messageList?.MessageList) {
+    //         if (zMessagePage === 1) {
+    //             // First page - overwrite
+    //             setAllUsers(messageList.MessageList);
+    //         } else {
+    //             // Next pages - append
+    //             setAllUsers(prev => [...prev, ...messageList.MessageList]);
+    //         }
+    //     }
+    // }, [messageList]);
+
+
     return (
         <div className="h-[100vh] w-full p-4">
             <Card className="h-full overflow-hidden rounded-2xl">
@@ -732,7 +570,7 @@ const ChatAppUI = () => {
                     <div className="hidden border-r md:block">
                         <Sidebar
                             activeId={activeId}
-                            setActiveId={(id) => {
+                            onSetActiveId={(id) => {
 
                                 setActiveId(id)
                                 // setConversations((prev) =>
@@ -760,7 +598,7 @@ const ChatAppUI = () => {
                                     {/* for unread logic */}
                                     <Sidebar
                                         activeId={activeId}
-                                        setActiveId={(id) => {
+                                        onSetActiveId={(id) => {
                                             setActiveId(id)
                                             // setConversations((prev) =>
                                             //     prev.map((conv) =>
@@ -781,26 +619,24 @@ const ChatAppUI = () => {
                                     onDelete={() => handleDeleteConversation(active.ConvoUserId)}
                                 />
                                 <div className="flex-1 min-h-0">   {/* 👈 allow flex child to shrink */}
-                                    <ScrollArea className="h-[calc(85vh-160px)]">
+                                    <div
+                                        ref={messagesEndRef}
+                                        className="h-[calc(85vh-160px)] overflow-auto mx-auto space-y-2 px-3 py-4"
+                                        onScroll={handleScroll}
+                                    >
+                                        <DateDivider label="Today" />
+                                        <AnimatePresence initial={false}>
+                                            {allUsers.map((msg) => {
+                                                const isMine = msg.SenderId === userId
+                                                return (
+                                                    <motion.div key={msg.Id} layout>
+                                                        <MessageBubble msg={msg} isMine={isMine} />
+                                                    </motion.div>
+                                                )
+                                            })}
+                                        </AnimatePresence>
+                                    </div>
 
-                                        <div
-                                            ref={listRef}
-                                            className="h-[calc(85vh-160px)] overflow-auto mx-auto space-y-2 px-3 py-4"
-                                        >
-                                            <DateDivider label="Today" />
-                                            Message list
-                                            <AnimatePresence initial={false}>
-                                                {messageList && messageList.MessageList.map((msg) => {
-                                                    const isMine = msg.SenderId === userId
-                                                    return (
-                                                        <motion.div key={msg.Id} layout>
-                                                            <MessageBubble msg={msg} isMine={isMine} />
-                                                        </motion.div>
-                                                    )
-                                                })}
-                                            </AnimatePresence>
-                                        </div>
-                                    </ScrollArea>
                                     <Composer onSend={handleSend} />
                                 </div>
 
@@ -817,11 +653,11 @@ const ChatAppUI = () => {
     )
 }
 
-export default ChatAppUI;
+export default Messages;
 
 
 // --- Notes ------------------------------------------------------------------
-// • Drop this component into your app and render <ChatAppUI />
+// • Drop this component into your app and render <Messages />
 // • Uses shadcn/ui primitives; ensure you've installed avatar, button, card, input, textarea, dropdown-menu, sheet, tooltip, scroll-area, separator.
 // • Tailwind required. Dark mode supported via class strategy.
 // • Replace seed data with your API data. Wire onSend to your backend.

@@ -7,6 +7,8 @@ import create from "zustand";
 interface MessageFormState {
   zIsOpenDialog: boolean;
   zSetIsOpenDialog: (zIsOpenDialog: boolean) => void;
+  zIsConvoChange: boolean;
+  zSetIsConvoChange: (zIsConvoChange: boolean) => void;
   zDialogTitle: string;
   zSetDialogTitle: (zDialogTitle: string) => void;
   zPage: number;
@@ -36,6 +38,8 @@ interface MessageFormState {
 const useMessageContext = create<MessageFormState>((set) => ({
   zIsOpenDialog: false,
   zSetIsOpenDialog: (zIsOpenDialog: boolean) => set({ zIsOpenDialog }),
+  zIsConvoChange: false,
+  zSetIsConvoChange: (zIsConvoChange: boolean) => set({ zIsConvoChange }),
   zDialogTitle: "",
   zSetDialogTitle: (zDialogTitle: string) => set({ zDialogTitle }),
   zPage: 1,
