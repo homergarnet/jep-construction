@@ -105,46 +105,49 @@ const EmployeePayslipPage = () => {
         />
       </div>
       {/* Employee Table */}
-      <Table>
-        <TableCaption>A list of employees</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Position</TableHead>
-            <TableHead>Total Hours</TableHead>
-            <TableHead>Overtime Hours</TableHead>
-            <TableHead>Rate Per Hour</TableHead>
-            <TableHead>Overtime Rate</TableHead>
-            <TableHead>Total Pay</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {paginatedEmployees.map((emp) => (
-            <TableRow key={emp.id}>
-              <TableCell>{emp.name}</TableCell>
-              <TableCell>{emp.position}</TableCell>
-              <TableCell>{emp.totalHours}</TableCell>
-              <TableCell>{emp.overtimeHours}</TableCell>
-              <TableCell>{emp.ratePerHour}</TableCell>
-              <TableCell>{emp.overtimeRate}</TableCell>
-              <TableCell>{emp.totalPay}</TableCell>
-              <TableCell className="text-right space-x-2">
-                <Button variant="outline" size="sm">
-                  Edit
-                </Button>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => handleRemove(emp.id)}
-                >
-                  Remove
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <div className="w-full overflow-x-auto border rounded-md">
+        <div className="min-w-[900px]"> {/* Prevent table from squishing too much */}
+          <Table>
+            <TableCaption>A list of employees</TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead>Position</TableHead>
+                <TableHead>Total Hours</TableHead>
+                <TableHead>Overtime Hours</TableHead>
+                <TableHead>Rate Per Hour</TableHead>
+                <TableHead>Overtime Rate</TableHead>
+                <TableHead>Total Pay</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {paginatedEmployees.map((emp) => (
+                <TableRow key={emp.id}>
+                  <TableCell>{emp.name}</TableCell>
+                  <TableCell>{emp.position}</TableCell>
+                  <TableCell>{emp.totalHours}</TableCell>
+                  <TableCell>{emp.overtimeHours}</TableCell>
+                  <TableCell>{emp.ratePerHour}</TableCell>
+                  <TableCell>{emp.overtimeRate}</TableCell>
+                  <TableCell>{emp.totalPay}</TableCell>
+                  <TableCell className="text-right space-x-2">
+                    <Button variant="outline" size="sm">Edit</Button>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => handleRemove(emp.id)}
+                    >
+                      Remove
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
+
 
       {/* Pagination */}
       <div className="flex justify-center mt-4">

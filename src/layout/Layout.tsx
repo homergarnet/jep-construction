@@ -7,17 +7,23 @@ import { Outlet } from 'react-router-dom'
 const Layout = ({ children }: { children?: React.ReactNode }) => {
     return (
         <SidebarProvider defaultOpen={true}>
-            <AppSidebar />
-            <main className="flex-1">
-                <Header />
+            <div className="flex min-h-screen w-full"> {/* ✅ Full width layout */}
+                <AppSidebar />
 
-                <>
-                    {/* {children} */}
-                    <Outlet />
-                </>
-            </main>
+                {/* ✅ Main content column */}
+                <div className="flex flex-1 flex-col overflow-hidden">
+                    <Header />
+
+                    {/* ✅ Scrollable page content area */}
+                    <div className="flex-1 overflow-auto p-4">
+                        <Outlet />
+                    </div>
+                </div>
+            </div>
         </SidebarProvider>
     );
-}
+};
 
-export default Layout
+export default Layout;
+
+
