@@ -1,5 +1,6 @@
 // src/store.ts
 import type { EmployeeListFormValues } from "@/pages/admin/employee/schema/employeeListFormSchema";
+import type { MessageDto } from "@/types/messages";
 import create from "zustand";
 
 //for definining of types
@@ -31,6 +32,10 @@ interface MessageFormState {
   zSetMessageFilter: (zMessageFilter: string) => void;
   zActiveId: string;
   zSetActiveId: (zActiveId: string) => void;
+  zIsSignalReceive: boolean;
+  zSetIsSignalReceive: (zIsSignalReceive: boolean) => void;
+  zSignalrValues: MessageDto | null;
+  zSetSignalrValues: (zSignalrValues: MessageDto) => void;
 }
 
 //for inialization
@@ -62,6 +67,10 @@ const useMessageContext = create<MessageFormState>((set) => ({
   zSetMessageFilter: (zMessageFilter: string) => set({ zMessageFilter }),
   zActiveId: "",
   zSetActiveId: (zActiveId: string) => set({ zActiveId }),
+  zIsSignalReceive: false,
+  zSetIsSignalReceive: (zIsSignalReceive: boolean) => set({ zIsSignalReceive }),
+  zSignalrValues: null,
+  zSetSignalrValues: (zSignalrValues) => set({ zSignalrValues }),
 }));
 
 export default useMessageContext;
