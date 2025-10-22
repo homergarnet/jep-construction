@@ -52,6 +52,7 @@ import { useCreateMessage, useGetConvoRowList, useGetMessageList, useSetReadById
 import { getJwtUserId } from "@/utils/getJwtRoleId";
 import { formatDateToMMDDYYYYhhmmA } from "@/utils/formatDateToMMDDYYYYhhmmA";
 import useSwal from "@/hooks/useSwal";
+import { useSignalRConnection } from "../hooks/useSignalrConnection";
 const apiRoot = import.meta.env.VITE_APP_API_ROOT_ENDPOINT;
 
 const classNames = (...args: (string | false | null | undefined)[]) => args.filter(Boolean).join(' ');
@@ -369,6 +370,7 @@ const Sidebar = ({
 
 const Messages = () => {
 
+    useSignalRConnection();
     const userId = getJwtUserId() ?? 0;
     const zConvoPage = useMessageContext((state) => state.zConvoPage);
     const zSetConvoPage = useMessageContext((state) => state.zSetConvoPage);
@@ -379,6 +381,9 @@ const Messages = () => {
     const zMessageFilter = useMessageContext((state) => state.zMessageFilter);
     const zConvoUserId = useMessageContext((state) => state.zConvoUserId);
     const zSetIsConvoChange = useMessageContext((state) => state.zSetIsConvoChange);
+    const zIsSignalReceive = useMessageContext((state) => state.zIsSignalReceive);
+    const zSetIsSignalReceive = useMessageContext((state) => state.zSetIsSignalReceive);
+    const zSignalrValues = useMessageContext((state) => state.zSignalrValues);
     const { showConfirm, showToast } = useSwal();
     const createMessage = useCreateMessage();
     const { data: convoRowList, isLoading: convoRowListLoading } = useGetConvoRowList({
@@ -560,6 +565,13 @@ const Messages = () => {
     //         }
     //     }
     // }, [messageList]);
+    useEffect(() => {
+        if (zIsSignalReceive) {
+            zSetIsSignalReceive(false);
+            console.log("zSignalrValues: ", zSignalrValues)
+            setAllUsers(prev => [...prev, zSignalrValues]);
+        }
+    }, [zIsSignalReceive])
 
 
     return (

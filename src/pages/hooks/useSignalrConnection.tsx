@@ -1,8 +1,20 @@
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import * as signalR from "@microsoft/signalr";
+import { useQueryClient } from "@tanstack/react-query";
+import useMessageContext from "@/store/message/messageContext";
+import { getJwtUserId } from "@/utils/getJwtRoleId";
+import type { MessageDto } from "@/types/messages";
+
 export const useSignalRConnection = () => {
-  const HubConnection = process.env.REACT_APP_SIGNALR_API_ENDPOINT as string;
-  const HomeRoomId = process.env.REACT_APP_HOME_ROOM_ID as string;
-  const { zSetAutomationMessage } = useHomeContext();
+
+  const HubConnection = import.meta.env.VITE_APP_HUB_CONNECTION_ENDPOINT;
+  const MessageRoomId = import.meta.env.VITE_APP_MESSAGE_ROOM_ID;
+  // const { zSetAutomationMessage } = useHomeContext();
   const location = useLocation();
+
+  const zSetIsSignalReceive = useMessageContext((state) => state.zSetIsSignalReceive);
+  const zSetSignalrValues = useMessageContext((state) => state.zSetSignalrValues);
   const [connection, setConnection] = useState<signalR.HubConnection | null>(
     null
   );
@@ -10,8 +22,8 @@ export const useSignalRConnection = () => {
   useEffect(() => {
     const newConnection = new signalR.HubConnectionBuilder()
       .withUrl(HubConnection, {
-        accessTokenFactory: () => localStorage.getItem("accessToken") || "",
-        withCredentials: true,
+        accessTokenFactory: () => localStorage.getItem("authToken") || "",
+        withCredentials: false,
       })
       .withAutomaticReconnect()
       .configureLogging(signalR.LogLevel.Information)
@@ -25,15 +37,33 @@ export const useSignalRConnection = () => {
         console.log("Connected to SignalR!");
 
         newConnection
-          .invoke("InitializeHomeRoom", HomeRoomId)
+          .invoke("InitializeMessageRoom", MessageRoomId)
           .then(() => console.log("Joined the room."))
           .catch(console.error);
 
         newConnection.on(
-          "ReceiveTotalSkuProcess",
-          (roomId: string, message: string) => {
-            console.log(`Received in ${roomId}: ${message}`);
-            zSetAutomationMessage(message);
+          "ReceiveMessage",
+          (roomId: string, messageId: number, userId: number, senderId: number, receiverId: number, message: string, profileImage: string, dateTimeNow: string) => {
+            const currentUserId = getJwtUserId() ?? 0;
+
+            console.log(`Received in ${roomId}:${messageId} ${userId} ${senderId} ${currentUserId} ${receiverId} ${message} ${profileImage} ${dateTimeNow}`);
+            if (currentUserId === receiverId) {
+              console.log("nag trigger")
+              let values: MessageDto = {
+                Id: messageId,
+                UserId: userId,
+                SenderId: userId,
+                ReceiverId: receiverId,
+                Message: message,
+                ProfileImage: profileImage,
+                IsEnabled: true,
+                DateTimeCreated: dateTimeNow
+              }
+              zSetSignalrValues(values)
+              zSetIsSignalReceive(true)
+            }
+
+            // zSetAutomationMessage(message);
           }
         );
       })
