@@ -8,8 +8,6 @@ const initialData: InventoryFormValues = {
   category: "",
   quantity: 0,
   unitOfMeasure: "",
-  reOrderLevel: 0,
-  reOrderQuantity: 0,
   description: "",
 };
 

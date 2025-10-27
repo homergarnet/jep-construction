@@ -31,10 +31,10 @@ const ProjectManagementTblBody: React.FC<ProjectManagementTblBodyProps> = ({
                     <TableCell>{emp.ClientName}</TableCell>
                     <TableCell>{formatDateToMMDDYYYY(emp.StartDate)}</TableCell>
                     <TableCell>{formatDateToMMDDYYYY(emp.EndDate)}</TableCell>
-                    <TableCell>{formatNumber(emp.Budget)}</TableCell>
+                    {/* <TableCell>{formatNumber(emp.Budget)}</TableCell> */}
                     <TableCell>{emp.Location}</TableCell>
                     <TableCell>{emp.Description}</TableCell>
-                    <TableCell>{emp.CompletionStatus}</TableCell>
+                    {/* <TableCell>{emp.CompletionStatus}</TableCell> */}
                     <TableCell className="text-right space-x-2">
                         {roleId === ADMIN_TYPE_NUM && (
                             <>

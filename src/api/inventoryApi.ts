@@ -53,8 +53,6 @@ export const inventoryApi = {
       category: data.InventoryList[0].Category,
       quantity: data.InventoryList[0].Quantity,
       unitOfMeasure: data.InventoryList[0].UnitOfMeasure,
-      reOrderLevel: data.InventoryList[0].ReOrderLevel,
-      reOrderQuantity: data.InventoryList[0].ReOrderQuantity,
       description: data.InventoryList[0].Description,
     } as InventoryFormValues;
 

@@ -148,7 +148,7 @@ const ProjectManagementDialog: React.FC<ProjectManagementDialogProps> = ({
                             )}
                         </div>
 
-                        <Controller
+                        {/* <Controller
                             name="budget"
                             control={control}
                             render={({ field }) => (
@@ -169,14 +169,14 @@ const ProjectManagementDialog: React.FC<ProjectManagementDialogProps> = ({
                                     }}
                                 />
                             )}
-                        />
-                        {errors.budget && (
+                        /> */}
+                        {/* {errors.budget && (
                             <p className="text-red-500 text-sm">{errors.budget.message}</p>
                         )}
 
                         {errors.budget && (
                             <p className="text-red-500 text-sm">{errors.budget.message}</p>
-                        )}
+                        )} */}
 
                         <Input placeholder="Location" {...register("location")} />
                         {errors.location && (
@@ -184,7 +184,6 @@ const ProjectManagementDialog: React.FC<ProjectManagementDialogProps> = ({
                                 {errors.location.message}
                             </p>
                         )}
-
                         <textarea
                             placeholder="Description"
                             {...register("description")}
@@ -195,12 +194,6 @@ const ProjectManagementDialog: React.FC<ProjectManagementDialogProps> = ({
                                 {errors.description.message}
                             </p>
                         )}
-
-                        <Input
-                            type="number"
-                            placeholder="Completion Status"
-                            {...register("completionStatus", { valueAsNumber: true })}
-                        />
 
                         <Button type="submit" className="w-full cursor-pointer">
                             Save

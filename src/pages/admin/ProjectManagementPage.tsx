@@ -66,10 +66,10 @@ const ProjectManagementPage = () => {
             projectName: "",
             startDate: new Date(), // or new Date().toISOString().split("T")[0] if you want today's date
             endDate: new Date(), // or new Date().toISOString().split("T")[0] if you want today's date
-            budget: 0,
+            // budget: 0,
             location: "",
             description: "",
-            completionStatus: 0,
+            // completionStatus: 0,
         },
         //for validation way choices "onBlur"(When you exit the textbox hover) | "onChange"(When you change the field not recommended performance issue) | "onSubmit" (Default and when user click the button) | "onTouched (on the first load event and every change event)" | "all" (Both change and blur event)
         mode: "onTouched",
@@ -154,10 +154,10 @@ const ProjectManagementPage = () => {
                     ProjectName: data.projectName,
                     StartDate: data.startDate,
                     EndDate: data.endDate,
-                    Budget: data.budget,
+                    // Budget: data.budget,
                     Location: data.location,
                     Description: data.description,
-                    CompletionStatus: data.completionStatus
+                    // CompletionStatus: data.completionStatus
                 }
 
                 if (zDialogTitle === CREATE_PROJECT_MANAGEMENT) {
@@ -189,10 +189,10 @@ const ProjectManagementPage = () => {
             projectName: "",
             startDate: new Date(), // or new Date().toISOString().split("T")[0] if you want today's date
             endDate: new Date(), // or new Date().toISOString().split("T")[0] if you want today's date
-            budget: 0,
+            // budget: 0,
             location: "",
             description: "",
-            completionStatus: 0,
+            // completionStatus: 0,
         };
         reset(values);
     }, [reset]);

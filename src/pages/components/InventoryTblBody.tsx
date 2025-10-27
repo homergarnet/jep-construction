@@ -29,8 +29,6 @@ const InventoryTblBody: React.FC<InventoryTblBodyProps> = ({
                     <TableCell>{emp.Category}</TableCell>
                     <TableCell>{emp.Quantity}</TableCell>
                     <TableCell>{emp.UnitOfMeasure}</TableCell>
-                    <TableCell>{emp.ReOrderLevel}</TableCell>
-                    <TableCell>{emp.ReOrderQuantity}</TableCell>
                     <TableCell>{emp.Description}</TableCell>
                     <TableCell className="text-right space-x-2">
                         {roleId === ADMIN_TYPE_NUM && (

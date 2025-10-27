@@ -15,10 +15,10 @@ export interface CreateUpdateProjectManagementRequest {
   ProjectName: string;
   StartDate: Date;
   EndDate: Date;
-  Budget: number;
+  // Budget: number;
   Location: string;
   Description: string;
-  CompletionStatus: number;
+  // CompletionStatus: number;
 }
 
 export interface ProjectManagementDto {
