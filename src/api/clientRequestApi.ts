@@ -1,5 +1,6 @@
 import type {
   ClientRequestResponse,
+  CreateCRReplyRequest,
   CreateUpdateClientReqRequest,
   GetClientRequestParams,
 } from "@/types/clientrequest";
@@ -32,6 +33,22 @@ export const clientRequestApi = {
     if (!data.IsSuccess) {
       throw new Error(data.ApiMessage);
     }
+    return data;
+  },
+
+  createCRReply: async (
+    payload: CreateCRReplyRequest
+  ): Promise<ClientRequestResponse> => {
+    const { data } = await apiConfig.post<ClientRequestResponse>(
+      "/ClientRequest/send-email",
+      payload
+    );
+
+    if (!data.IsSuccess) {
+      throw new Error(data.ApiMessage);
+    }
+
+    // Return the full response, not just ApiMessage
     return data;
   },
 };

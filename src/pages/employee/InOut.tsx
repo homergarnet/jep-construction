@@ -36,26 +36,47 @@ const InOut = () => {
 
   // start camera
   useEffect(() => {
-    const startCamera = async () => {
-      try {
-        const camStream = await navigator.mediaDevices.getUserMedia({ video: true })
-        setStream(camStream)
-        if (videoRef.current) {
-          videoRef.current.srcObject = camStream
-          videoRef.current.play()
-        }
-      } catch (err) {
-        console.error("Camera error:", err)
-      }
-    }
+    let isMounted = true;
+    let camStream: MediaStream | null = null;
 
-    startCamera()
-    return () => {
-      if (stream) {
-        stream.getTracks().forEach((t) => t.stop())
+    const startCamera = async () => {
+      console.log("🎥 Starting camera...");
+      try {
+        camStream = await navigator.mediaDevices.getUserMedia({ video: true });
+        console.log("✅ Stream obtained:", camStream);
+
+        if (!isMounted) return;
+
+        if (videoRef.current) {
+          videoRef.current.srcObject = camStream;
+          await videoRef.current.play().catch((err) =>
+            console.error("⚠️ Play() failed:", err)
+          );
+          console.log("🎬 Camera playing.");
+        } else {
+          console.warn("⚠️ videoRef not ready yet, retrying in 500ms...");
+          setTimeout(startCamera, 500);
+        }
+
+        setStream(camStream);
+      } catch (err) {
+        console.error("❌ Camera error:", err);
+        alert(
+          `Camera access failed: ${(err as Error).message || err
+          }. Try refreshing the page.`
+        );
       }
-    }
-  }, [])
+    };
+
+    startCamera();
+
+    return () => {
+      isMounted = false;
+      if (camStream) {
+        camStream.getTracks().forEach((t) => t.stop());
+      }
+    };
+  }, []);
 
   // reverse geocode
   const fetchCityCountry = async (lat: number, lng: number) => {
@@ -164,8 +185,15 @@ const InOut = () => {
         <video
           ref={videoRef}
           autoPlay
+          muted
           playsInline
-          className="mt-4 w-64 rounded-lg shadow"
+          style={{
+            width: "100%",
+            maxWidth: "400px",
+            height: "300px",
+            backgroundColor: "black",
+            borderRadius: "8px",
+          }}
         />
       )}
       <canvas ref={canvasRef} className="hidden" />

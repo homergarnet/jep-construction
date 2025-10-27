@@ -11,6 +11,7 @@ import React from 'react'
 import ClientRequestTblBody from './components/ClientRequestTblBody'
 import { useGetClientRequestList, useRemoveClientRequest } from '@/hooks/useClientRequest'
 import ClientRequestPagination from './components/ClientRequestPagination'
+import CRReplyDialog from './components/CRReplyDialog'
 
 const ClientRequestPage = () => {
     const zSetIsOpenDialog = useClientRequestContext((state) => state.zSetIsOpenDialog);
@@ -98,6 +99,9 @@ const ClientRequestPage = () => {
                     />
                 </div>
             </div>
+
+            <CRReplyDialog
+            />
             {/* <EmployeeDialog
                 onStatusChange={handleStatusChange}
                 onSubmit={handleSubmitForm}

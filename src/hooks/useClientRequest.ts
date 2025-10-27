@@ -2,6 +2,7 @@ import { clientRequestApi } from "@/api/clientRequestApi";
 import useClientRequestContext from "@/store/clientRequest/clientRequestContext";
 import type {
   ClientRequestResponse,
+  CreateCRReplyRequest,
   GetClientRequestParams,
 } from "@/types/clientrequest";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -31,6 +32,29 @@ export const useRemoveClientRequest = () => {
     },
     onError: (error: Error) => {
       // showToast(error.message, "error");
+    },
+  });
+};
+
+export const useCreateCRReply = () => {
+  const queryClient = useQueryClient();
+  const zPage = useClientRequestContext((state) => state.zPage);
+  const zPageSize = useClientRequestContext((state) => state.zPageSize);
+  const zStatusFilter = useClientRequestContext((state) => state.zStatusFilter);
+
+  return useMutation({
+    mutationFn: (payload: CreateCRReplyRequest) =>
+      clientRequestApi.createCRReply(payload),
+    onSuccess: (res) => {
+      queryClient.invalidateQueries({
+        queryKey: [
+          "clientrequests",
+          { keyword: zStatusFilter, page: zPage, pageSize: zPageSize },
+        ],
+      });
+    },
+    onError: (error: Error) => {
+      //   showToast(error.message, "error");
     },
   });
 };

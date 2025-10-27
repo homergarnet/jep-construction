@@ -15,7 +15,13 @@ export interface CreateUpdateClientReqRequest {
   Email: string;
   MobileNumber: string;
   Message: string;
+}
 
+export interface CreateCRReplyRequest {
+  Id: number;
+  To: string;
+  Subject: string;
+  Body: string;
 }
 
 export interface ClientRequestDto {
@@ -25,8 +31,8 @@ export interface ClientRequestDto {
   Email: string;
   MobileNumber: string;
   Message: string;
+  HasReply: boolean;
   DateTimeCreated: string;
-  
 }
 
 export interface ClientRequestResponse {

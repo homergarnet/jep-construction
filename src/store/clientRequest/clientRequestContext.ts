@@ -13,6 +13,10 @@ interface EmployeeListFormState {
   zSetPageSize: (zPageSize: number) => void;
   zStatusFilter: string;
   zSetStatusFilter: (zStatusFilter: string) => void;
+  zCRId: number;
+  zSetCRId: (zCRId: number) => void;
+  zCREmail: string;
+  zSetCREmail: (zCREmail: string) => void;
 }
 
 //for inialization
@@ -28,6 +32,10 @@ const useClientRequestContext = create<EmployeeListFormState>((set) => ({
   zSetPageSize: (zPageSize: number) => set({ zPageSize }),
   zStatusFilter: "not/a",
   zSetStatusFilter: (zStatusFilter: string) => set({ zStatusFilter }),
+  zCRId: 0,
+  zSetCRId: (zCRId: number) => set({ zCRId }),
+  zCREmail: "",
+  zSetCREmail: (zCREmail: string) => set({ zCREmail }),
 }));
 
 export default useClientRequestContext;
