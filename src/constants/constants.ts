@@ -124,6 +124,7 @@ export const clientRequestColumns = [
   { key: "mobileNumber", label: "Mobile Number" },
   { key: "messageDescription", label: "Message Description" },
   { key: "dateTimeCreated", label: "Date Time Created" },
+  { key: "hasReply", label: "Has Reply" },
   { key: "actions", label: "Actions", className: "text-right" },
 ];
 
