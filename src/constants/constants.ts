@@ -99,10 +99,8 @@ export const projectManagementColumns = [
   { key: "clientName", label: "Client Name" },
   { key: "startDate", label: "Start Date" },
   { key: "endDate", label: "End Date" },
-  { key: "budget", label: "Budget" },
   { key: "location", label: "Location" },
   { key: "description", label: "Description" },
-  { key: "completionStatus", label: "Completion Status" },
   { key: "actions", label: "Actions", className: "text-right" },
 ];
 
@@ -135,8 +133,6 @@ export const inventoryColumns = [
   { key: "category", label: "Category" },
   { key: "quantity", label: "Quantity" },
   { key: "unitOfMeasure", label: "Unit of Measure" },
-  { key: "reOrderLevel", label: "RE-Order Level" },
-  { key: "reOrderQuantity", label: "RE-Order Quantity" },
   { key: "description", label: "Description / Notes" },
   { key: "actions", label: "Actions", className: "text-right" },
 ];

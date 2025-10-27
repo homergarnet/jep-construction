@@ -10,8 +10,6 @@ export const inventoryFormSchema = z.object({
   category: z.string().min(1, "Category is required"),
   quantity: z.number().min(1, "Quantity is required"),
   unitOfMeasure: z.string().min(1, "Unit of Measure is required"),
-  reOrderLevel: z.number().min(1, "RE order level is required"),
-  reOrderQuantity: z.number().min(1, "RE order quantity is required"),
   description: z.string().min(1, "Description is required"),
 });
 

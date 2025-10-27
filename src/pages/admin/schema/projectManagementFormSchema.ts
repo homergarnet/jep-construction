@@ -25,10 +25,10 @@ export const projectManagementFormSchema = z.object({
     .refine((date) => !isNaN(date.getTime()), {
       message: "Invalid date format",
     }),
-  budget,
+  // budget,
   location: z.string().min(1, "Location is required"),
   description: z.string().min(1, "Description is required"),
-  completionStatus: z.number(),
+  // completionStatus: z.number(),
 });
 
 // Export the inferred TypeScript type for the form values

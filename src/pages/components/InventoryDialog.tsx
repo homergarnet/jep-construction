@@ -210,19 +210,6 @@ const InventoryDialog: React.FC<InventoryDialogProps> = ({
                                 {errors.unitOfMeasure.message}
                             </p>
                         )}
-
-                        <Input
-                            type="number"
-                            placeholder="RE-Order Level"
-                            {...register("reOrderLevel", { valueAsNumber: true })}
-                        />
-
-                        <Input
-                            type="number"
-                            placeholder="RE-Order Quantity"
-                            {...register("reOrderQuantity", { valueAsNumber: true })}
-                        />
-
                         <textarea
                             placeholder="Description"
                             {...register("description")}

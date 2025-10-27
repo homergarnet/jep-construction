@@ -16,8 +16,6 @@ export interface CreateUpdateInventoryRequest {
   Category: string;
   Quantity: number;
   UnitOfMeasure: string;
-  ReOrderLevel: number;
-  ReOrderQuantity: number;
   Description: string;
 }
 
@@ -29,8 +27,6 @@ export interface InventoryDto {
   Category: string;
   Quantity: number;
   UnitOfMeasure: string;
-  ReOrderLevel: number;
-  ReOrderQuantity: number;
   Description: string;
 }
 

@@ -58,8 +58,6 @@ const InventoryPage = () => {
             category: "",
             quantity: 0,
             unitOfMeasure: "",
-            reOrderLevel: 0,
-            reOrderQuantity: 0,
             description: "",
         },
         //for validation way choices "onBlur"(When you exit the textbox hover) | "onChange"(When you change the field not recommended performance issue) | "onSubmit" (Default and when user click the button) | "onTouched (on the first load event and every change event)" | "all" (Both change and blur event)
@@ -145,8 +143,6 @@ const InventoryPage = () => {
                 // Category: string;
                 // Quantity: number;
                 // UnitOfMeasure: string;
-                // ReOrderLevel: number;
-                // ReOrderQuantity: number;
                 // Description: string;
                 let payload: CreateUpdateInventoryRequest = {
                     Id: data.id,
@@ -155,8 +151,6 @@ const InventoryPage = () => {
                     Category: data.category,
                     Quantity: data.quantity,
                     UnitOfMeasure: data.unitOfMeasure,
-                    ReOrderLevel: data.reOrderLevel,
-                    ReOrderQuantity: data.reOrderQuantity,
                     Description: data.description,
                 }
 
@@ -190,8 +184,6 @@ const InventoryPage = () => {
             category: "",
             quantity: 0,
             unitOfMeasure: "",
-            reOrderLevel: 0,
-            reOrderQuantity: 0,
             description: "",
         };
         reset(values);
