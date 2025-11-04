@@ -45,6 +45,7 @@ export const adminSidebar = {
       items: [
         { title: "Employee List", url: "/admin/employee-list" },
         { title: "Attendance", url: "/admin/attendance" },
+        { title: "Assign Project", url: "/admin/assign-project" },
         // { title: "Payslip", url: "/admin/payslip" },
       ],
     },

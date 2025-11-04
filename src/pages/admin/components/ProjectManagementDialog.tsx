@@ -11,8 +11,7 @@ import { CLIENT_TYPE, CREATE_EMPLOYEE, CREATE_PROJECT_MANAGEMENT, EDIT_EMPLOYEE,
 import useProjectManagementContext from '@/store/projectManagement/projectManagementContext';
 import type { ProjectManagementFormValues } from '../schema/projectManagementFormSchema';
 import { useGetEmployeeList } from '@/hooks/useEmployeeList';
-
-
+import { format } from "date-fns"
 
 interface ProjectManagementDialogProps {
     onClientNameChange: (userId: string) => void;
@@ -129,25 +128,28 @@ const ProjectManagementDialog: React.FC<ProjectManagementDialogProps> = ({
                         </div>
 
                         <div className="flex flex-col space-y-1">
-                            <label className="text-sm font-medium">Start Date</label>
-                            <Input type="date" {...register("startDate")} />
+                            <label className="text-sm font-medium">Start date</label>
+                            <Input
+                                type="date"
+                                {...register("startDate")}
+                                min={format(new Date(), "yyyy-MM-dd")} // Disable yesterday and past dates
+                            />
                             {errors.startDate && (
-                                <p className="text-red-500 text-sm">
-                                    {errors.startDate.message}
-                                </p>
+                                <p className="text-red-500 text-sm">{errors.startDate.message}</p>
                             )}
                         </div>
 
                         <div className="flex flex-col space-y-1">
-                            <label className="text-sm font-medium">End Date</label>
-                            <Input type="date" {...register("endDate")} />
+                            <label className="text-sm font-medium">End date</label>
+                            <Input
+                                type="date"
+                                {...register("endDate")}
+                                min={format(new Date(), "yyyy-MM-dd")} // Disable yesterday and past dates
+                            />
                             {errors.endDate && (
-                                <p className="text-red-500 text-sm">
-                                    {errors.endDate.message}
-                                </p>
+                                <p className="text-red-500 text-sm">{errors.endDate.message}</p>
                             )}
                         </div>
-
                         {/* <Controller
                             name="budget"
                             control={control}
