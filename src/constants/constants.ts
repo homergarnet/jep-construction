@@ -137,8 +137,27 @@ export const inventoryColumns = [
   { key: "actions", label: "Actions", className: "text-right" },
 ];
 
+export const assignProjectColumns = [
+  { key: "profileImage", label: "Profile Image" },
+  { key: "clientName", label: "Client Name" },
+  { key: "projectName", label: "Project Name" },
+  { key: "email", label: "Email" },
+  { key: "employeeNumber", label: "Employee Number" },
+  { key: "employeeName", label: "Employee name" },
+  { key: "mobileNumber", label: "Mobile Number" },
+  { key: "position", label: "Position" },
+  { key: "location", label: "Location" },
+  { key: "startDate", label: "Start Date" },
+  { key: "endDate", label: "End Date" },
+
+  { key: "actions", label: "Actions", className: "text-right" },
+];
+
 export const CREATE_EMPLOYEE = "Create employee";
 export const EDIT_EMPLOYEE = "Edit employee";
+
+export const CREATE_ASSIGN_PROJECT = "Create assign project";
+export const EDIT_ASSIGN_PROJECT = "Edit assign project";
 
 export const CREATE_EMP_ATTENDANCE = "Create employee attendance";
 export const EDIT_EMP_ATTENDANCE = "Edit employee attendance";

@@ -19,7 +19,7 @@ import ProjectManagementDialog from './components/ProjectManagementDialog'
 import { getJwtRoleId } from '@/utils/getJwtRoleId'
 import ReviewDialog from './components/ReviewDialog'
 import useReviewContext from '@/store/review/reviewContext'
-import PMPagination from './components/PMPaginatinon'
+import PMPagination from './components/PMPagination'
 
 const ProjectManagementPage = () => {
 

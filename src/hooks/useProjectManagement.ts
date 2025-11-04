@@ -3,6 +3,7 @@ import { ADMIN_TYPE_NUM } from "@/constants/constants";
 import useProjectManagementContext from "@/store/projectManagement/projectManagementContext";
 import type {
   CreateUpdateProjectManagementRequest,
+  GetProjectIdByCNamePNameParams,
   GetProjectManagementByIdParams,
   GetProjectManagementParams,
   ProjectManagementResponse,
@@ -54,6 +55,17 @@ export const useGetProjectManagementById = (
     queryKey: ["projectmanagement", params.id],
     queryFn: () => projectManagementApi.getProjectManagementById(params),
     enabled: !!params.id && enabled,
+  });
+};
+
+export const useGetProjectIdByCNamePName = (
+  params: GetProjectIdByCNamePNameParams,
+  enabled = true
+) => {
+  return useQuery<ProjectManagementResponse>({
+    queryKey: ["projectIdByCNamePName", params.cName, params.pName],
+    queryFn: () => projectManagementApi.getProjectIdByCNamePName(params),
+    enabled: !!params.cName && !!params.pName && !!enabled,
   });
 };
 

@@ -7,10 +7,10 @@ const initialData: ProjectManagementFormValues = {
   projectName: "",
   startDate: new Date(),
   endDate: new Date(),
-  budget: 0,
+  // budget: 0,
   location: "",
   description: "",
-  completionStatus: 0,
+  // completionStatus: 0,
 };
 
 //for definining of types

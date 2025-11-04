@@ -9,6 +9,11 @@ export interface GetProjectManagementByIdParams {
   id: number;
 }
 
+export interface GetProjectIdByCNamePNameParams {
+  cName: string;
+  pName: string;
+}
+
 export interface CreateUpdateProjectManagementRequest {
   Id?: number;
   UserId: number;

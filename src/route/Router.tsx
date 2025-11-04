@@ -12,6 +12,7 @@ const Login = React.lazy(() => import("../pages/admin/Login"));
 const EmployeeLogin = React.lazy(() => import("../pages/employee/Login"));
 const EmployeeListPage = React.lazy(() => import("../pages/admin/employee/EmployeeListPage"));
 const EmployeeAttendancePage = React.lazy(() => import("../pages/admin/employee/EmployeeAttendancePage"));
+const AssignProjectPage = React.lazy(() => import("../pages/admin/employee/AssignProjectPage"));
 const ClientLogin = React.lazy(() => import("../pages/client/Login"));
 const PayslipPage = React.lazy(() => import("../pages/admin/employee/EmployeePayslipPage"));
 const ClientListPage = React.lazy(() => import("../pages/admin/ClientListPage"));
@@ -85,6 +86,14 @@ const Router = createBrowserRouter(
           element={
             <Suspense fallback={<div>Loading...</div>}>
               <EmployeeAttendancePage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="admin/assign-project"
+          element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <AssignProjectPage />
             </Suspense>
           }
         />
