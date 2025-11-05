@@ -18,11 +18,19 @@ import trusses_roofing from "@/assets/trusses_roofing.jpg";
 import table_set from "@/assets/table_set.jpg";
 import grils from "@/assets/grils.jpg";
 import GetInTouchForm from './components/GetInTouchForm';
+import ReviewCarousel from '@/components/ReviewCarousel';
+import { useGetReviewList } from '@/hooks/useReview';
 
 const HomePage = () => {
     const { theme, setTheme } = useTheme();
     const isDark = theme === "dark"
     const [isOpen, setIsOpen] = useState(false)
+    const { data: reviewList, isLoading: reviewListLoading, refetch: refetchReviewList, } = useGetReviewList({
+        keyword: "",
+        isApprove: true,
+        page: 1,
+        pageSize: 1000,
+    });
 
     return (
         <>
@@ -45,12 +53,12 @@ const HomePage = () => {
 
                         {/* Desktop Nav (right side) */}
                         <nav className="hidden md:flex items-center space-x-6">
-                            <a href="#" className="block py-2 hover:text-blue-500">Home</a>
-                            <a href="#" className="block py-2 hover:text-blue-500">About</a>
-                            <a href="#" className="block py-2 hover:text-blue-500">Services</a>
-                            <a href="#" className="block py-2 hover:text-blue-500">Projects</a>
+                            <a href="#home" className="block py-2 hover:text-blue-500">Home</a>
+                            <a href="#aboutUs" className="block py-2 hover:text-blue-500">About</a>
+                            <a href="#services" className="block py-2 hover:text-blue-500">Services</a>
+                            <a href="#projects" className="block py-2 hover:text-blue-500">Projects</a>
                             {/* <a href="#" className="block py-2 hover:text-blue-500">Feedback</a> */}
-                            <a href="#" className="block py-2 hover:text-blue-500">Contact Us</a>
+                            <a href="#contactUs" className="block py-2 hover:text-blue-500">Contact Us</a>
 
                             {/* Theme toggle */}
                             <div
@@ -80,18 +88,18 @@ const HomePage = () => {
                             className={`md:hidden px-4 pb-3 space-y-2 border-t transition-colors duration-300
         ${isDark ? "bg-gray-900 border-gray-800 text-white" : "bg-white border-gray-200 text-gray-900"}`}
                         >
-                            <a href="#" className="block py-2 hover:text-blue-500">Home</a>
-                            <a href="#" className="block py-2 hover:text-blue-500">About</a>
-                            <a href="#" className="block py-2 hover:text-blue-500">Services</a>
-                            <a href="#" className="block py-2 hover:text-blue-500">Projects</a>
+                            <a href="#home" className="block py-2 hover:text-blue-500">Home</a>
+                            <a href="#aboutUs" className="block py-2 hover:text-blue-500">About</a>
+                            <a href="#services" className="block py-2 hover:text-blue-500">Services</a>
+                            <a href="#projects" className="block py-2 hover:text-blue-500">Projects</a>
                             {/* <a href="#" className="block py-2 hover:text-blue-500">Feedback</a> */}
-                            <a href="#" className="block py-2 hover:text-blue-500">Contact Us</a>
+                            <a href="#contactUs" className="block py-2 hover:text-blue-500">Contact Us</a>
                         </nav>
                     )}
                 </header>
 
                 {/* Hero Section */}
-                <section className="flex-1"> {/* pt-20 = header height offset */}
+                <section id="home" className="flex-1"> {/* pt-20 = header height offset */}
                     <div className="w-full h-[calc(100vh-80px)] relative">
                         {/* Background image */}
                         <img
@@ -113,7 +121,7 @@ const HomePage = () => {
                         </div>
                     </div>
                 </section>
-                <h2 className="text-2xl font-bold text-center mt-2">About Us</h2>
+                <h2 id="aboutUs" className="text-2xl font-bold text-center mt-2">About Us</h2>
                 <p className="mt-4 text-xl md:text-2xl max-w-2xl mx-auto text-center leading-relaxed text-gray-700">
                     JEP Construction and Metal Works is a company specializing in high-quality construction
                     services with a passion for excellence and innovation. With years of experience, we pride
@@ -175,7 +183,7 @@ const HomePage = () => {
                         </CardContent>
                     </Card>
                 </div>
-                <h2 className="text-2xl font-bold mb-6 text-center">Our Services</h2>
+                <h2 id="services" className="text-2xl font-bold mb-6 text-center">Our Services</h2>
                 <div className="flex flex-wrap justify-center gap-6 px-6 py-10">
                     {/* Card 1 */}
                     <Card className="w-80 shadow-md rounded-2xl border border-gray-200">
@@ -286,7 +294,7 @@ const HomePage = () => {
                         </CardContent>
                     </Card>
                 </div>
-                <h2 className="text-2xl font-bold mb-6 text-center">Our Projects</h2>
+                <h2 id="projects" className="text-2xl font-bold mb-6 text-center">Our Projects</h2>
                 <div className="flex flex-wrap justify-center gap-6 px-6 py-10">
                     {/* Card 1 */}
                     <Card className="w-80 shadow-md rounded-2xl border border-gray-200">
@@ -410,7 +418,15 @@ const HomePage = () => {
                     </Card>
                 </div>
             </div>
-            <h2 className="text-2xl font-bold mb-6 text-center">Contact Us</h2>
+            <h2 id="reviews" className="text-2xl font-bold mb-6 text-center">Reviews</h2>
+            {reviewList?.ReviewList?.length ? (
+                <ReviewCarousel reviews={reviewList.ReviewList} interval={5000} />
+            ) : (
+                <p className="text-center text-muted-foreground">No reviews found.</p>
+            )}
+
+            <h2 id="contactUs" className="text-2xl font-bold mb-6 text-center">Contact Us</h2>
+
             <GetInTouchForm />
             <footer className="border-t backdrop-blur py-12 supports-[backdrop-filter]:bg-background/60">
                 <div className="container mx-auto px-4 text-center text-gray-400">
