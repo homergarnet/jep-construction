@@ -17,6 +17,11 @@ export interface CreateUpdateReviewRequest {
   ReviewDescription: string;
 }
 
+export interface UpdateApproveReviewRequest {
+  Id: number;
+  ISApprove: boolean;
+}
+
 export interface ReviewDto {
   Id: number;
   ProjectName: string;
@@ -25,6 +30,7 @@ export interface ReviewDto {
   MobileNumber: string;
   Rate: number;
   ReviewDescription: string;
+  IsApprove: boolean;
   DateTimeCreated: string;
 }
 

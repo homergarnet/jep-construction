@@ -3,6 +3,7 @@ import type {
   GetReviewByIdParams,
   GetReviewParams,
   ReviewResponse,
+  UpdateApproveReviewRequest,
 } from "@/types/review";
 import apiConfig from "./apiConfig";
 import type { ReviewFormValues } from "@/pages/schema/reviewFormSchema";
@@ -68,6 +69,20 @@ export const reviewApi = {
   ): Promise<ReviewResponse> => {
     const { data } = await apiConfig.put<ReviewResponse>(
       "/Review/update-review",
+      payload
+    );
+
+    if (!data.IsSuccess) {
+      throw new Error(data.ApiMessage);
+    }
+    return data;
+  },
+
+  updateApproveReview: async (
+    payload: UpdateApproveReviewRequest
+  ): Promise<ReviewResponse> => {
+    const { data } = await apiConfig.put<ReviewResponse>(
+      "/Review/update-approve-review-post",
       payload
     );
 

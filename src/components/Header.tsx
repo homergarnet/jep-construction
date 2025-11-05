@@ -7,14 +7,14 @@ import { getJwtRoleId } from "@/utils/getJwtRoleId";
 import { ADMIN_ROLE_ID, EMPLOYEE_ROLE_ID } from "@/constants/constants";
 
 const Header: React.FC = () => {
-
+    const roleId = getJwtRoleId();
     const { theme, setTheme } = useTheme();
     const isDark = theme === "dark"
     const [isOpen, setIsOpen] = useState(false)
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        const roleId = getJwtRoleId();
+
         localStorage.removeItem("authToken");
         // Clear stored auth data
         // Redirect to login page
@@ -32,9 +32,13 @@ const Header: React.FC = () => {
 
                 {/* Desktop Nav */}
                 <nav className="hidden md:flex space-x-6">
-                    <a href="#" className="hover:text-blue-500">Home</a>
-                    <a href="#" className="hover:text-blue-500">About</a>
-                    <a href="#" className="hover:text-blue-500">Contact</a>
+                    {roleId === "0" && (
+                        <>
+                            <a href="#" className="hover:text-blue-500">Home</a>
+                            <a href="#" className="hover:text-blue-500">About</a>
+                            <a href="#" className="hover:text-blue-500">Contact</a>
+                        </>
+                    )}
                     {/* theme to toggle */}
                     <div onClick={() => setTheme(isDark ? "light" : "dark")}
                         className={`flex items-center cursor-pointer transition-transform duration-500 ${isDark ? "rotate-180" : "rotate-0"}`}>

@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input'
 import { Table, TableCaption } from '@/components/ui/table'
 import { reviewColumns } from '@/constants/constants'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
-import { useGetReviewList, useRemoveReview } from '@/hooks/useReview'
+import { useGetReviewList, useRemoveReview, useUpdateApproveReview } from '@/hooks/useReview'
 import useSwal from '@/hooks/useSwal'
 import useReviewContext from '@/store/review/reviewContext'
 import { debounce } from 'lodash'
@@ -11,6 +11,7 @@ import { Users } from 'lucide-react'
 import React from 'react'
 import ReviewTblBody from './admin/components/ReviewTblBody'
 import ReviewPagination from './admin/components/ReviewPagination'
+import type { UpdateApproveReviewRequest } from '@/types/review'
 
 const ReviewPage = () => {
 
@@ -24,11 +25,13 @@ const ReviewPage = () => {
     const zSetStatusFilter = useReviewContext((state) => state.zSetStatusFilter);
     const { showConfirm, showToast } = useSwal();
     const { confirm, ConfirmDialog } = useConfirmDialog();
-    const { data: reviewList, isLoading: reviewListLoading } = useGetReviewList({
+    const { data: reviewList, isLoading: reviewListLoading, refetch: refetchReviewList, } = useGetReviewList({
         keyword: zStatusFilter,
         page: zPage,
         pageSize: zPageSize,
     });
+
+    const updateApproveReview = useUpdateApproveReview();
 
     const removeReview = useRemoveReview();
 
@@ -44,6 +47,29 @@ const ReviewPage = () => {
         handleReview(value);
     }, 1500);
 
+
+    const handleUpdateApproveReview = async (id: number, isApprove: boolean) => {
+        const ok = await confirm({
+            title: "You won't be able to revert this!",
+            description: `Are you sure you want to update approve review?`,
+            confirmLabel: "Yes, Continue",
+            cancelLabel: "No",
+        })
+
+        if (!ok) return
+        let req: UpdateApproveReviewRequest = {
+            Id: id,
+            ISApprove: isApprove
+        }
+
+        updateApproveReview.mutate(req, {
+            onSuccess: (res) => {
+                refetchReviewList()
+                showToast(res.ApiMessage, "success")
+            },
+            onError: (error: Error) => showToast(error.message, "error"),
+        })
+    }
 
     const handleRemove = async (id: number) => {
         const ok = await confirm({
@@ -89,6 +115,7 @@ const ReviewPage = () => {
                     <TblHeader columns={reviewColumns} />
                     <ReviewTblBody
                         paginatedReviews={reviewList?.ReviewList}
+                        onUpdateApproveReview={handleUpdateApproveReview}
                         onRemove={handleRemove}
                     />
                 </Table>
