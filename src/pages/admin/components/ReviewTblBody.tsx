@@ -8,11 +8,13 @@ import { formatDateToMMDDYYYYhhmmA } from '@/utils/formatDateToMMDDYYYYhhmmA';
 
 type ReviewTblBodyProps = {
     paginatedReviews: ReviewDto[] | undefined;
+    onUpdateApproveReview: (id: number, isApprove: boolean) => void;
     onRemove: (id: number) => void;
 }
 
 const ReviewTblBody: React.FC<ReviewTblBodyProps> = ({
     paginatedReviews,
+    onUpdateApproveReview,
     onRemove,
 }) => {
 
@@ -28,6 +30,13 @@ const ReviewTblBody: React.FC<ReviewTblBodyProps> = ({
                     <TableCell>{emp.ReviewDescription}</TableCell>
                     <TableCell>{formatDateToMMDDYYYYhhmmA(emp.DateTimeCreated)}</TableCell>
                     <TableCell className="text-right space-x-2">
+                        {emp.IsApprove ? <>
+                            <Button className='cursor-pointer' variant="default" size="sm" onClick={(e) => onUpdateApproveReview(emp.Id, false)}>
+                                Hide review
+                            </Button>
+                        </> : <><Button className='cursor-pointer' variant="ghost" size="sm" onClick={(e) => onUpdateApproveReview(emp.Id, true)}>
+                            Display Review
+                        </Button></>}
                         {/* <Button className='cursor-pointer' variant="outline" size="sm" onClick={(e) => onCreateUpdateEmployeeList(EDIT_EMPLOYEE, emp.Id)}>
                             Edit
                         </Button> */}

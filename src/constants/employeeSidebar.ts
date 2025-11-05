@@ -10,6 +10,7 @@ import {
   SquaresExclude,
   UserPen,
   Flag,
+  LocateFixed,
 } from "lucide-react";
 
 export const employeeSidebar = {
@@ -36,6 +37,11 @@ export const employeeSidebar = {
     },
   ],
   navMain: [
+    {
+      title: "Assign Project",
+      url: "/employee/assign-project",
+      icon: LocateFixed,
+    },
     {
       title: "Attendance",
       url: "#",

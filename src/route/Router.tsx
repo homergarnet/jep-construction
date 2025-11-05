@@ -22,6 +22,7 @@ const Messages = React.lazy(() => import("../pages/Messenger/Messages"));
 const InventoryPage = React.lazy(() => import("../pages/InventoryPage"));
 const ClientRequestPage = React.lazy(() => import("../pages/admin/ClientRequestPage"));
 const ProfilePage = React.lazy(() => import("../pages/ProfilePage"));
+const EmpAssignProjectPage = React.lazy(() => import("../pages/employee/EmpAssignProjectPage"));
 const InOut = React.lazy(() => import("../pages/employee/InOut"));
 const Page404 = React.lazy(() => import("../pages/Page404"));
 
@@ -166,6 +167,14 @@ const Router = createBrowserRouter(
 
       {/* Protected routes for role 2 */}
       <Route element={<ProtectedRoute roles={[2]} />}>
+        <Route
+          path="employee/assign-project"
+          element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <EmpAssignProjectPage />
+            </Suspense>
+          }
+        />
         <Route
           path="employee/in-out"
           element={

@@ -7,6 +7,7 @@ import type {
   GetReviewByIdParams,
   GetReviewParams,
   ReviewResponse,
+  UpdateApproveReviewRequest,
 } from "@/types/review";
 import { getJwtRoleId, getJwtUserId } from "@/utils/getJwtRoleId";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -76,7 +77,38 @@ export const useUpdateReview = () => {
       // pass it in zustand store if we want dynamic
       queryClient.invalidateQueries({
         queryKey: [
-          "projectmanagements",
+          "reviews",
+          {
+            keyword: zStatusFilter,
+            userId: getJwtRoleId() === ADMIN_TYPE_NUM ? 0 : getJwtUserId(),
+            page: zPage,
+            pageSize: zPageSize,
+          },
+        ],
+      });
+    },
+    onError: (error: Error) => {
+      // showToast(error.message, "error");
+    },
+  });
+};
+
+export const useUpdateApproveReview = () => {
+  const queryClient = useQueryClient();
+  const zPage = useProjectManagementContext((state) => state.zPage);
+  const zPageSize = useProjectManagementContext((state) => state.zPageSize);
+  const zStatusFilter = useProjectManagementContext(
+    (state) => state.zStatusFilter
+  );
+
+  return useMutation({
+    mutationFn: (payload: UpdateApproveReviewRequest) =>
+      reviewApi.updateApproveReview(payload),
+    onSuccess: () => {
+      // pass it in zustand store if we want dynamic
+      queryClient.invalidateQueries({
+        queryKey: [
+          "reviews",
           {
             keyword: zStatusFilter,
             userId: getJwtRoleId() === ADMIN_TYPE_NUM ? 0 : getJwtUserId(),
