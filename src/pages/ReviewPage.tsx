@@ -82,7 +82,10 @@ const ReviewPage = () => {
         if (!ok) return
 
         removeReview.mutate(id, {
-            onSuccess: (res) => showToast(res.ApiMessage, "success"),
+            onSuccess: (res) => {
+                refetchReviewList();
+                showToast(res.ApiMessage, "success")
+            },
             onError: (error: Error) => showToast(error.message, "error"),
         })
     }
