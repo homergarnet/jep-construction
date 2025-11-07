@@ -32,7 +32,7 @@ export const AutoCompleteProjectName: React.FC<AutoCompleteProjectNameProps> = (
     const watchCName = watch("clientName");
     const watchPName = watch("projectName");
 
-    const { data: projectIdByCNamePName, isLoading: projectIdByCNamePNameLoading } = useGetProjectIdByCNamePName({
+    const { data: projectIdByCNamePName, isLoading: projectIdByCNamePNameLoading, refetch: refetchProjectIdByCNamePName } = useGetProjectIdByCNamePName({
         cName: watchCName,
         pName: watchPName,
     });
@@ -52,9 +52,15 @@ export const AutoCompleteProjectName: React.FC<AutoCompleteProjectNameProps> = (
         );
     }, [items, query]);
 
-    const handleSelect = (val: string) => {
+    const handleSelect = async (val: string) => {
         setQuery(val);
         setValue("projectName", val, { shouldValidate: true });
+        // const { data } = await refetchProjectIdByCNamePName();
+        // if (data?.ProjectManagementList?.[0]?.Location) {
+        //     setValue("location", data.ProjectManagementList[0].Location, {
+        //         shouldValidate: true,
+        //     });
+        // }
         // console.log("zEmpList: ", zEmpList)
         // const filteredList = zEmpList.filter(
         //     (item) => item.EmployeeNumber?.toLowerCase().includes(val.toLowerCase())
@@ -92,6 +98,14 @@ export const AutoCompleteProjectName: React.FC<AutoCompleteProjectNameProps> = (
             setValue("projectId", zProjectId, { shouldValidate: true });
         }
     }, [zProjectId])
+
+    useEffect(() => {
+        if (projectIdByCNamePName?.ProjectManagementList?.[0]?.Location) {
+            setValue("location", projectIdByCNamePName.ProjectManagementList[0].Location, {
+                shouldValidate: true,
+            });
+        }
+    }, [projectIdByCNamePName, setValue]);
 
     return (
         <div ref={containerRef} className="w-full relative">

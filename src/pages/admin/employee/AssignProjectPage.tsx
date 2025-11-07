@@ -146,7 +146,13 @@ const AssignProjectPage = () => {
                 } else {
                     updateAssignProject.mutate(payload, {
                         onSuccess: (res) => showToast(res.ApiMessage, "success"),
-                        onError: (error: Error) => showToast(error.message, "error"),
+                        onError: (error: any) => {
+                            const apiMessage =
+                                error?.response?.data?.ApiMessage ||
+                                error?.message ||
+                                "An unexpected error occurred.";
+                            showToast(apiMessage, "error");
+                        },
                     })
                 }
             } catch (error) {

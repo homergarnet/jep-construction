@@ -151,7 +151,10 @@ const AssignProjectDialog: React.FC<AssignProjectDialogProps> = ({
                                 />
                             )}
                         />
-
+                        <Input placeholder="Location" {...register("location")} disabled />
+                        {errors.location && (
+                            <p className="text-red-500 text-sm">{errors.location.message}</p>
+                        )}
                         {/* <Input placeholder="Email" {...register("email")} />
                         {errors.email && (
                             <p className="text-red-500 text-sm">{errors.email.message}</p>
