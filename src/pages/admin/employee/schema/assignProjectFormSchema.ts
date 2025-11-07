@@ -10,6 +10,7 @@ export const assignProjectFormSchema = z.object({
   employeeFullname: z.string().min(1, "Employee full name is required"),
   clientName: z.string().min(1, "Client name is required"),
   projectName: z.string().min(1, "Project name is required"),
+  location: z.string().optional(),
   startDate: z.coerce
     .date({
       required_error: "Start date is required",
