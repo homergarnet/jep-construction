@@ -11,6 +11,7 @@ const initialData: AssignProjectFormValues = {
   employeeFullname: "",
   clientName: "",
   projectName: "",
+  location: "",
   startDate: new Date(),
   endDate: new Date(),
 };
