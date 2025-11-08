@@ -14,7 +14,10 @@ import { useGetMessageUserList, useSetReadById } from "@/hooks/useMessage"
 import useMessageContext from "@/store/message/messageContext"
 import { debounce } from "lodash"
 
-const NewChatSheet = ({ onSetActiveId }: { onSetActiveId: (id: string) => void }) => {
+const NewChatSheet = ({ onSetActiveId, onRefetchConvoRowList }: {
+    onSetActiveId: (id: string) => void,
+    onRefetchConvoRowList: () => void
+}) => {
     const apiRoot = import.meta.env.VITE_APP_API_ROOT_ENDPOINT;
 
     const zPage = useMessageContext((state) => state.zPage);
@@ -103,15 +106,23 @@ const NewChatSheet = ({ onSetActiveId }: { onSetActiveId: (id: string) => void }
                             <button
                                 key={u.Id}
                                 onClick={() => {
-                                    onSetActiveId(u.Id.toString())
+                                    onSetActiveId(u.Id.toString());
                                     setReadById.mutate(u.Id, {
                                         onSuccess: (res) => {
-                                            console.log("res: ", res);
-                                            zSetConvoUserId(u.Id)
-
+                                            // ⏳ Delay only zSetConvoUserId
+                                            setTimeout(() => {
+                                                zSetConvoUserId(u.Id);
+                                            }, 300);
                                         },
-                                        onError: (error: Error) => { console.log("error: ", error) },
-                                    })
+                                        onError: (error: Error) => {
+                                            onRefetchConvoRowList();
+                                            // ⏳ Delay only zSetConvoUserId
+                                            setTimeout(() => {
+
+                                                zSetConvoUserId(u.Id);
+                                            }, 300);
+                                        },
+                                    });
                                 }}
                                 className="flex items-center gap-3 rounded-lg p-2 hover:bg-muted w-full text-left"
                             >
@@ -121,6 +132,7 @@ const NewChatSheet = ({ onSetActiveId }: { onSetActiveId: (id: string) => void }
                                 </Avatar>
                                 <span>{u.Firstname + " " + u.Lastname}</span>
                             </button>
+
                         ))}
                     </div>
                 </div>

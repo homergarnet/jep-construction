@@ -320,20 +320,22 @@ const Sidebar = ({
     const zSetConvoUserId = useMessageContext((state) => state.zSetConvoUserId);
     const zConvoPageSize = useMessageContext((state) => state.zConvoPageSize);
 
-    const { data: convoRowList, isLoading: convoRowListLoading } = useGetConvoRowList({
+    const { data: convoRowList, isLoading: convoRowListLoading, refetch: refetchConvoRowList } = useGetConvoRowList({
         page: zConvoPage,
         pageSize: zConvoPageSize,
     });
 
 
-
+    const handleRefetchConvoRowList = () => {
+        refetchConvoRowList();
+    }
     const setReadById = useSetReadById();
 
 
     return (
         <div className="flex h-screen flex-col"> {/* ensure full screen height */}
             <div className="p-2 border-b">
-                <NewChatSheet onSetActiveId={onSetActiveId} />
+                <NewChatSheet onSetActiveId={onSetActiveId} onRefetchConvoRowList={handleRefetchConvoRowList} />
             </div>
             <ScrollArea className="flex-1 min-h-0"> {/* min-h-0 is important for scroll */}
                 <div className="space-y-1 p-2">
@@ -348,10 +350,12 @@ const Sidebar = ({
                                 onClick={() => {
                                     setReadById.mutate(c.ConvoUserId, {
                                         onSuccess: (res) => {
-
                                             zSetConvoUserId(c.ConvoUserId)
                                         },
-                                        onError: (error: Error) => { console.log("error: ", error) },
+                                        onError: (error: Error) => {
+                                            console.log("error: ", error)
+                                            zSetConvoUserId(c.ConvoUserId);
+                                        },
                                     })
 
                                     onSetActiveId(c.ConvoUserId.toString())
@@ -509,11 +513,13 @@ const Messages = () => {
         zSetMessagePage(1)
         zSetIsConvoChange(true);
         const timer = setTimeout(() => {
+            console.log("messageList: ", messageList)
             if (messagesEndRef.current) {
 
                 setIsMaxScroll(false)
                 messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
                 zSetIsConvoChange(false);
+
             }
         }, 500); // 👈 delay in ms (tweak 50–150 if needed)
 
