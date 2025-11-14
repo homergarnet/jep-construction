@@ -39,7 +39,7 @@ const EmployeeListPage = () => {
     const createEmployee = useCreateEmployee();
     const { data: employeeList, isLoading: empListLoading } = useGetEmployeeList({
         keyword: zStatusFilter,
-        accountType: EMPLOYEE_TYPE,
+        accountType: "workers",
         page: zPage,
         pageSize: zPageSize,
     });
@@ -63,7 +63,14 @@ const EmployeeListPage = () => {
             salary: 0,
             status: "",
             address: "",
+            gender: "",
+            department: "",
+            hourlyRate: 0,
+            emergencyContactName: "",
+            emergencyRelationship: "",
+            emergencyContactNo: "",
             dateOfBirth: new Date(), // or new Date().toISOString().split("T")[0] if you want today's date
+            userType: "",
         },
         //for validation way choices "onBlur"(When you exit the textbox hover) | "onChange"(When you change the field not recommended performance issue) | "onSubmit" (Default and when user click the button) | "onTouched (on the first load event and every change event)" | "all" (Both change and blur event)
         mode: "onTouched",
@@ -118,8 +125,17 @@ const EmployeeListPage = () => {
         }
     }, [zSetIsOpenDialog, zSetDialogTitle, empIdDupli]);
 
+    const handleGenderChange = useCallback((value: string) => {
+        if (value !== "N/A")
+            setValue("gender", value, { shouldValidate: true });
+    }, []);
+
     const handleStatusChange = useCallback((value: string) => {
         setValue("status", value, { shouldValidate: true });
+    }, []);
+
+    const handleUserTypeChange = useCallback((value: string) => {
+        setValue("userType", value, { shouldValidate: true });
     }, []);
 
 
@@ -150,7 +166,13 @@ const EmployeeListPage = () => {
                     Salary: data.salary,
                     Status: data.status,
                     Address: data.address,
-                    AccountType: EMPLOYEE_TYPE,
+                    Gender: data.gender,
+                    Department: data.department,
+                    HourlyRate: data.hourlyRate ?? 0,
+                    EmergencyContactName: data.emergencyContactName,
+                    EmergencyRelationship: data.emergencyRelationship,
+                    EmergencyContactNo: data.emergencyContactNo,
+                    UserType: data.userType,
                     DateOfBirth: data.dateOfBirth,
                 }
 
@@ -186,7 +208,14 @@ const EmployeeListPage = () => {
             salary: 0, // must be a number
             status: "",
             address: "",
+            gender: "",
+            department: "",
+            hourlyRate: 0,
+            emergencyContactName: "",
+            emergencyRelationship: "",
+            emergencyContactNo: "",
             dateOfBirth: new Date(),
+            userType: "",
         };
         reset(values);
     }, [reset]);
@@ -231,12 +260,12 @@ const EmployeeListPage = () => {
                 {/* Header with Status Filter, Search + Add Employee */}
                 <div className="flex justify-end items-center mb-4 space-x-2">
                     {/* Status Filter */}
-                    <StatusFilter
+                    {/* <StatusFilter
                         value={zStatusFilter}
                         onChange={zSetStatusFilter}
                         options={statusOptions}
                         placeholder='Filter by status'
-                    />
+                    /> */}
 
                     {/* Search */}
                     <Input
@@ -268,7 +297,9 @@ const EmployeeListPage = () => {
                 </div>
             </div>
             <EmployeeDialog
+                onGenderChange={handleGenderChange}
                 onStatusChange={handleStatusChange}
+                onUserTypeChange={handleUserTypeChange}
                 onSubmit={handleSubmitForm}
                 onError={handleErrorForm}
                 onReset={handleResetValue}

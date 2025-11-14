@@ -1,7 +1,7 @@
 export interface LoginPayload {
   Email: string;
   Password: string;
-  UserType: string;
+  UserType?: string;
 }
 
 export interface RegisterPayload {
@@ -15,4 +15,5 @@ export interface AuthResponse {
   TotalRecords: number; // Same
   IsSuccess: boolean;
   ApiMessage: string; // This is actually the JWT token
+  LoginType: string;
 }

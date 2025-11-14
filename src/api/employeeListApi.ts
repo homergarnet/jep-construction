@@ -56,6 +56,12 @@ export const employeeListApi = {
       salary: data.UserList[0].Salary,
       status: data.UserList[0].Status,
       address: data.UserList[0].Address,
+      gender: data.UserList[0].Gender,
+      department: data.UserList[0].Department,
+      hourlyRate: data.UserList[0].HourlyRate,
+      emergencyContactName: data.UserList[0].EmergencyContactName,
+      emergencyRelationship: data.UserList[0].EmergencyRelationship,
+      emergencyContactNo: data.UserList[0].EmergencyContactNo,
       dateOfBirth: data.UserList[0].DateOfBirth.split("T")[0],
     } as EmployeeListFormValues;
 

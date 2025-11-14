@@ -19,7 +19,13 @@ export interface CreateUpdateEmployeeRequest {
   Salary: number;
   Status: string;
   Address: string;
-  AccountType: string;
+  Gender: string;
+  Department: string;
+  HourlyRate: number;
+  EmergencyContactName: string;
+  EmergencyRelationship: string;
+  EmergencyContactNo: string;
+  UserType: string;
   DateOfBirth: Date;
 }
 

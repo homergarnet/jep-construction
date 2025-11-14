@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import { z } from "zod";
 import { salary } from "./salary";
+import { hourlyRate } from "../../schema/hourlyRate";
 
 // Define the schema for events form validation
 
@@ -14,6 +15,14 @@ export const employeeListFormSchema = z.object({
   salary,
   status: z.string().min(1, "Status is required"),
   address: z.string().min(1, "Address is required"),
+  gender: z.string().min(1, "Gender is required"),
+  department: z.string().min(1, "Department is required"),
+  hourlyRate,
+  emergencyContactName: z.string().min(1, "Emergency contact name is required"),
+  emergencyRelationship: z
+    .string()
+    .min(1, "Emergency relationship is required"),
+  emergencyContactNo: z.string().min(1, "Emergency contact no is required"),
   dateOfBirth: z.coerce
     .date({
       required_error: "Date of birth is required",
@@ -22,6 +31,7 @@ export const employeeListFormSchema = z.object({
     .refine((date) => !isNaN(date.getTime()), {
       message: "Invalid date format",
     }),
+  userType: z.string().min(1, "User type is required"),
 });
 
 // Export the inferred TypeScript type for the form values

@@ -2,6 +2,7 @@ import type {
   ClientRequestResponse,
   CreateCRReplyRequest,
   CreateUpdateClientReqRequest,
+  GetClientRequestByIdParams,
   GetClientRequestParams,
 } from "@/types/clientrequest";
 import apiConfig from "./apiConfig";
@@ -18,6 +19,34 @@ export const clientRequestApi = {
       }
     );
 
+    if (!data.IsSuccess) {
+      throw new Error(data.ApiMessage);
+    }
+
+    return data;
+  },
+
+  getClientRequestById: async (
+    params: GetClientRequestByIdParams
+  ): Promise<ClientRequestResponse> => {
+    const { data } = await apiConfig.get("/ClientRequest/get-client-request-by-id", {
+      params,
+    });
+
+    // const result = {
+    //   id: data.UserList[0].Id,
+    //   email: data.UserList[0].Email,
+    //   firstname: data.UserList[0].Firstname,
+    //   lastname: data.UserList[0].Lastname,
+    //   mobileNumber: data.UserList[0].MobileNumber,
+    //   position: data.UserList[0].Position,
+    //   salary: data.UserList[0].Salary,
+    //   status: data.UserList[0].Status,
+    //   address: data.UserList[0].Address,
+    //   dateOfBirth: data.UserList[0].DateOfBirth.split("T")[0],
+    // } as ClientListFormValues;
+
+    // useClientListContext.getState().zSetClientListAEData(result);
     if (!data.IsSuccess) {
       throw new Error(data.ApiMessage);
     }

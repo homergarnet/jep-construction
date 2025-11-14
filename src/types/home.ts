@@ -1,6 +1,6 @@
 export interface CreateUpdateHomeRequest {
   Id?: number;
-  ProjectName: string;
+  ProjectName?: string;
   Name: string;
   Email: string;
   MobileNumber: string;

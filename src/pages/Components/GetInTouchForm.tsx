@@ -23,11 +23,15 @@ import { useCreateHome } from "@/hooks/useHome"
 // ✅ Schema
 const schema = z.object({
     id: z.number().optional(),
-    projectName: z.string().min(2, "Project Name must be at least 2 characters."),
+    // projectName: z.string().min(2, "Project Name must be at least 2 characters."),
+    projectName: z.string().optional(),
     name: z.string().min(2, "Name must be at least 2 characters."),
     email: z.string().email("Invalid email."),
-    mobileNumber: z.string().min(1, "Phone number is required"),
-    message: z.string().min(10, "Message must be at least 10 characters."),
+    mobileNumber: z
+        .string()
+        .min(11, "Mobile number must be at least 11 digits.")
+        .max(13, "Mobile number must not exceed 13 digits."),
+    message: z.string().min(1, "Message is required."),
 })
 
 type FormData = z.infer<typeof schema>
@@ -89,7 +93,7 @@ const GetInTouchForm = () => {
                 className="space-y-6 max-w-lg mx-auto mb-2"
             >
                 {/* Project Name */}
-                <FormField
+                {/* <FormField
                     control={form.control}
                     name="projectName"
                     render={({ field }) => (
@@ -101,7 +105,7 @@ const GetInTouchForm = () => {
                             <FormMessage />
                         </FormItem>
                     )}
-                />
+                /> */}
 
                 {/* Name */}
                 <FormField

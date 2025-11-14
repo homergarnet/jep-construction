@@ -2,16 +2,14 @@ import type { AuthResponse, LoginPayload, RegisterPayload } from "@/types/auth";
 import apiConfig from "./apiConfig";
 
 export const authApi = {
-
-  login: async (payload: LoginPayload): Promise<string> => {
+  login: async (payload: LoginPayload): Promise<AuthResponse> => {
     const { data } = await apiConfig.post<AuthResponse>("/Auth/login", payload);
 
     if (!data.IsSuccess) {
       throw new Error("Login failed");
     }
-
     // Return only the token
-    return data.ApiMessage;
+    return data;
   },
 
   getProfile: async () => {

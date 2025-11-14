@@ -3,6 +3,7 @@ import useClientRequestContext from "@/store/clientRequest/clientRequestContext"
 import type {
   ClientRequestResponse,
   CreateCRReplyRequest,
+  GetClientRequestByIdParams,
   GetClientRequestParams,
 } from "@/types/clientrequest";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -11,6 +12,17 @@ export const useGetClientRequestList = (params: GetClientRequestParams) => {
   return useQuery<ClientRequestResponse>({
     queryKey: ["clientrequests", params],
     queryFn: () => clientRequestApi.getClientRequestList(params),
+  });
+};
+
+export const useGetClientRequestById = (
+  params: GetClientRequestByIdParams,
+  enabled = true
+) => {
+  return useQuery<ClientRequestResponse>({
+    queryKey: ["clientrequest", params.id],
+    queryFn: () => clientRequestApi.getClientRequestById(params),
+    enabled: !!params.id && enabled,
   });
 };
 

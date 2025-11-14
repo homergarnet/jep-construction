@@ -20,8 +20,13 @@ import grils from "@/assets/grils.jpg";
 import GetInTouchForm from './components/GetInTouchForm';
 import ReviewCarousel from '@/components/ReviewCarousel';
 import { useGetReviewList } from '@/hooks/useReview';
+import { getJwtUserId } from '@/utils/getJwtRoleId';
+import { useConfirmDialog } from '@/hooks/useConfirmDialog';
+import useRedirect from '@/hooks/useRedirect';
+import { Link } from 'react-router-dom';
 
 const HomePage = () => {
+    useRedirect();
     const { theme, setTheme } = useTheme();
     const isDark = theme === "dark"
     const [isOpen, setIsOpen] = useState(false)
@@ -31,13 +36,22 @@ const HomePage = () => {
         page: 1,
         pageSize: 1000,
     });
+    const { confirm, ConfirmDialog } = useConfirmDialog();
+
+    const handleLogout = () => {
+
+        localStorage.removeItem("authToken");
+        // Clear stored auth data
+        // Redirect to login page
+        // navigate(`/${roleId === ADMIN_ROLE_ID ? "admin" : roleId === EMPLOYEE_ROLE_ID ? "employee" : "client"}/login`);
+    };
 
     return (
         <>
             <div className="min-h-screen flex flex-col">
                 <header
                     className={`sticky top-0 z-50 w-full border-b shadow-sm transition-colors duration-300
-      ${isDark ? "bg-gray-900 border-gray-800 text-white" : "bg-white border-gray-200 text-gray-900"}`}
+                    ${isDark ? "bg-gray-900 border-gray-800 text-white" : "bg-white border-gray-200 text-gray-900"}`}
                 >
                     <div className="max-w-7xl flex items-center justify-between py-3 md:py-4 px-4">
                         {/* Logo / Brand (left side) */}
@@ -59,7 +73,7 @@ const HomePage = () => {
                             <a href="#projects" className="block py-2 hover:text-blue-500">Projects</a>
                             {/* <a href="#" className="block py-2 hover:text-blue-500">Feedback</a> */}
                             <a href="#contactUs" className="block py-2 hover:text-blue-500">Contact Us</a>
-
+                            <Link to="/auth/login" className="block py-2 hover:text-blue-500">Login</Link>
                             {/* Theme toggle */}
                             <div
                                 onClick={() => setTheme(isDark ? "light" : "dark")}
@@ -94,6 +108,7 @@ const HomePage = () => {
                             <a href="#projects" className="block py-2 hover:text-blue-500">Projects</a>
                             {/* <a href="#" className="block py-2 hover:text-blue-500">Feedback</a> */}
                             <a href="#contactUs" className="block py-2 hover:text-blue-500">Contact Us</a>
+                            <a href="#" className="block py-2 hover:text-blue-500"> {getJwtUserId() === 0 ? "Login" : "Logout"}</a>
                         </nav>
                     )}
                 </header>
@@ -433,6 +448,8 @@ const HomePage = () => {
                     <p>JEP Construction and Metal Works &copy; 2025</p>
                 </div>
             </footer>
+            {/* Important: must render this once per component */}
+            {ConfirmDialog}
         </>
 
 

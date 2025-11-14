@@ -19,6 +19,7 @@ import { useForm, type FieldErrors } from 'react-hook-form'
 import type { CreateUpdateEmpAttendanceRequest } from '@/types/empAttendance'
 import { getJwtRoleId } from '@/utils/getJwtRoleId'
 import EmpAttendancePagination from './components/EmpAttendancePagination'
+import EAViewDataDialog from './components/EAViewDataDialog'
 
 const EmployeeAttendancePage = () => {
   const roleId = getJwtRoleId();
@@ -34,6 +35,7 @@ const EmployeeAttendancePage = () => {
 
   const [empAttendanceId, setEmpAttendanceId] = useState(0);
   const [empAttendanceIdDupli, setEmpAttendanceIdDupli] = useState(0);
+  const [date, setDate] = useState("");
   const { showConfirm, showToast } = useSwal();
   const { confirm, ConfirmDialog } = useConfirmDialog();
   const { data: empAttendanceList, isLoading: empAttendanceLoading } = useGetEmpAttendanceList({
@@ -170,7 +172,14 @@ const EmployeeAttendancePage = () => {
       salary: 0, // must be a number
       status: "",
       address: "",
+      gender: "",
+      department: "",
+      hourlyRate: 0,
+      emergencyContactName: "",
+      emergencyRelationship: "",
+      emergencyContactNo: "",
       dateOfBirth: new Date(),
+      userType: "",
     };
     reset(values);
   }, [reset]);
@@ -190,6 +199,40 @@ const EmployeeAttendancePage = () => {
       onError: (error: Error) => showToast(error.message, "error"),
     })
   }
+
+
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let input = e.target.value.replace(/\D/g, ""); // keep only digits
+
+    // Auto-insert slashes
+    if (input.length > 2 && input.length <= 4)
+      input = `${input.slice(0, 2)}/${input.slice(2)}`;
+    else if (input.length > 4)
+      input = `${input.slice(0, 2)}/${input.slice(2, 4)}/${input.slice(4, 8)}`;
+
+    // ✅ Check if it's a valid date (dd/mm/yyyy)
+    const datePattern = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+    const match = input.match(datePattern);
+
+    if (match) {
+      const [_, day, month, year] = match.map(Number);
+      const date = new Date(year, month - 1, day);
+
+      // Ensure date parts match (e.g. 32/01/2025 → invalid)
+      if (
+        date.getFullYear() === year &&
+        date.getMonth() === month - 1 &&
+        date.getDate() === day
+      ) {
+        console.log("✅ Valid date:", input);
+        zSetStatusFilter(input);
+      }
+    }
+
+    setDate(input);
+  };
+
 
   //for update modal fields
   useEffect(() => {
@@ -212,13 +255,21 @@ const EmployeeAttendancePage = () => {
         <p className="text-muted-foreground mt-1">
           {roleId === ADMIN_TYPE_NUM ? "Track and manage employee daily attendance records." : "Daily attendance records."}
         </p>
-
-        {/* Header with Status Filter, Search + Add attendance */}
-        <div className="flex justify-end items-center mb-4 space-x-2">
-          {/* Search */}
+        {/* Wrapper for Date + Search */}
+        <div className="flex justify-between items-center mb-4">
+          {/* Date Input */}
+          <Input
+            type="text"
+            placeholder="search by dd/mm/yyyy"
+            value={date}
+            onChange={handleChange}
+            maxLength={10}
+            className="w-64"
+          />
+          {/* Search Input */}
           <Input
             placeholder="Search attendance..."
-            onChange={(e) => debouncedHSEnChange(e.target.value)} // 👈 extract value
+            onChange={(e) => debouncedHSEnChange(e.target.value)}
             className="w-64"
           />
         </div>
@@ -248,6 +299,7 @@ const EmployeeAttendancePage = () => {
         onReset={handleResetValue}
         formMethods={form}
       />
+      <EAViewDataDialog />
       {/* Important: must render this once per component */}
       {ConfirmDialog}
     </>

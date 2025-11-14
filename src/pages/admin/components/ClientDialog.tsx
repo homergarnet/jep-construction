@@ -77,32 +77,48 @@ const ClientDialog: React.FC<ClientDialogProps> = ({
                         noValidate
                         className="space-y-3"
                     >
-                        <Input placeholder="Email" {...register("email")} />
-                        {errors.email && (
-                            <p className="text-red-500 text-sm">{errors.email.message}</p>
-                        )}
+                        <div className="flex flex-col space-y-1">
+                            <label htmlFor="email" className="text-sm font-medium">Email</label>
+                            <Input id="email" placeholder="" {...register("email")} />
+                            {errors.email && (
+                                <p className="text-red-500 text-sm">{errors.email.message}</p>
+                            )}
+                        </div>
 
-                        <Input placeholder="Firstname" {...register("firstname")} />
-                        {errors.firstname && (
-                            <p className="text-red-500 text-sm">
-                                {errors.firstname.message}
-                            </p>
-                        )}
+                        <div className="flex gap-4">
+                            {/* Firstname */}
+                            <div className="flex flex-col space-y-1 w-full">
+                                <label htmlFor="firstName" className="text-sm font-medium">Firstname</label>
+                                <Input id="firstName" {...register("firstname")} />
+                                {errors.firstname && (
+                                    <p className="text-red-500 text-sm">{errors.firstname.message}</p>
+                                )}
+                            </div>
 
-                        <Input placeholder="Lastname" {...register("lastname")} />
-                        {errors.lastname && (
-                            <p className="text-red-500 text-sm">{errors.lastname.message}</p>
-                        )}
+                            {/* Lastname */}
+                            <div className="flex flex-col space-y-1 w-full">
+                                <label htmlFor="lastName" className="text-sm font-medium">Lastname</label>
+                                <Input id="lastName" {...register("lastname")} />
+                                {errors.lastname && (
+                                    <p className="text-red-500 text-sm">{errors.lastname.message}</p>
+                                )}
+                            </div>
+                        </div>
 
-                        <Input
-                            placeholder="Mobile Number"
-                            {...register("mobileNumber")}
-                        />
-                        {errors.mobileNumber && (
-                            <p className="text-red-500 text-sm">
-                                {errors.mobileNumber.message}
-                            </p>
-                        )}
+                        <div className="flex flex-col space-y-1">
+                            <label htmlFor="mobileNumber" className="text-sm font-medium">Mobile number</label>
+                            <Input
+                                id="mobileNumber"
+                                placeholder=""
+                                {...register("mobileNumber")}
+                            />
+                            {errors.mobileNumber && (
+                                <p className="text-red-500 text-sm">
+                                    {errors.mobileNumber.message}
+                                </p>
+                            )}
+                        </div>
+
 
                         {/* ✅ Status Select integrated with RHF */}
                         <div className="flex flex-col space-y-1 w-full">
@@ -135,19 +151,30 @@ const ClientDialog: React.FC<ClientDialogProps> = ({
                                 </p>
                             )}
                         </div>
+                        <div className="flex flex-col space-y-1">
+                            <label htmlFor="address" className="text-sm font-medium">Address</label>
+                            <Input id="address" type="text" placeholder="" {...register("address")} />
+                            {errors.address && (
+                                <p className="text-red-500 text-sm">{errors.address.message}</p>
+                            )}
+                        </div>
 
-                        <Input type="text" placeholder="Address" {...register("address")} />
-                        {errors.address && (
-                            <p className="text-red-500 text-sm">{errors.address.message}</p>
-                        )}
 
                         <div className="flex flex-col space-y-1">
                             <label className="text-sm font-medium">Birthdate</label>
-                            <Input type="date" {...register("dateOfBirth")} />
+
+                            <Input
+                                type="date"
+                                max={new Date(
+                                    new Date().setFullYear(new Date().getFullYear() - 21)
+                                )
+                                    .toISOString()
+                                    .split("T")[0]} // formats date to YYYY-MM-DD
+                                {...register("dateOfBirth")}
+                            />
+
                             {errors.dateOfBirth && (
-                                <p className="text-red-500 text-sm">
-                                    {errors.dateOfBirth.message}
-                                </p>
+                                <p className="text-red-500 text-sm">{errors.dateOfBirth.message}</p>
                             )}
                         </div>
 

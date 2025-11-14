@@ -14,12 +14,12 @@ import { debounce } from 'lodash'
 import { ADMIN_TYPE_NUM, CREATE_PROJECT_MANAGEMENT, projectManagementColumns } from '@/constants/constants'
 import type { CreateUpdateProjectManagementRequest } from '@/types/projectmanagement'
 import TblHeader from '@/components/TblHeader'
-import ProjectManagementTblBody from './components/ProjectManagementTblBody'
 import ProjectManagementDialog from './components/ProjectManagementDialog'
 import { getJwtRoleId } from '@/utils/getJwtRoleId'
 import ReviewDialog from './components/ReviewDialog'
 import useReviewContext from '@/store/review/reviewContext'
 import PMPagination from './components/PMPagination'
+import ProjectManagementCard from './components/ProjectManagementCard'
 
 const ProjectManagementPage = () => {
 
@@ -245,9 +245,14 @@ const ProjectManagementPage = () => {
                     {/* Add Project Management */}
                     {roleId === ADMIN_TYPE_NUM && <Button className='cursor-pointer' onClick={(e) => handleCreateUpdateProjectManagement(CREATE_PROJECT_MANAGEMENT, 0)}>{CREATE_PROJECT_MANAGEMENT}</Button>}
                 </div>
-
+                <ProjectManagementCard
+                    paginatedProjectManagements={projectManagementList?.ProjectManagementList}
+                    onRemove={handleRemove}
+                    onCreateUpdateProjectManagement={handleCreateUpdateProjectManagement}
+                    onCreateUpdateReview={handleCreateUpdateReview}
+                />
                 {/* Employee Table */}
-                <Table>
+                {/* <Table>
                     <TableCaption>A list of employees</TableCaption>
                     <TblHeader columns={projectManagementColumns} headerType="project management" />
                     <ProjectManagementTblBody
@@ -256,7 +261,7 @@ const ProjectManagementPage = () => {
                         onCreateUpdateProjectManagement={handleCreateUpdateProjectManagement}
                         onCreateUpdateReview={handleCreateUpdateReview}
                     />
-                </Table>
+                </Table> */}
                 {/* Pagination */}
                 <div className="flex justify-center mt-4">
                     <PMPagination

@@ -5,11 +5,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 export const useLogin = () => {
   const queryClient = useQueryClient();
 
+
   return useMutation({
     mutationFn: (payload: LoginPayload) => authApi.login(payload),
-    onSuccess: (token) => {
-      // ✅ store token directly
-      localStorage.setItem("authToken", token);
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["auth", "profile"] });
     },
   });

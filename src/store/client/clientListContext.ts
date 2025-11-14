@@ -20,12 +20,16 @@ interface ClientListFormState {
   zSetIsOpenDialog: (zIsOpenDialog: boolean) => void;
   zDialogTitle: string;
   zSetDialogTitle: (zDialogTitle: string) => void;
+  zIsOpenDialog2: boolean;
+  zSetIsOpenDialog2: (zIsOpenDialog: boolean) => void;
   zPage: number;
   zSetPage: (zPage: number) => void;
   zPageSize: number;
   zSetPageSize: (zPageSize: number) => void;
   zStatusFilter: string;
   zSetStatusFilter: (zStatusFilter: string) => void;
+  zClientId: number;
+  zSetClientId: (zClientId: number) => void;
   // for updating and creating employeeList data
   zClientListAEData: ClientListFormValues;
   zSetClientListAEData: (data: ClientListFormValues) => void;
@@ -38,12 +42,16 @@ const useClientListContext = create<ClientListFormState>((set) => ({
   zSetIsOpenDialog: (zIsOpenDialog: boolean) => set({ zIsOpenDialog }),
   zDialogTitle: "",
   zSetDialogTitle: (zDialogTitle: string) => set({ zDialogTitle }),
+  zIsOpenDialog2: false,
+  zSetIsOpenDialog2: (zIsOpenDialog2: boolean) => set({ zIsOpenDialog2 }),
   zPage: 1,
   zSetPage: (zPage: number) => set({ zPage }),
   zPageSize: 3,
   zSetPageSize: (zPageSize: number) => set({ zPageSize }),
   zStatusFilter: "not/a",
   zSetStatusFilter: (zStatusFilter: string) => set({ zStatusFilter }),
+  zClientId: 0,
+  zSetClientId: (zClientId: number) => set({ zClientId }),
   zClientListAEData: initialData,
   zSetClientListAEData: (data) => set({ zClientListAEData: data }),
 }));

@@ -14,11 +14,11 @@ export interface AttendanceListDto {
   EmployeeNumber: string;
   EmployeeName: string;
   Location: string;
-  TimeInOut: string;
-  TimeInOutType: string;
-  TimeInOutImage: string;
-  DateTimeCreated: Date;
-  DateTimeUpdated: Date;
+  TimeIn: string;
+  TimeInImage: string;
+  TimeOut: string;
+  TimeOutImage: string;
+  Duration: string;
 }
 
 export interface CreateUpdateEmpAttendanceRequest {

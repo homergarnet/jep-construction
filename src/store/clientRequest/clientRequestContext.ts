@@ -7,6 +7,8 @@ interface EmployeeListFormState {
   zSetIsOpenDialog: (zIsOpenDialog: boolean) => void;
   zDialogTitle: string;
   zSetDialogTitle: (zDialogTitle: string) => void;
+  zIsOpenDialog2: boolean;
+  zSetIsOpenDialog2: (zIsOpenDialog: boolean) => void;
   zPage: number;
   zSetPage: (zPage: number) => void;
   zPageSize: number;
@@ -26,6 +28,8 @@ const useClientRequestContext = create<EmployeeListFormState>((set) => ({
   zSetIsOpenDialog: (zIsOpenDialog: boolean) => set({ zIsOpenDialog }),
   zDialogTitle: "",
   zSetDialogTitle: (zDialogTitle: string) => set({ zDialogTitle }),
+  zIsOpenDialog2: false,
+  zSetIsOpenDialog2: (zIsOpenDialog2: boolean) => set({ zIsOpenDialog2 }),
   zPage: 1,
   zSetPage: (zPage: number) => set({ zPage }),
   zPageSize: 3,

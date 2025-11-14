@@ -74,23 +74,25 @@ export const employeeColumns = [
 ];
 
 export const empAttendanceColumns = [
-  { key: "employeeNumber", label: "Employee Number" },
+  // { key: "employeeNumber", label: "Employee Number" },
   { key: "employeeName", label: "Employee Name" },
-  { key: "timeInOut", label: "Time In Out" },
-  { key: "timeInOutType", label: "Time In Out Type" },
-  { key: "timeInOutImage", label: "Time In Out Image" },
+  // { key: "timeIn", label: "Time In" },
+  // { key: "timeIn", label: "Time In Image" },
+  // { key: "timeOut", label: "Time Out" },
+  // { key: "timeOut", label: "Time Out Image" },
+  { key: "duration", label: "Duration" },
   { key: "actions", label: "Actions", className: "text-right" },
 ];
 
 export const clientColumns = [
-  { key: "clientNumber", label: "Client Number" },
+  // { key: "clientNumber", label: "Client Number" },
   { key: "email", label: "Email" },
-  { key: "firstname", label: "Firstname" },
-  { key: "lastname", label: "Lastname" },
-  { key: "mobileNumber", label: "Mobile Number" },
+  // { key: "firstname", label: "Firstname" },
+  // { key: "lastname", label: "Lastname" },
+  // { key: "mobileNumber", label: "Mobile Number" },
   { key: "status", label: "Status" },
-  { key: "address", label: "Address" },
-  { key: "birthDate", label: "Date Of Birth" },
+  // { key: "address", label: "Address" },
+  // { key: "birthDate", label: "Date Of Birth" },
   { key: "actions", label: "Actions", className: "text-right" },
 ];
 
@@ -116,13 +118,13 @@ export const reviewColumns = [
 ];
 
 export const clientRequestColumns = [
-  { key: "projectName", label: "Project Name" },
+  // { key: "projectName", label: "Project Name" },
   { key: "Name", label: "Name" },
   { key: "email", label: "Email" },
-  { key: "mobileNumber", label: "Mobile Number" },
-  { key: "messageDescription", label: "Message Description" },
-  { key: "dateTimeCreated", label: "Date Time Created" },
-  { key: "hasReply", label: "Has Reply" },
+  // { key: "mobileNumber", label: "Mobile Number" },
+  // { key: "messageDescription", label: "Message Description" },
+  // { key: "dateTimeCreated", label: "Date Time Created" },
+  // { key: "hasReply", label: "Status" },
   { key: "actions", label: "Actions", className: "text-right" },
 ];
 

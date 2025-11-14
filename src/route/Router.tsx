@@ -9,11 +9,11 @@ import React from "react";
 
 const HomePage = React.lazy(() => import("../pages/HomePage"));
 const Login = React.lazy(() => import("../pages/admin/Login"));
-const EmployeeLogin = React.lazy(() => import("../pages/employee/Login"));
+// const EmployeeLogin = React.lazy(() => import("../pages/employee/Login"));
 const EmployeeListPage = React.lazy(() => import("../pages/admin/employee/EmployeeListPage"));
 const EmployeeAttendancePage = React.lazy(() => import("../pages/admin/employee/EmployeeAttendancePage"));
 const AssignProjectPage = React.lazy(() => import("../pages/admin/employee/AssignProjectPage"));
-const ClientLogin = React.lazy(() => import("../pages/client/Login"));
+// const ClientLogin = React.lazy(() => import("../pages/client/Login"));
 const PayslipPage = React.lazy(() => import("../pages/admin/employee/EmployeePayslipPage"));
 const ClientListPage = React.lazy(() => import("../pages/admin/ClientListPage"));
 const ProjectManagementPage = React.lazy(() => import("../pages/admin/ProjectManagementPage"));
@@ -49,14 +49,14 @@ const Router = createBrowserRouter(
         }
       />
       <Route
-        path="admin/login"
+        path="auth/login"
         element={
           <Suspense fallback={<div>Loading...</div>}>
             <Login />
           </Suspense>
         }
       />
-      <Route
+      {/* <Route
         path="employee/login"
         element={
           <Suspense fallback={<div>Loading...</div>}>
@@ -71,7 +71,7 @@ const Router = createBrowserRouter(
             <ClientLogin />
           </Suspense>
         }
-      />
+      /> */}
       {/* Protected routes for role 1 */}
       <Route element={<ProtectedRoute roles={[1]} />}>
         <Route

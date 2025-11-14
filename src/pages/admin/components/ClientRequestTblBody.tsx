@@ -20,6 +20,9 @@ const ClientRequestTblBody: React.FC<ClientRequestTblBodyProps> = ({
     const zSetIsOpenDialog = useClientRequestContext(
         (state) => state.zSetIsOpenDialog
     );
+    const zSetIsOpenDialog2 = useClientRequestContext(
+        (state) => state.zSetIsOpenDialog2
+    );
     const zSetCRId = useClientRequestContext(
         (state) => state.zSetCRId
     );
@@ -33,11 +36,31 @@ const ClientRequestTblBody: React.FC<ClientRequestTblBodyProps> = ({
                     <TableCell>{emp.ProjectName}</TableCell>
                     <TableCell>{emp.Name}</TableCell>
                     <TableCell>{emp.Email}</TableCell>
-                    <TableCell>{emp.MobileNumber}</TableCell>
+                    {/* <TableCell>{emp.MobileNumber}</TableCell>
                     <TableCell>{emp.Message}</TableCell>
                     <TableCell>{formatDateToMMDDYYYYhhmmA(emp.DateTimeCreated)}</TableCell>
-                    <TableCell>{emp.HasReply === true ? "Yes" : "No"}</TableCell>
+                    <TableCell>
+                        <span
+                            className={`px-2 py-1 rounded-full text-xs font-semibold ${emp.HasReply ? "bg-green-100 text-green-700" : "bg-orange-100 text-orange-700"
+                                }`}
+                        >
+                            {emp.HasReply ? "Sent reply" : "Not yet"}
+                        </span>
+                    </TableCell> */}
+
                     <TableCell className="text-right space-x-2">
+                        <Button
+                            className="cursor-pointer border-blue-300 text-blue-500 hover:bg-blue-50 hover:text-blue-600"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                                zSetCRId(emp.Id);
+                                // zSetCREmail(emp.Email);
+                                zSetIsOpenDialog2(true);
+                            }}
+                        >
+                            View
+                        </Button>
                         <Button className='cursor-pointer' variant="outline" size="sm" onClick={(e) => {
                             zSetCRId(emp.Id);
                             zSetCREmail(emp.Email)

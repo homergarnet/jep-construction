@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useLogin } from "@/hooks/useAuth";
-import type { LoginPayload } from "@/types/auth";
+import type { AuthResponse, LoginPayload } from "@/types/auth";
 import useSharedStore from "@/store/sharedStore";
 import { useNavigate } from "react-router-dom";
 import useRedirect from "@/hooks/useRedirect";
@@ -51,14 +51,22 @@ const Login = () => {
         const payload: LoginPayload = {
             Email: values.email,
             Password: values.password,
-            UserType: "admin", // or whatever your API expects
+            // UserType: "admin", // or whatever your API expects
         };
 
         login.mutate(payload, {
 
-            onSuccess: () => {
-                // alert("Login successful!");
-                navigate("/admin/employee-list");
+            onSuccess: (response: AuthResponse) => {
+                localStorage.setItem("authToken", response.ApiMessage);
+                if (response.LoginType === "admin") {
+                    navigate("/admin/employee-list");
+                } else if (response.LoginType === "employee") {
+                    navigate("/employee/in-out");
+                } else if (response.LoginType === "client") {
+                    navigate("/client/my-projects");
+                } else {
+
+                }
                 zSetLoading(false)
             },
             onError: (error) => {
@@ -75,9 +83,10 @@ const Login = () => {
             <Card className="w-full max-w-md shadow-lg rounded-2xl">
                 <CardHeader>
                     <CardTitle className="text-center text-2xl font-bold">
-                        Admin Login
+                        Login
                     </CardTitle>
                 </CardHeader>
+
                 <CardContent>
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -119,6 +128,7 @@ const Login = () => {
                                 )}
                             />
 
+                            {/* Login Button */}
                             <Button
                                 type="submit"
                                 className="w-full"
@@ -127,11 +137,22 @@ const Login = () => {
                                 {login.isPending ? "Logging in..." : "Login"}
                             </Button>
 
+                            {/* Error Message */}
                             {login.error && (
                                 <p className="text-sm text-red-500 text-center">
                                     {(login.error as Error).message}
                                 </p>
                             )}
+
+                            {/* Back to Home Button */}
+                            <Button
+                                type="button"
+                                variant="outline"
+                                className="w-full"
+                                onClick={() => navigate("/")}
+                            >
+                                ← Back to Home Page
+                            </Button>
                         </form>
                     </Form>
                 </CardContent>

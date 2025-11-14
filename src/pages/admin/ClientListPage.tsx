@@ -18,6 +18,7 @@ import TblHeader from '@/components/TblHeader'
 import ClientTblBody from './components/ClientTblBody'
 import ClientDialog from './components/ClientDialog'
 import ClientListPagination from './components/ClientListPagination'
+import ClientViewDataDialog from './components/ClientViewDataDialog'
 
 const ClientListPage = () => {
 
@@ -273,6 +274,7 @@ const ClientListPage = () => {
                 onReset={handleResetValue}
                 formMethods={form}
             />
+            <ClientViewDataDialog />
             {/* Important: must render this once per component */}
             {ConfirmDialog}
         </>

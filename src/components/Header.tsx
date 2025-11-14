@@ -18,7 +18,9 @@ const Header: React.FC = () => {
         localStorage.removeItem("authToken");
         // Clear stored auth data
         // Redirect to login page
-        navigate(`/${roleId === ADMIN_ROLE_ID ? "admin" : roleId === EMPLOYEE_ROLE_ID ? "employee" : "client"}/login`);
+
+        // navigate(`/${roleId === ADMIN_ROLE_ID ? "admin" : roleId === EMPLOYEE_ROLE_ID ? "employee" : "client"}/login`);
+        navigate(`/`);
     };
 
 
