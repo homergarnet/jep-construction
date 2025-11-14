@@ -63,6 +63,7 @@ export const employeeListApi = {
       emergencyRelationship: data.UserList[0].EmergencyRelationship,
       emergencyContactNo: data.UserList[0].EmergencyContactNo,
       dateOfBirth: data.UserList[0].DateOfBirth.split("T")[0],
+      userType: data.UserList[0].UserType,
     } as EmployeeListFormValues;
 
     useEmployeeListContext.getState().zSetEmpListAEData(result);

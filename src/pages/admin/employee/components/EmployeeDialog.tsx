@@ -141,9 +141,9 @@ const EmployeeDialog: React.FC<EmployeeDialogProps> = ({
                                         </Select>
                                     )}
                                 />
-                                {errors.status && (
+                                {errors.gender && (
                                     <p className="text-red-500 text-sm">
-                                        {errors.status.message}
+                                        {errors.gender.message}
                                     </p>
                                 )}
                             </div>
