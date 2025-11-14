@@ -33,8 +33,8 @@ const ClientRequestTblBody: React.FC<ClientRequestTblBodyProps> = ({
         <TableBody>
             {paginatedClientRequests && paginatedClientRequests.map((emp) => (
                 <TableRow key={emp.Id}>
-                    <TableCell>{emp.ProjectName}</TableCell>
-                    {/* <TableCell>{emp.Name}</TableCell> */}
+                    {/* <TableCell>{emp.ProjectName}</TableCell> */}
+                    <TableCell>{emp.Name}</TableCell>
                     <TableCell>{emp.Email}</TableCell>
                     {/* <TableCell>{emp.MobileNumber}</TableCell>
                     <TableCell>{emp.Message}</TableCell>
