@@ -178,8 +178,12 @@ const EmployeeListPage = () => {
 
                 if (zDialogTitle === CREATE_EMPLOYEE) {
                     createEmployee.mutate(payload, {
+
                         onSuccess: (res) => showToast(res.ApiMessage, "success"),
-                        onError: (error: Error) => showToast(error.message, "error"),
+                        onError: (error: any) => {
+                            console.log("error: ", error.response.data.ApiMessage)
+                            showToast(error.response.data.ApiMessage, "error")
+                        },
                     })
                 } else {
                     updateEmployee.mutate(payload, {

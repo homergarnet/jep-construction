@@ -298,7 +298,7 @@ const EmployeeDialog: React.FC<EmployeeDialogProps> = ({
                                 )}
                             </div>
                             <div className="flex flex-col space-y-1 w-full">
-                                <label htmlFor="emergencyRelationship" className="text-sm font-medium">Emergency Relationship</label>
+                                <label htmlFor="emergencyRelationship" className="text-sm font-medium">Relationship</label>
                                 <Input id="emergencyRelationship" {...register("emergencyRelationship")} />
                                 {errors.emergencyRelationship && (
                                     <p className="text-red-500 text-sm">{errors.emergencyRelationship.message}</p>

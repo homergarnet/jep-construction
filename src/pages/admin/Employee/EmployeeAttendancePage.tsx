@@ -202,37 +202,28 @@ const EmployeeAttendancePage = () => {
 
 
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let input = e.target.value.replace(/\D/g, ""); // keep only digits
-
-    // Auto-insert slashes
-    if (input.length > 2 && input.length <= 4)
-      input = `${input.slice(0, 2)}/${input.slice(2)}`;
-    else if (input.length > 4)
-      input = `${input.slice(0, 2)}/${input.slice(2, 4)}/${input.slice(4, 8)}`;
-
-    // ✅ Check if it's a valid date (dd/mm/yyyy)
-    const datePattern = /^(\d{2})\/(\d{2})\/(\d{4})$/;
-    const match = input.match(datePattern);
-
-    if (match) {
-      const [_, day, month, year] = match.map(Number);
-      const date = new Date(year, month - 1, day);
-
-      // Ensure date parts match (e.g. 32/01/2025 → invalid)
-      if (
-        date.getFullYear() === year &&
-        date.getMonth() === month - 1 &&
-        date.getDate() === day
-      ) {
-        console.log("✅ Valid date:", input);
-        zSetStatusFilter(input);
-      }
-    }
-
-    setDate(input);
+  // Convert ISO yyyy-MM-dd → dd/MM/yyyy
+  const isoToDDMMYYYY = (iso: string) => {
+    if (!iso) return "";
+    const [year, month, day] = iso.split("-");
+    return `${day}/${month}/${year}`;
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const isoValue = e.target.value; // yyyy-MM-dd from <input type="date">
+    setDate(isoValue);
+
+    if (isoValue) {
+      const formatted = isoToDDMMYYYY(isoValue);
+      console.log("✅ Valid date:", formatted);
+      zSetStatusFilter(formatted); // pass dd/MM/yyyy to your filter
+    }
+  };
+
+  const handleClear = () => {
+    setDate("");           // clear input
+    zSetStatusFilter("");  // reset filter
+  };
 
   //for update modal fields
   useEffect(() => {
@@ -256,16 +247,27 @@ const EmployeeAttendancePage = () => {
           {roleId === ADMIN_TYPE_NUM ? "Track and manage employee daily attendance records." : "Daily attendance records."}
         </p>
         {/* Wrapper for Date + Search */}
-        <div className="flex justify-between items-center mb-4">
-          {/* Date Input */}
-          <Input
-            type="text"
-            placeholder="search by dd/mm/yyyy"
-            value={date}
-            onChange={handleChange}
-            maxLength={10}
-            className="w-64"
-          />
+        <div className="flex justify-between items-center mb-4 space-x-2">
+          {/* Date Input + Clear Button */}
+          <div className="relative w-64">
+            <Input
+              type="date"
+              placeholder="search by dd/mm/yyyy"
+              value={date} // ISO format for picker
+              onChange={handleChange}
+              className="w-full"
+            />
+            {date && (
+              <button
+                type="button"
+                onClick={handleClear}
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 px-2 py-1 text-sm bg-gray-200 rounded hover:bg-gray-300"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+
           {/* Search Input */}
           <Input
             placeholder="Search attendance..."
@@ -273,6 +275,7 @@ const EmployeeAttendancePage = () => {
             className="w-64"
           />
         </div>
+
 
         {/* Employee Table */}
         <Table>
