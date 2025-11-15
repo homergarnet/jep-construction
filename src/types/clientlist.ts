@@ -33,7 +33,12 @@ export interface CreateUpdateClientRequest {
   Salary: number;
   Status: string;
   Address: string;
-  AccountType: string;
+  Gender: string;
+  Department: string;
+  EmergencyContactName: string;
+  EmergencyRelationship: string;
+  EmergencyContactNo: string;
+  UserType: string;
   DateOfBirth: Date;
 }
 

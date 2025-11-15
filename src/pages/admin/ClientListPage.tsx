@@ -151,7 +151,12 @@ const ClientListPage = () => {
                     Salary: 0,
                     Status: data.status,
                     Address: data.address,
-                    AccountType: CLIENT_TYPE,
+                    Gender: "",
+                    Department: "",
+                    EmergencyContactName: "",
+                    EmergencyRelationship: "",
+                    EmergencyContactNo: "",
+                    UserType: CLIENT_TYPE,
                     DateOfBirth: data.dateOfBirth,
                 }
 
