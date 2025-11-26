@@ -6,75 +6,66 @@ import useMessageContext from "@/store/message/messageContext";
 import { getJwtUserId } from "@/utils/getJwtRoleId";
 import type { MessageDto } from "@/types/messages";
 
-export const useSignalRConnection = () => {
+let connection: signalR.HubConnection | null = null;
 
-  const HubConnection = import.meta.env.VITE_APP_HUB_CONNECTION_ENDPOINT;
-  const MessageRoomId = import.meta.env.VITE_APP_MESSAGE_ROOM_ID;
-  // const { zSetAutomationMessage } = useHomeContext();
-  const location = useLocation();
-
+export const useSignalRConnection = (roomId: string) => {
   const zSetIsSignalReceive = useMessageContext((state) => state.zSetIsSignalReceive);
   const zSetSignalrValues = useMessageContext((state) => state.zSetSignalrValues);
-  const [connection, setConnection] = useState<signalR.HubConnection | null>(
-    null
-  );
 
   useEffect(() => {
-    const newConnection = new signalR.HubConnectionBuilder()
-      .withUrl(HubConnection, {
+    if (connection) return; // prevent duplicates
+
+    connection = new signalR.HubConnectionBuilder()
+      .withUrl(import.meta.env.VITE_APP_HUB_CONNECTION_ENDPOINT, {
         accessTokenFactory: () => localStorage.getItem("authToken") || "",
-        withCredentials: false,
       })
       .withAutomaticReconnect()
       .configureLogging(signalR.LogLevel.Information)
       .build();
 
-    setConnection(newConnection);
-
-    newConnection
+    connection
       .start()
-      .then(() => {
-        console.log("Connected to SignalR!");
+      .then(async () => {
+        console.log("SignalR connected");
 
-        newConnection
-          .invoke("InitializeMessageRoom", MessageRoomId)
-          .then(() => console.log("Joined the room."))
-          .catch(console.error);
+        await connection!.invoke("InitializeMessageRoom", roomId);
 
-        newConnection.on(
+        connection!.on(
           "ReceiveMessage",
-          (roomId: string, messageId: number, userId: number, senderId: number, receiverId: number, message: string, profileImage: string, dateTimeNow: string) => {
-            const currentUserId = getJwtUserId() ?? 0;
+          (
+            roomId: string,
+            messageId: number,
+            userId: number,
+            senderId: number,
+            receiverId: number,
+            message: string,
+            profileImage: string,
+            dateTimeNow: string
+          ) => {
+            const currentUserId = getJwtUserId();
 
-            console.log(`Received in ${roomId}:${messageId} ${userId} ${senderId} ${currentUserId} ${receiverId} ${message} ${profileImage} ${dateTimeNow}`);
-            if (currentUserId === receiverId) {
-              console.log("nag trigger")
-              let values: MessageDto = {
-                Id: messageId,
-                UserId: userId,
-                SenderId: userId,
-                ReceiverId: receiverId,
-                Message: message,
-                ProfileImage: profileImage,
-                IsEnabled: true,
-                DateTimeCreated: dateTimeNow
-              }
-              zSetSignalrValues(values)
-              zSetIsSignalReceive(true)
-            }
+            if (currentUserId !== receiverId) return;
 
-            // zSetAutomationMessage(message);
+            const dto = {
+              Id: messageId,
+              UserId: userId,
+              SenderId: senderId,
+              ReceiverId: receiverId,
+              Message: message,
+              ProfileImage: profileImage,
+              IsEnabled: true,
+              DateTimeCreated: dateTimeNow,
+            };
+
+            zSetSignalrValues(dto);
+            zSetIsSignalReceive(true);
           }
         );
       })
-      .catch((err) => console.error("Connection failed:", err));
+      .catch(console.error);
 
     return () => {
-      // Cleanup SignalR connection on route change or component unmount
-      newConnection
-        .stop()
-        .then(() => console.log("SignalR connection closed."))
-        .catch(console.error);
+      // only stop if leaving app (optional)
     };
-  }, [location.pathname]); // Re-run on route change
+  }, []);
 };

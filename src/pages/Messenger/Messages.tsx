@@ -373,9 +373,8 @@ const Sidebar = ({
 // ---------- Main Chat App ----------
 
 const Messages = () => {
-
-    useSignalRConnection();
     const userId = getJwtUserId() ?? 0;
+    useSignalRConnection(userId.toString());
     const zConvoPage = useMessageContext((state) => state.zConvoPage);
     const zSetConvoPage = useMessageContext((state) => state.zSetConvoPage);
     const zConvoPageSize = useMessageContext((state) => state.zConvoPageSize);
