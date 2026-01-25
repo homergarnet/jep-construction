@@ -11,7 +11,7 @@ const Layout = ({ children }: { children?: React.ReactNode }) => {
                 <AppSidebar />
 
                 {/* ✅ Main content column */}
-                <div className="flex flex-1 flex-col overflow-hidden">
+                <div className="flex flex-1 flex-col">
                     <Header />
 
                     {/* ✅ Scrollable page content area */}
