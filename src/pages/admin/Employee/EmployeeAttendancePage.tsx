@@ -18,8 +18,8 @@ import { empAttendanceFormSchema, type EmpAttendanceFormValues } from './schema/
 import { useForm, type FieldErrors } from 'react-hook-form'
 import type { CreateUpdateEmpAttendanceRequest } from '@/types/empAttendance'
 import { getJwtRoleId } from '@/utils/getJwtRoleId'
-import EmpAttendancePagination from './components/EmpAttendancePagination'
 import EAViewDataDialog from './components/EAViewDataDialog'
+import { GenTablePagination } from '@/components/GenTablePagination'
 
 const EmployeeAttendancePage = () => {
   const roleId = getJwtRoleId();
@@ -290,8 +290,10 @@ const EmployeeAttendancePage = () => {
 
         {/* Pagination */}
         <div className="flex justify-center mt-4">
-          <EmpAttendancePagination
+          <GenTablePagination
+            currentPage={zPage}
             totalPages={totalPages}
+            onPageChange={zSetPage}
           />
         </div>
       </div >

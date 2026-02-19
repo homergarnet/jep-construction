@@ -10,9 +10,9 @@ import { Users } from 'lucide-react'
 import React from 'react'
 import ClientRequestTblBody from './components/ClientRequestTblBody'
 import { useGetClientRequestList, useRemoveClientRequest } from '@/hooks/useClientRequest'
-import ClientRequestPagination from './components/ClientRequestPagination'
 import CRReplyDialog from './components/CRReplyDialog'
 import CRViewDataDialog from './components/CRViewDataDialog'
+import { GenTablePagination } from '@/components/GenTablePagination'
 
 const ClientRequestPage = () => {
     const zSetIsOpenDialog = useClientRequestContext((state) => state.zSetIsOpenDialog);
@@ -95,8 +95,10 @@ const ClientRequestPage = () => {
                 </Table>
                 {/* Pagination */}
                 <div className="flex justify-center mt-4">
-                    <ClientRequestPagination
+                    <GenTablePagination
+                        currentPage={zPage}
                         totalPages={totalPages}
+                        onPageChange={zSetPage}
                     />
                 </div>
             </div>
