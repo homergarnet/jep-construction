@@ -15,8 +15,8 @@ import { Button } from '@/components/ui/button';
 import { Table, TableCaption } from '@/components/ui/table';
 import TblHeader from '@/components/TblHeader';
 import AssignProjectTblBody from './components/AssignProjectTblBody';
-import AssignProjectPagination from './components/AssignProjectPagination';
 import AssignProjectDialog from './components/AssignProjectDialog';
+import { GenTablePagination } from '@/components/GenTablePagination';
 
 const AssignProjectPage = () => {
     const zSetIsOpenDialog = useAssignProjectContext((state) => state.zSetIsOpenDialog);
@@ -248,8 +248,10 @@ const AssignProjectPage = () => {
                 </Table>
                 {/* Pagination */}
                 <div className="flex justify-center mt-4">
-                    <AssignProjectPagination
+                    <GenTablePagination
+                        currentPage={zPage}
                         totalPages={totalPages}
+                        onPageChange={zSetPage}
                     />
                 </div>
             </div>

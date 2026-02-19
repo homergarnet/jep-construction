@@ -18,8 +18,8 @@ import ProjectManagementDialog from './components/ProjectManagementDialog'
 import { getJwtRoleId } from '@/utils/getJwtRoleId'
 import ReviewDialog from './components/ReviewDialog'
 import useReviewContext from '@/store/review/reviewContext'
-import PMPagination from './components/PMPagination'
 import ProjectManagementCard from './components/ProjectManagementCard'
+import { GenTablePagination } from '@/components/GenTablePagination'
 
 const ProjectManagementPage = () => {
 
@@ -264,8 +264,10 @@ const ProjectManagementPage = () => {
                 </Table> */}
                 {/* Pagination */}
                 <div className="flex justify-center mt-4">
-                    <PMPagination
+                    <GenTablePagination
+                        currentPage={zPage}
                         totalPages={totalPages}
+                        onPageChange={zSetPage}
                     />
                 </div>
             </div>
