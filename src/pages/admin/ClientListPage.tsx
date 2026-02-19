@@ -17,8 +17,8 @@ import type { CreateUpdateClientRequest } from '@/types/clientlist'
 import TblHeader from '@/components/TblHeader'
 import ClientTblBody from './components/ClientTblBody'
 import ClientDialog from './components/ClientDialog'
-import ClientListPagination from './components/ClientListPagination'
 import ClientViewDataDialog from './components/ClientViewDataDialog'
+import { GenTablePagination } from '@/components/GenTablePagination'
 
 const ClientListPage = () => {
 
@@ -267,8 +267,10 @@ const ClientListPage = () => {
                 </Table>
                 {/* Pagination */}
                 <div className="flex justify-center mt-4">
-                    <ClientListPagination
+                    <GenTablePagination
+                        currentPage={zPage}
                         totalPages={totalPages}
+                        onPageChange={zSetPage}
                     />
                 </div>
             </div>

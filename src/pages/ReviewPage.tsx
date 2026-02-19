@@ -10,8 +10,8 @@ import { debounce } from 'lodash'
 import { Users } from 'lucide-react'
 import React from 'react'
 import ReviewTblBody from './admin/components/ReviewTblBody'
-import ReviewPagination from './admin/components/ReviewPagination'
 import type { UpdateApproveReviewRequest } from '@/types/review'
+import { GenTablePagination } from '@/components/GenTablePagination'
 
 const ReviewPage = () => {
 
@@ -124,8 +124,10 @@ const ReviewPage = () => {
                 </Table>
                 {/* Pagination */}
                 <div className="flex justify-center mt-4">
-                    <ReviewPagination
+                    <GenTablePagination
+                        currentPage={zPage}
                         totalPages={totalPages}
+                        onPageChange={zSetPage}
                     />
                 </div>
             </div>

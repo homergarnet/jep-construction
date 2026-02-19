@@ -18,7 +18,7 @@ import { Button } from '@/components/ui/button'
 import { useCreateEmployee, useGetEmployeeById, useGetEmployeeList, useRemoveEmployee, useUpdateEmployee } from '@/hooks/useEmployeeList'
 import { debounce } from 'lodash'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
-import EmpListPagination from './components/EmpListPagination'
+import { GenTablePagination } from '@/components/GenTablePagination'
 
 const EmployeeListPage = () => {
 
@@ -295,8 +295,10 @@ const EmployeeListPage = () => {
                 </Table>
                 {/* Pagination */}
                 <div className="flex justify-center mt-4">
-                    <EmpListPagination
+                    <GenTablePagination
+                        currentPage={zPage}
                         totalPages={totalPages}
+                        onPageChange={zSetPage}
                     />
                 </div>
             </div>

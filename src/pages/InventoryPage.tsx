@@ -17,7 +17,7 @@ import TblHeader from '@/components/TblHeader'
 import InventoryTblBody from './components/InventoryTblBody'
 import InventoryDialog from './components/InventoryDialog'
 import { getJwtRoleId } from '@/utils/getJwtRoleId'
-import InventoryPagination from './admin/components/InventoryPagination'
+import { GenTablePagination } from '@/components/GenTablePagination'
 
 const InventoryPage = () => {
     const roleId = getJwtRoleId();
@@ -253,8 +253,10 @@ const InventoryPage = () => {
                 </div>
                 {/* Pagination */}
                 <div className="flex justify-center mt-4">
-                    <InventoryPagination
+                    <GenTablePagination
+                        currentPage={zPage}
                         totalPages={totalPages}
+                        onPageChange={zSetPage}
                     />
                 </div>
             </div>
