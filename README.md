@@ -31,3 +31,11 @@ ShadCn
 Backend:
 Asp.net core web api 8.0
 Sql Server 2019
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+you can create a .env, .env.development, .env.prod, .env.uat
+GENERATE_SOURCEMAP=false
+VITE_DOCUMENTATION_LINK="local link"
+VITE_APP_API_ENDPOINT=http://localhost:8001/api
+VITE_APP_API_ROOT_ENDPOINT=http://localhost:8001/
+VITE_APP_HUB_CONNECTION_ENDPOINT=http://localhost:8001/messagehub
+VITE_APP_MESSAGE_ROOM_ID=messageRoom
